@@ -1,0 +1,22 @@
+
+/*! Signed distance from P to plane (O,n), assume n normalized. */ 
+
+float SignedDistanceToPlane( float2 P, float2 O, float2 n )
+{
+	return dot( P - O, n );
+}
+
+void main( in float2 vout_tex : TEXCOORD0
+		   , uniform sampler2D Tex : TEXUNIT0
+		   , uniform sampler2D Tex2 : TEXUNIT1
+		   , uniform float4 Plane
+		   , uniform float OffsetRcp
+		   , out float4 col : COLOR )
+{
+	float d = SignedDistanceToPlane( vout_tex, Plane.xy, Plane.zw );
+	d = saturate( d * OffsetRcp ); // linear transition zone
+	col = lerp( tex2D( Tex, vout_tex ), 
+				tex2D( Tex2, vout_tex ), float4(d) );
+//	col = d; // debug fade mask
+}
+

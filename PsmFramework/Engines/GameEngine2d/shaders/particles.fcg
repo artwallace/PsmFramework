@@ -1,0 +1,11 @@
+
+void main( in float2 vout_tex : TEXCOORD0
+	   , in float4 vout_color : TEXCOORD1
+	   , uniform sampler2D Tex : TEXUNIT0
+	   , out float4 col : COLOR )
+{
+//	col = vout_color;
+//	col = float4( vout_tex, 0, 1 );
+	col = vout_color * tex2D( Tex, vout_tex );
+}
+

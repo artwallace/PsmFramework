@@ -1,0 +1,13 @@
+
+void main( uniform float4x4 MVP
+	   , uniform float4 Color
+	   , uniform float4 UVTransform // mostly for y flip control
+	   , in float4 vin_data : POSITION
+	   , out float2 vout_tex : TEXCOORD0
+	   , out float4 pp : POSITION )
+{
+	pp = mul( float4(vin_data.xy,0,1), MVP );
+	vout_tex = vin_data.zw;
+	vout_tex = UVTransform.xy + vout_tex * UVTransform.zw;
+}
+

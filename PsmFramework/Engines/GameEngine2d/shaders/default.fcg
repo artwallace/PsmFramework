@@ -1,0 +1,6 @@
+
+void main( in float4 vout_color : TEXCOORD0
+	   , out float4 col : COLOR )
+{
+	col = vout_color;
+}

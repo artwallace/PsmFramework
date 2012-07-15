@@ -1,0 +1,18 @@
+
+void main( uniform float4x4 MVP
+	   , uniform float4 Color
+	   , uniform float4 UVTransform // mostly for y flip control from C#
+	   , in float4 vin_data : POSITION
+	   , in float4 vin_color : TEXCOORD0
+	   , out float2 vout_tex : TEXCOORD0
+	   , out float4 vout_color : TEXCOORD1
+	   , out float4 pp : POSITION 
+//	   , out float psize : PSIZE 
+ )
+{
+	pp = mul( float4(vin_data.xy,0,1), MVP );
+	vout_tex = vin_data.zw;
+	vout_color = Color * vin_color;
+//	psize = vin_data.w;
+}
+

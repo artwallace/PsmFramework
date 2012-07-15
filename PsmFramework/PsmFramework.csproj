@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5AF095E5-17EF-4029-9259-379EAF1C9425}</ProjectGuid>
+    <ProjectTypeGuids>{69878862-DA7D-4DC6-B0A1-50D8FAB4242F};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>PsmFramework</RootNamespace>
+    <AssemblyName>PsmFramework</AssemblyName>
+    <newfilesearch>OnLoadAutoInsert</newfilesearch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Sce.PlayStation.Core" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Sce\Sce.Psm.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Engines\" />
+    <Folder Include="Modes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Engines\RawSpriteTileArray.cs" />
+    <Compile Include="Engines\CyclonePhysics2d\Particle2dBase.cs" />
+    <Compile Include="Engines\CyclonePhysics2d\ParticleWorld2dBase.cs" />
+    <Compile Include="Engines\CyclonePhysics2d\Forces\AnchoredBungee2d.cs" />
+    <Compile Include="Engines\CyclonePhysics2d\Forces\AnchoredSpring2d.cs" />
+    <Compile Include="Engines\CyclonePhysics2d\Forces\Bungee2d.cs" />
+    <Compile Include="Engines\CyclonePhysics2d\Forces\Buoyancy2d.cs" />
+    <Compile Include="Engines\CyclonePhysics2d\Forces\Drag2d.cs" />
+    <Compile Include="Engines\CyclonePhysics2d\Forces\ForceGenerator2dBase.cs" />
+    <Compile Include="Engines\CyclonePhysics2d\Forces\Friction2d.cs" />
+    <Compile Include="Engines\CyclonePhysics2d\Forces\Gravity2d.cs" />
+    <Compile Include="Engines\CyclonePhysics2d\Forces\Spring2d.cs" />
+    <Compile Include="Engines\CyclonePhysics3d\Particle3dBase.cs" />
+    <Compile Include="Engines\CyclonePhysics3d\ParticleWorld3dBase.cs" />
+    <Compile Include="Engines\CyclonePhysics3d\Forces\AnchoredBungee3d.cs" />
+    <Compile Include="Engines\CyclonePhysics3d\Forces\AnchoredSpring3d.cs" />
+    <Compile Include="Engines\CyclonePhysics3d\Forces\Bungee3d.cs" />
+    <Compile Include="Engines\CyclonePhysics3d\Forces\Buoyancy3d.cs" />
+    <Compile Include="Engines\CyclonePhysics3d\Forces\Drag3d.cs" />
+    <Compile Include="Engines\CyclonePhysics3d\Forces\ForceGenerator3dBase.cs" />
+    <Compile Include="Engines\CyclonePhysics3d\Forces\Gravity3d.cs" />
+    <Compile Include="Engines\CyclonePhysics3d\Forces\Spring3d.cs" />
+    <Compile Include="Engines\DrawEngine2d\DrawEngine2d.cs" />
+    <Compile Include="Engines\DrawEngine2d\LayerBase.cs" />
+    <Compile Include="Engines\DrawEngine2d\ScreenLayer.cs" />
+    <Compile Include="Engines\DrawEngine2d\WorldLayer.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\Background.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\BackgroundTile.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\Circle.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\DebugLabel.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\DrawableBase.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\Image.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\Label.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\Line.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\Point.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\Rectangle.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\Sprite.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\SpriteGroup.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\SpriteTranslationKey.cs" />
+    <Compile Include="Engines\DrawEngine2d\Shaders\FontShader.cs" />
+    <Compile Include="Engines\DrawEngine2d\Shaders\ShaderBase.cs" />
+    <Compile Include="Engines\DrawEngine2d\Shaders\SpriteShader.cs" />
+    <Compile Include="Engines\DrawEngine2d\Support\Area2i.cs" />
+    <Compile Include="Engines\DrawEngine2d\Support\Color.cs" />
+    <Compile Include="Engines\DrawEngine2d\Support\Colors.cs" />
+    <Compile Include="Engines\DrawEngine2d\Support\Coordinate2.cs" />
+    <Compile Include="Engines\DrawEngine2d\Support\Coordinate2i.cs" />
+    <Compile Include="Engines\DrawEngine2d\Support\Coordinate3.cs" />
+    <Compile Include="Engines\DrawEngine2d\Support\Coordinate3i.cs" />
+    <Compile Include="Engines\DrawEngine2d\Support\CoordinateSystemMode.cs" />
+    <Compile Include="Engines\DrawEngine2d\Support\DebugFont.cs" />
+    <Compile Include="Engines\DrawEngine2d\Support\RectangularArea2.cs" />
+    <Compile Include="Engines\DrawEngine2d\Support\RectangularArea2i.cs" />
+    <Compile Include="Engines\DrawEngine2d\Support\RenderMode.cs" />
+    <Compile Include="Engines\DrawEngine2d\Textures\Texture2dArea.cs" />
+    <Compile Include="Engines\DrawEngine2d\Textures\Texture2dPlus.cs" />
+    <Compile Include="Engines\DrawEngine2d\Textures\TextureCachePolicy.cs" />
+    <Compile Include="Engines\DrawEngine2d\Textures\TiledTexture.cs" />
+    <Compile Include="Engines\DrawEngine2d\Textures\TiledTextureBase.cs" />
+    <Compile Include="Engines\DrawEngine2d\Textures\TiledTextureIndex.cs" />
+    <Compile Include="Engines\DrawEngine2d\Textures\TiledTextureIndexType.cs" />
+    <Compile Include="Engines\GameEngine2d\Action.cs" />
+    <Compile Include="Engines\GameEngine2d\ActionManager.cs" />
+    <Compile Include="Engines\GameEngine2d\DebugFlags.cs" />
+    <Compile Include="Engines\GameEngine2d\Director.cs" />
+    <Compile Include="Engines\GameEngine2d\Label.cs" />
+    <Compile Include="Engines\GameEngine2d\Node.cs" />
+    <Compile Include="Engines\GameEngine2d\ParticleSystem.cs" />
+    <Compile Include="Engines\GameEngine2d\Plane3D.cs" />
+    <Compile Include="Engines\GameEngine2d\RawSpriteTile.cs" />
+    <Compile Include="Engines\GameEngine2d\RawSpriteTileList.cs" />
+    <Compile Include="Engines\GameEngine2d\Scene.cs" />
+    <Compile Include="Engines\GameEngine2d\Scheduler.cs" />
+    <Compile Include="Engines\GameEngine2d\SpriteBase.cs" />
+    <Compile Include="Engines\GameEngine2d\SpriteList.cs" />
+    <Compile Include="Engines\GameEngine2d\SpriteTile.cs" />
+    <Compile Include="Engines\GameEngine2d\SpriteUV.cs" />
+    <Compile Include="Engines\GameEngine2d\TransitionScene.cs" />
+    <Compile Include="Engines\GameEngine2d\base\BlendMode.cs" />
+    <Compile Include="Engines\GameEngine2d\base\Bounds2.cs" />
+    <Compile Include="Engines\GameEngine2d\base\Bounds2i.cs" />
+    <Compile Include="Engines\GameEngine2d\base\Camera2D.cs" />
+    <Compile Include="Engines\GameEngine2d\base\Camera3D.cs" />
+    <Compile Include="Engines\GameEngine2d\base\Colors.cs" />
+    <Compile Include="Engines\GameEngine2d\base\Common.cs" />
+    <Compile Include="Engines\GameEngine2d\base\ConvexPoly2.cs" />
+    <Compile Include="Engines\GameEngine2d\base\Curves.cs" />
+    <Compile Include="Engines\GameEngine2d\base\DrawHelpers.cs" />
+    <Compile Include="Engines\GameEngine2d\base\EmbeddedDebugFont.cs" />
+    <Compile Include="Engines\GameEngine2d\base\FontMap.cs" />
+    <Compile Include="Engines\GameEngine2d\base\GraphicsContextAlpha.cs" />
+    <Compile Include="Engines\GameEngine2d\base\ICamera.cs" />
+    <Compile Include="Engines\GameEngine2d\base\ICollisionBasics.cs" />
+    <Compile Include="Engines\GameEngine2d\base\ImmediateMode.cs" />
+    <Compile Include="Engines\GameEngine2d\base\ImmediateModeQuads.cs" />
+    <Compile Include="Engines\GameEngine2d\base\Input2.cs" />
+    <Compile Include="Engines\GameEngine2d\base\ISpriteShader.cs" />
+    <Compile Include="Engines\GameEngine2d\base\Math.cs" />
+    <Compile Include="Engines\GameEngine2d\base\Matrix3.cs" />
+    <Compile Include="Engines\GameEngine2d\base\MatrixStack.cs" />
+    <Compile Include="Engines\GameEngine2d\base\PitchRoll.cs" />
+    <Compile Include="Engines\GameEngine2d\base\Plane2.cs" />
+    <Compile Include="Engines\GameEngine2d\base\Profiler.cs" />
+    <Compile Include="Engines\GameEngine2d\base\Sphere2.cs" />
+    <Compile Include="Engines\GameEngine2d\base\SpriteRenderer.cs" />
+    <Compile Include="Engines\GameEngine2d\base\TextureInfo.cs" />
+    <Compile Include="Engines\GameEngine2d\base\Timer.cs" />
+    <Compile Include="Engines\GameEngine2d\base\TRS.cs" />
+    <Compile Include="Engines\GameEngine2d\base\Vector2i.cs" />
+    <Compile Include="Engines\GameEngine2d\base\Vector3i.cs" />
+    <Compile Include="Engines\GameEngine2d\base\VertexBufferPool.cs" />
+    <Compile Include="Engines\Messaging\GenericMessage.cs" />
+    <Compile Include="Engines\Messaging\IExecuteWithObject.cs" />
+    <Compile Include="Engines\Messaging\IMessenger.cs" />
+    <Compile Include="Engines\Messaging\MessageBase.cs" />
+    <Compile Include="Engines\Messaging\Messenger.cs" />
+    <Compile Include="Engines\Messaging\NotificationMessage.cs" />
+    <Compile Include="Engines\Messaging\NotificationMessageAction.cs" />
+    <Compile Include="Engines\Messaging\NotificationMessageActionGeneric.cs" />
+    <Compile Include="Engines\Messaging\NotificationMessageGeneric.cs" />
+    <Compile Include="Engines\Messaging\NotificationMessageWithCallback.cs" />
+    <Compile Include="Engines\Messaging\WeakAction.cs" />
+    <Compile Include="Engines\Messaging\WeakActionGeneric.cs" />
+    <Compile Include="Engines\PadServer\ChannelStates.cs" />
+    <Compile Include="Engines\PadServer\ControllerTypes.cs" />
+    <Compile Include="Engines\PadServer\GamepadReader.cs" />
+    <Compile Include="Modes\DrawEngine2dModeBase.cs" />
+    <Compile Include="Modes\GameEngine2dModeBase.cs" />
+    <Compile Include="Modes\ModeBase.cs" />
+    <Compile Include="Modes\UiToolkitModeBase.cs" />
+    <Compile Include="Modes\Conversation2d\Conversation2dModeBase.cs" />
+    <Compile Include="Modes\FixedFront2d\FixedFront2dModeBase.cs" />
+    <Compile Include="Modes\Isometric2d\Actor.cs" />
+    <Compile Include="Modes\Isometric2d\BackgroundAsset.cs" />
+    <Compile Include="Modes\Isometric2d\BackgroundBase.cs" />
+    <Compile Include="Modes\Isometric2d\BackgroundTile.cs" />
+    <Compile Include="Modes\Isometric2d\BackgroundTileData.cs" />
+    <Compile Include="Modes\Isometric2d\DiamondBackground.cs" />
+    <Compile Include="Modes\Isometric2d\DrawLayers.cs" />
+    <Compile Include="Modes\Isometric2d\Isometric2dModeBase.cs" />
+    <Compile Include="Modes\Isometric2d\LevelBase.cs" />
+    <Compile Include="Modes\Isometric2d\RoomBase.cs" />
+    <Compile Include="Modes\Isometric2d\StaggeredBackground.cs" />
+    <Compile Include="Modes\SideScroller2d\SideScroller2dModeBase.cs" />
+    <Compile Include="Modes\TopDown2d\Actor.cs" />
+    <Compile Include="Modes\TopDown2d\Background.cs" />
+    <Compile Include="Modes\TopDown2d\BackgroundTile.cs" />
+    <Compile Include="Modes\TopDown2d\BackgroundTileData.cs" />
+    <Compile Include="Modes\TopDown2d\DrawLayers.cs" />
+    <Compile Include="Modes\TopDown2d\LevelBase.cs" />
+    <Compile Include="Modes\TopDown2d\MovementStrategyBase.cs" />
+    <Compile Include="Modes\TopDown2d\PlayerInputMovementStrategy.cs" />
+    <Compile Include="Modes\TopDown2d\RoomBase.cs" />
+    <Compile Include="Modes\TopDown2d\RotateInPlaceMovementStrategy.cs" />
+    <Compile Include="Modes\TopDown2d\TopDown2dModeBase.cs" />
+    <Compile Include="Modes\TopDown2d\WanderMovementStrategy.cs" />
+    <Compile Include="Modes\TopDown2dAlt\TopDown2dAltModeBase.cs" />
+    <Compile Include="Modes\TurnBasedGrid2d\TurnBasedGrid2dModeBase.cs" />
+    <Compile Include="Modes\TurnBasedIsometric2d\TurnBasedIsometric2dModeBase.cs" />
+    <Compile Include="AppManager.cs" />
+    <Compile Include="AppOptionsBase.cs" />
+    <Compile Include="AppSaveDataBase.cs" />
+    <Compile Include="FpsPresets.cs" />
+    <Compile Include="IDisposablePlus.cs" />
+    <Compile Include="RandomGenerator.cs" />
+    <Compile Include="RunState.cs" />
+    <Compile Include="TextureManager.cs" />
+    <Compile Include="TextureUsers.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedShaderProgram Include="Engines\DrawEngine2d\Shaders\Font.fcg" />
+    <EmbeddedShaderProgram Include="Engines\DrawEngine2d\Shaders\Font.vcg" />
+    <EmbeddedShaderProgram Include="Engines\DrawEngine2d\Shaders\Particles.fcg" />
+    <EmbeddedShaderProgram Include="Engines\DrawEngine2d\Shaders\Particles.vcg" />
+    <EmbeddedShaderProgram Include="Engines\DrawEngine2d\Shaders\Sprite.fcg" />
+    <EmbeddedShaderProgram Include="Engines\DrawEngine2d\Shaders\Sprite.vcg" />
+    <EmbeddedShaderProgram Include="Engines\GameEngine2d\shaders\default.fcg" />
+    <EmbeddedShaderProgram Include="Engines\GameEngine2d\shaders\default.vcg" />
+    <EmbeddedShaderProgram Include="Engines\GameEngine2d\shaders\font.fcg" />
+    <EmbeddedShaderProgram Include="Engines\GameEngine2d\shaders\font.vcg" />
+    <EmbeddedShaderProgram Include="Engines\GameEngine2d\shaders\particles.fcg" />
+    <EmbeddedShaderProgram Include="Engines\GameEngine2d\shaders\particles.vcg" />
+    <EmbeddedShaderProgram Include="Engines\GameEngine2d\shaders\sprite.fcg" />
+    <EmbeddedShaderProgram Include="Engines\GameEngine2d\shaders\sprite.vcg" />
+    <EmbeddedShaderProgram Include="Engines\GameEngine2d\shaders\sprite_directional_fade.fcg" />
+    <EmbeddedShaderProgram Include="Engines\GameEngine2d\shaders\sprite_directional_fade.vcg" />
+  </ItemGroup>
+</Project>

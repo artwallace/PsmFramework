@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<StaggeredIsometricBackground>
+	
+	<AssetList>
+		<Asset Row="0" Column="0" Name="Hilight" />
+		<Asset Name="Grass">
+			<ImageNE Row="0" Column="1" Flipped="No" />
+			<ImageNW Row="0" Column="1" Flipped="Yes" />
+			<ImageSE Row="0" Column="1" Flipped="No" />
+			<ImageSW Row="0" Column="1" Flipped="Yes" />
+		</Asset>
+		<Asset Row="0" Column="2" Name="Sand" />
+		<Asset Row="0" Column="3" Name="Water" />
+	</AssetList>
+	
+	<Tiles>
+		<Tile Row="0" Column="0" Asset="Sand" />
+		<Tile Row="0" Column="1" Asset="Grass" />
+		<Tile Row="0" Column="2" Asset="Sand" />
+		<Tile Row="0" Column="3" Asset="Grass" />
+		<Tile Row="0" Column="4" Asset="Sand" />
+		<Tile Row="0" Column="5" Asset="Grass" />
+		<Tile Row="0" Column="6" Asset="Sand" />
+		<Tile Row="0" Column="7" Asset="Grass" />
+		<Tile Row="0" Column="8" Asset="Sand" />
+		<Tile Row="0" Column="9" Asset="Grass" />
+		<Tile Row="0" Column="10" Asset="Sand" />
+		
+		<Tile Row="1" Column="0" Asset="Sand" />
+		<Tile Row="1" Column="1" Asset="Grass" />
+		<Tile Row="1" Column="2" Asset="Grass" />
+		<Tile Row="1" Column="3" Asset="Grass" />
+		<Tile Row="1" Column="4" Asset="Grass" />
+		<Tile Row="1" Column="5" Asset="Grass" />
+		<Tile Row="1" Column="6" Asset="Grass" />
+		<Tile Row="1" Column="7" Asset="Grass" />
+		<Tile Row="1" Column="8" Asset="Grass" />
+		<Tile Row="1" Column="9" Asset="Grass" />
+		<Tile Row="1" Column="10" Asset="Sand" />
+		
+		<Tile Row="2" Column="0" Asset="Sand" />
+		<Tile Row="2" Column="1" Asset="Grass" />
+		<Tile Row="2" Column="2" Asset="Grass" />
+		<Tile Row="2" Column="3" Asset="Grass" />
+		<Tile Row="2" Column="4" Asset="Grass" />
+		<Tile Row="2" Column="5" Asset="Grass" />
+		<Tile Row="2" Column="6" Asset="Grass" />
+		<Tile Row="2" Column="7" Asset="Grass" />
+		<Tile Row="2" Column="8" Asset="Grass" />
+		<Tile Row="2" Column="9" Asset="Grass" />
+		<Tile Row="2" Column="10" Asset="Sand" />
+		
+		<Tile Row="3" Column="0" Asset="Sand" />
+		<Tile Row="3" Column="1" Asset="Grass" />
+		<Tile Row="3" Column="2" Asset="Grass" />
+		<Tile Row="3" Column="3" Asset="Grass" />
+		<Tile Row="3" Column="4" Asset="Grass" />
+		<Tile Row="3" Column="5" Asset="Grass" />
+		<Tile Row="3" Column="6" Asset="Grass" />
+		<Tile Row="3" Column="7" Asset="Grass" />
+		<Tile Row="3" Column="8" Asset="Grass" />
+		<Tile Row="3" Column="9" Asset="Grass" />
+		<Tile Row="3" Column="10" Asset="Sand" />
+		
+		<Tile Row="4" Column="0" Asset="Sand" />
+		<Tile Row="4" Column="1" Asset="Grass" />
+		<Tile Row="4" Column="2" Asset="Grass" />
+		<Tile Row="4" Column="3" Asset="Grass" />
+		<Tile Row="4" Column="4" Asset="Grass" />
+		<Tile Row="4" Column="5" Asset="Grass" />
+		<Tile Row="4" Column="6" Asset="Grass" />
+		<Tile Row="4" Column="7" Asset="Grass" />
+		<Tile Row="4" Column="8" Asset="Grass" />
+		<Tile Row="4" Column="9" Asset="Grass" />
+		<Tile Row="4" Column="10" Asset="Sand" />
+		
+		<Tile Row="5" Column="0" Asset="Sand" />
+		<Tile Row="5" Column="1" Asset="Grass" />
+		<Tile Row="5" Column="2" Asset="Grass" />
+		<Tile Row="5" Column="3" Asset="Grass" />
+		<Tile Row="5" Column="4" Asset="Grass" />
+		<Tile Row="5" Column="5" Asset="Grass" />
+		<Tile Row="5" Column="6" Asset="Grass" />
+		<Tile Row="5" Column="7" Asset="Grass" />
+		<Tile Row="5" Column="8" Asset="Grass" />
+		<Tile Row="5" Column="9" Asset="Grass" />
+		<Tile Row="5" Column="10" Asset="Sand" />
+		
+		<Tile Row="6" Column="0" Asset="Sand" />
+		<Tile Row="6" Column="1" Asset="Grass" />
+		<Tile Row="6" Column="2" Asset="Grass" />
+		<Tile Row="6" Column="3" Asset="Grass" />
+		<Tile Row="6" Column="4" Asset="Grass" />
+		<Tile Row="6" Column="5" Asset="Grass" />
+		<Tile Row="6" Column="6" Asset="Grass" />
+		<Tile Row="6" Column="7" Asset="Grass" />
+		<Tile Row="6" Column="8" Asset="Grass" />
+		<Tile Row="6" Column="9" Asset="Grass" />
+		<Tile Row="6" Column="10" Asset="Sand" />
+		
+		<Tile Row="7" Column="0" Asset="Sand" />
+		<Tile Row="7" Column="1" Asset="Empty" />
+		<Tile Row="7" Column="2" Asset="Sand" />
+		<Tile Row="7" Column="3" Asset="Empty" />
+		<Tile Row="7" Column="4" Asset="Sand" />
+		<Tile Row="7" Column="5" Asset="Empty" />
+		<Tile Row="7" Column="6" Asset="Sand" />
+		<Tile Row="7" Column="7" Asset="Empty" />
+		<Tile Row="7" Column="8" Asset="Sand" />
+		<Tile Row="7" Column="9" Asset="Empty" />
+		<Tile Row="7" Column="10" Asset="Sand" />
+	</Tiles>
+	
+</StaggeredIsometricBackground>

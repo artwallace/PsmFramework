@@ -1,0 +1,16 @@
+
+void main( uniform float4x4 MVP
+	   , in float4 p : POSITION
+	   #if 1
+	   // fails (displays white rectangle)
+	   , in float4 vin_color : COLOR0
+	   #else
+	   // works (displays gouraud shaded rectangle)
+	   , in float4 vin_color : TEXCOORD0
+	   #endif
+	   , out float4 vout_color : TEXCOORD0
+	   , out float4 pp : POSITION )
+{
+	pp = mul( p, MVP );
+	vout_color = vin_color;
+}
