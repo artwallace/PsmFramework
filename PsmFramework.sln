@@ -1,0 +1,77 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "Demo\Demo.csproj", "{3D57530B-FFC0-49AB-9D5C-57526E886768}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PsmFramework", "PsmFramework\PsmFramework.csproj", "{5AF095E5-17EF-4029-9259-379EAF1C9425}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3D57530B-FFC0-49AB-9D5C-57526E886768}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D57530B-FFC0-49AB-9D5C-57526E886768}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D57530B-FFC0-49AB-9D5C-57526E886768}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D57530B-FFC0-49AB-9D5C-57526E886768}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AF095E5-17EF-4029-9259-379EAF1C9425}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AF095E5-17EF-4029-9259-379EAF1C9425}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AF095E5-17EF-4029-9259-379EAF1C9425}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AF095E5-17EF-4029-9259-379EAF1C9425}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Demo\Demo.csproj
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = None
+		$1.ResourceNamePolicy = FileFormatDefault
+		$0.TextStylePolicy = $2
+		$2.inheritsSet = null
+		$2.scope = text/x-csharp
+		$0.CSharpFormattingPolicy = $3
+		$3.IndentSwitchBody = True
+		$3.AnonymousMethodBraceStyle = NextLine
+		$3.PropertyBraceStyle = NextLine
+		$3.PropertyGetBraceStyle = NextLine
+		$3.PropertySetBraceStyle = NextLine
+		$3.EventAddBraceStyle = NextLine
+		$3.EventRemoveBraceStyle = NextLine
+		$3.StatementBraceStyle = NextLine
+		$3.PlaceElseOnNewLine = True
+		$3.PlaceElseIfOnNewLine = True
+		$3.PlaceCatchOnNewLine = True
+		$3.PlaceFinallyOnNewLine = True
+		$3.BeforeMethodDeclarationParentheses = False
+		$3.BeforeMethodCallParentheses = False
+		$3.BeforeConstructorDeclarationParentheses = False
+		$3.BeforeIndexerDeclarationBracket = False
+		$3.BeforeDelegateDeclarationParentheses = False
+		$3.NewParentheses = False
+		$3.IfParentheses = False
+		$3.WhileParentheses = False
+		$3.ForParentheses = False
+		$3.ForeachParentheses = False
+		$3.CatchParentheses = False
+		$3.SwitchParentheses = False
+		$3.LockParentheses = False
+		$3.UsingParentheses = False
+		$3.SpacesBeforeBrackets = False
+		$3.inheritsSet = Mono
+		$3.inheritsScope = text/x-csharp
+		$3.scope = text/x-csharp
+		$0.TextStylePolicy = $4
+		$4.inheritsSet = null
+		$4.scope = text/x-cgsrc
+		$0.StandardHeader = $5
+		$5.Text = 
+		$5.IncludeInNewFiles = True
+		$0.VersionControlPolicy = $6
+		$6.inheritsSet = Mono
+		$0.ChangeLogPolicy = $7
+		$7.UpdateMode = None
+		$7.MessageStyle = $8
+		$8.LineAlign = 0
+		$7.inheritsSet = Mono
+	EndGlobalSection
+EndGlobal

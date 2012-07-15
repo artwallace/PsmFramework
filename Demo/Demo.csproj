@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3D57530B-FFC0-49AB-9D5C-57526E886768}</ProjectGuid>
+    <ProjectTypeGuids>{69878862-DA7D-4DC6-B0A1-50D8FAB4242F};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Demo</RootNamespace>
+    <AssemblyName>Demo</AssemblyName>
+    <newfilesearch>OnLoadAutoInsert</newfilesearch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Sce.PlayStation.Core" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Sce\Sce.Psm.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\PsmFramework\PsmFramework.csproj">
+      <Project>{5AF095E5-17EF-4029-9259-379EAF1C9425}</Project>
+      <Name>PsmFramework</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PsmMetadata Include="app.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App.cs" />
+    <Compile Include="AppOptions.cs" />
+    <Compile Include="AppSaveData.cs" />
+    <Compile Include="Fireworks\FireworksMode.cs" />
+    <Compile Include="MainMenu\Assets.cs" />
+    <Compile Include="MainMenu\MainMenuMode.cs" />
+    <Compile Include="SpaceRockets\SpaceRocketsMode.cs" />
+    <Compile Include="TwinStickShooter\Assets.cs" />
+    <Compile Include="TwinStickShooter\Level1.cs" />
+    <Compile Include="TwinStickShooter\Level1Room1.cs" />
+    <Compile Include="TwinStickShooter\Level1Room2.cs" />
+    <Compile Include="TwinStickShooter\TwinStickShooterMode.cs" />
+    <Compile Include="Zombies\Assets.cs" />
+    <Compile Include="Zombies\Level1.cs" />
+    <Compile Include="Zombies\Level1Room1.cs" />
+    <Compile Include="Zombies\ZombieMode.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Fireworks\" />
+    <Folder Include="MainMenu\" />
+    <Folder Include="SpaceRockets\" />
+    <Folder Include="TwinStickShooter\" />
+    <Folder Include="Zombies\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MainMenu\MainMenu.png" />
+    <Content Include="TwinStickShooter\Images\Background.png" />
+    <Content Include="TwinStickShooter\Images\Logo.png" />
+    <Content Include="TwinStickShooter\Images\MagneticBomb64.png" />
+    <Content Include="TwinStickShooter\Images\Missing64.png" />
+    <Content Include="TwinStickShooter\Images\Ship64.png" />
+    <Content Include="TwinStickShooter\Images\Spam64.png" />
+    <Content Include="TwinStickShooter\Images\Teleporter64.png" />
+    <Content Include="Zombies\Images\Background.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Zombies\Level1Room1Background.xml" />
+  </ItemGroup>
+</Project>
