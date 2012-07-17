@@ -32,14 +32,20 @@ namespace PsmFramework.Modes
 		
 		internal override void UpdateInternal()
 		{
-//			if (!Mgr.ModeChanged)
-//				DrawEngine2d.Update();
 		}
 		
 		internal override void RenderInternal()
 		{
 			if (!Mgr.ModeChanged)
+			{
+				StartDrawTimer();
 				DrawEngine2d.Render();
+				CompleteDrawTimer();
+				
+				StartSwapBuffersTimer();
+				DrawEngine2d.RenderSwapBuffers();
+				CompleteSwapBuffersTimer();
+			}
 		}
 		
 		#endregion

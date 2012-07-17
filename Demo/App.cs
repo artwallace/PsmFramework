@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using Demo.MainMenu;
 using PsmFramework;
-using Sce.PlayStation.Core.Environment;
 using Sce.PlayStation.Core.Graphics;
 
 namespace Demo
@@ -50,7 +49,7 @@ namespace Demo
 		private static Int32 DebugMinScreenHeight = 480;
 		
 		private static Int32 DebugMaxScreenWidth = 1024;
-		private static Int32 DebugMaxScreenHeight = 700;
+		private static Int32 DebugMaxScreenHeight = 768;
 		
 		private static GraphicsContext GenerateGraphicsContext()
 		{

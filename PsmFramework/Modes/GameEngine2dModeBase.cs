@@ -61,8 +61,14 @@ namespace PsmFramework.Modes
 		
 		internal override void RenderInternal()
 		{
+			StartDrawTimer();
 			Director.Instance.Render();
+			CompleteDrawTimer();
+			
+			StartSwapBuffersTimer();
 			Director.Instance.GL.Context.SwapBuffers();
+			CompleteSwapBuffersTimer();
+			
 			Director.Instance.PostSwap();
 		}
 		
@@ -230,14 +236,20 @@ namespace PsmFramework.Modes
 			DebugInfo.Append("RAM Used: ");
 			DebugInfo.AppendLine((System.Math.Round(GC.GetTotalMemory(false) / 1048576d, 2)).ToString() + " MiB");
 			
-			DebugInfo.Append("TimeSinceLastFrame: ");
-			DebugInfo.AppendLine(Mgr.TimeSinceLastFrame.Ticks.ToString());
+			//DebugInfo.Append("TimeSinceLastFrame: ");
+			//DebugInfo.AppendLine(Mgr.TimeSinceLastFrame.Ticks.ToString());
 			
 			DebugInfo.Append("Update Ticks: ");
 			DebugInfo.AppendLine(Mgr.UpdateLength.Ticks.ToString());
 			
+			//DebugInfo.Append("Render Ticks: ");
+			//DebugInfo.AppendLine(Mgr.RenderLength.Ticks.ToString());
+			
 			DebugInfo.Append("Render Ticks: ");
-			DebugInfo.AppendLine(Mgr.RenderLength.Ticks.ToString());
+			DebugInfo.AppendLine(DrawLength.Ticks.ToString());
+			
+			DebugInfo.Append("Swap Buffers Ticks: ");
+			DebugInfo.AppendLine(SwapBuffersLength.Ticks.ToString());
 			
 			DebugInfo.Append("FPS: ");
 			DebugInfo.AppendLine(Mgr.FramesPerSecond.ToString());

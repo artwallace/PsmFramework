@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
 using PsmFramework.Modes;
 using Sce.PlayStation.Core.Environment;
 using Sce.PlayStation.Core.Graphics;
@@ -35,9 +34,7 @@ namespace PsmFramework
 			
 			InitializeOptions(options);
 			InitializeGraphics(gc);
-			
-			InitializeNewTimers();
-			
+			InitializeTimers();
 			InitializeModes();
 			InitializeInput();
 		}
@@ -46,9 +43,7 @@ namespace PsmFramework
 		{
 			CleanupInput();
 			CleanupModes();
-			
-			CleanupNewTimers();
-			
+			CleanupTimers();
 			CleanupGraphics();
 			CleanupOptions();
 		}
@@ -184,17 +179,16 @@ namespace PsmFramework
 		
 		#endregion
 		
-		#region New Timers, Performace
+		#region Timers, Performace tracking
 		
-		private void InitializeNewTimers()
+		private void InitializeTimers()
 		{
 			FrameTimer = new Stopwatch();
 			UpdateTimer = new Stopwatch();
 			RenderTimer = new Stopwatch();
-			SwapBuffersTimer = new Stopwatch();
 		}
 		
-		private void CleanupNewTimers()
+		private void CleanupTimers()
 		{
 			FrameTimer.Stop();
 			FrameTimer = null;
@@ -204,20 +198,15 @@ namespace PsmFramework
 			
 			RenderTimer.Stop();
 			RenderTimer = null;
-			
-			SwapBuffersTimer.Stop();
-			SwapBuffersTimer = null;
 		}
 		
 		private Stopwatch FrameTimer;
 		private Stopwatch UpdateTimer;
 		private Stopwatch RenderTimer;
-		private Stopwatch SwapBuffersTimer;
 		
 		public TimeSpan TimeSinceLastFrame { get; private set; }
 		public TimeSpan UpdateLength { get; private set; }
 		public TimeSpan RenderLength { get; private set; }
-		public TimeSpan SwapBuffersLength { get; private set; }
 		
 		private void CalculateTimeSinceLastFrame()
 		{
@@ -250,26 +239,12 @@ namespace PsmFramework
 			RenderLength = RenderTimer.Elapsed;
 		}
 		
-		private void StartSwapBuffersTimer()
-		{
-			SwapBuffersTimer.Reset();
-			SwapBuffersTimer.Start();
-		}
-		
-		private void CompleteSwapBuffersTimer()
-		{
-			SwapBuffersTimer.Stop();
-			SwapBuffersLength = SwapBuffersTimer.Elapsed;
-		}
-		
 		private void PauseInGameTimer()
 		{
-			
 		}
 		
 		private void ResumeInGameTimer()
 		{
-			
 		}
 		
 		public Int32 FramesPerSecond { get; private set; }

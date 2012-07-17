@@ -9,7 +9,7 @@ using Sce.PlayStation.Core.Graphics;
 
 namespace PsmFramework.Engines.DrawEngine2d
 {
-	public sealed class DrawEngine2d : IDisposable
+	public sealed class DrawEngine2d : IDisposablePlus
 	{
 		#region Constructor, Dispose
 		
@@ -24,7 +24,10 @@ namespace PsmFramework.Engines.DrawEngine2d
 		public void Dispose()
 		{
 			Cleanup();
+			IsDisposed = true;
 		}
+		
+		public Boolean IsDisposed { get; private set; }
 		
 		#endregion
 		
@@ -81,21 +84,24 @@ namespace PsmFramework.Engines.DrawEngine2d
 				SecondBufferFilled = true;
 				RenderWork();
 			}
-			
-			GraphicsContext.SwapBuffers();
 		}
 		
 		//TODO: Remove this stupid workaround.
 		private void RenderWork()
 		{
 			//Move this all back to the proper Render method
-			// once the workaround isn't needed.
+			// if/once the workaround isn't needed.
 			ResetRenderRequired();
 				
 			GraphicsContext.Clear();
 			
 			foreach(LayerBase layer in Layers.Values)
 				layer.Render();
+		}
+		
+		public void RenderSwapBuffers()
+		{
+			GraphicsContext.SwapBuffers();
 		}
 		
 		#endregion

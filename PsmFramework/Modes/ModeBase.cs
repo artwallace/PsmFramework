@@ -1,17 +1,17 @@
 using System;
+using System.Diagnostics;
 
 namespace PsmFramework.Modes
 {
-	public abstract class ModeBase : IDisposable
+	public abstract class ModeBase : IDisposablePlus
 	{
 		#region Constructor, Dispose
 		
 		protected ModeBase(AppManager mgr)
 		{
-			if (mgr == null)
-				throw new ArgumentNullException();
-			
 			InitializeAppManager(mgr);
+			
+			InitializePerformanceTracking();
 			
 			InitializeInternal();
 			Initialize();
@@ -22,8 +22,14 @@ namespace PsmFramework.Modes
 			Cleanup();
 			CleanupInternal();
 			
+			CleanupPerformanceTracking();
+			
 			CleanupAppManager();
+			
+			IsDisposed = true;
 		}
+		
+		public Boolean IsDisposed { get; private set; }
 		
 		#endregion
 		
@@ -57,6 +63,9 @@ namespace PsmFramework.Modes
 		
 		private void InitializeAppManager(AppManager mgr)
 		{
+			if (mgr == null)
+				throw new ArgumentNullException();
+			
 			Mgr = mgr;
 		}
 		
@@ -66,6 +75,55 @@ namespace PsmFramework.Modes
 		}
 		
 		public AppManager Mgr { get; private set; }
+		
+		#endregion
+		
+		#region Performance Tracking
+		
+		private void InitializePerformanceTracking()
+		{
+			DrawTimer = new Stopwatch();
+			SwapBuffersTimer = new Stopwatch();
+		}
+		
+		private void CleanupPerformanceTracking()
+		{
+			DrawTimer.Stop();
+			DrawTimer = null;
+			
+			SwapBuffersTimer.Stop();
+			SwapBuffersTimer = null;
+		}
+		
+		private Stopwatch DrawTimer;
+		private Stopwatch SwapBuffersTimer;
+		
+		public TimeSpan DrawLength { get; private set; }
+		public TimeSpan SwapBuffersLength { get; private set; }
+		
+		protected void StartDrawTimer()
+		{
+			DrawTimer.Reset();
+			DrawTimer.Start();
+		}
+		
+		protected void CompleteDrawTimer()
+		{
+			DrawTimer.Stop();
+			DrawLength = DrawTimer.Elapsed;
+		}
+		
+		protected void StartSwapBuffersTimer()
+		{
+			SwapBuffersTimer.Reset();
+			SwapBuffersTimer.Start();
+		}
+		
+		protected void CompleteSwapBuffersTimer()
+		{
+			SwapBuffersTimer.Stop();
+			SwapBuffersLength = SwapBuffersTimer.Elapsed;
+		}
 		
 		#endregion
 	}
