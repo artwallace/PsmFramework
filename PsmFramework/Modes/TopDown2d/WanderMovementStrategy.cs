@@ -46,7 +46,7 @@ namespace PsmFramework.Modes.TopDown2d
 				needNewDuration = true;
 			}
 			else
-				DurationInTicks -= Mgr.TicksSinceLastUpdate;
+				DurationInTicks -= Mgr.TimeSinceLastFrame.Ticks;
 			
 			//TODO: if collision, needNewHeading = true;
 			

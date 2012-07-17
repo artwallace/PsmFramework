@@ -68,13 +68,6 @@ namespace PsmFramework.Modes
 		public AppManager Mgr { get; private set; }
 		
 		#endregion
-		
-//		#region Fps Governor
-//		
-//		public virtual Boolean UseCustomFpsLimit { get { return false; } }
-//		public virtual FpsPresets FpsLimit { get { return FpsPresets.Max60Fps; } }
-//		
-//		#endregion
 	}
 }
 

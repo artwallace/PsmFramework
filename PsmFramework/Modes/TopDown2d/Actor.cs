@@ -294,7 +294,7 @@ namespace PsmFramework.Modes.TopDown2d
 			if (MovementStrategy != null)
 				MovementStrategy.Move();
 			
-			Integrate(Mgr.TicksSinceLastUpdateF);
+			Integrate(Mgr.TimeSinceLastFrame.Ticks);
 			
 			Sprite.Position = Position;
 			Sprite.Rotation = Heading;

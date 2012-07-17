@@ -82,7 +82,7 @@ namespace Demo.TwinStickShooter
 		private void CreateShip()
 		{
 			Mode.TextureManager.AddTextureAsset(Assets.Image_Ship64, this);
-			Actor actor = new Actor(this, Assets.Image_Ship64, Background.GetTilePositionAtCenter(4, 2), 200f, 0.99f);
+			Actor actor = new Actor(this, Assets.Image_Ship64, Background.GetTilePositionAtCenter(4, 2), 300f, 0.9999f);
 			//actor.SetPosition(Background.GetTilePositionAtCenter(4, 2));
 			AddActor(actor);
 			actor.SetMovementStrategy(new PlayerInputMovementStrategy(actor, true, true));

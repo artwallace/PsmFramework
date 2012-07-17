@@ -20,7 +20,7 @@ namespace PsmFramework.Engines.CyclonePhysics2d.Forces
 				return;
 			
 			//TODO: I just made this number up. Remove hardcoding.
-			Particle.AddForce(Particle.Velocity * -1f);
+			Particle.AddForce(Particle.Velocity * -2f);
 		}
 	}
 }

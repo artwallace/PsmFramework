@@ -72,9 +72,13 @@ namespace PsmFramework.Modes.TopDown2d
 		internal void UpdateInternal()
 		{
 			Update();
-			Actors.ForEach(a => {a.Update(); } );
-			UpdateCamera();
-			UpdateBackground();
+			
+			if(Mgr.RunState != RunState.Paused)
+			{
+				Actors.ForEach(a => {a.Update(); } );
+				UpdateCamera();
+				UpdateBackground();
+			}
 		}
 		
 		#endregion

@@ -33,7 +33,7 @@ namespace PsmFramework.Modes.TopDown2d
 		{
 			if(Mgr.GamePadData.AnalogLeftX > 0.1f || Mgr.GamePadData.AnalogLeftX < -0.1f)
 			{
-				throw new SystemException();
+				throw new SystemException("Testing.");
 			}
 		}
 		
@@ -41,14 +41,14 @@ namespace PsmFramework.Modes.TopDown2d
 		{
 			//TODO: Need 
 			if (Mgr.GamePad0_Up)
-				Actor.AddForce(Actor.Heading.Perpendicular().Multiply(3f));
+				Actor.AddForce(Actor.Heading.Perpendicular().Multiply(1.5f));
 			else if (Mgr.GamePad0_Down)
 				Actor.AddForce(Actor.Heading.Perpendicular().Negate());
 			
 			if (Mgr.GamePad0_Left)
-				Actor.AddRotationToHeading(0.0085f * Mgr.TicksSinceLastUpdate);
+				Actor.AddRotationToHeading(0.0000011f * Mgr.TimeSinceLastFrame.Ticks);
 			else if (Mgr.GamePad0_Right)
-				Actor.AddRotationToHeading(-0.0085f * Mgr.TicksSinceLastUpdate);
+				Actor.AddRotationToHeading(-0.0000011f * Mgr.TimeSinceLastFrame.Ticks);
 		}
 		
 		#endregion

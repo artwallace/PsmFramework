@@ -39,14 +39,14 @@ namespace Demo.Zombies
 			Vector2 move = Vector2.Zero;
 			
 			if (Mgr.GamePad0_Up)
-				move.Y += 1f * Mgr.TicksSinceLastUpdate;
+				move.Y += 1f * Mgr.TimeSinceLastFrame.Ticks;
 			else if (Mgr.GamePad0_Down)
-				move.Y -= 1f * Mgr.TicksSinceLastUpdate;
+				move.Y -= 1f * Mgr.TimeSinceLastFrame.Ticks;
 			
 			if (Mgr.GamePad0_Left)
-				move.X -= 1f * Mgr.TicksSinceLastUpdate;
+				move.X -= 1f * Mgr.TimeSinceLastFrame.Ticks;
 			else if (Mgr.GamePad0_Right)
-				move.X += 1f * Mgr.TicksSinceLastUpdate;
+				move.X += 1f * Mgr.TimeSinceLastFrame.Ticks;
 			
 			MoveCamera(move);
 		}

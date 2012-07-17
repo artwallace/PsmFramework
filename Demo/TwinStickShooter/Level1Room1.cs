@@ -34,8 +34,8 @@ namespace Demo.TwinStickShooter
 			//Actors are updated in base class. Just change room stuff here.
 			
 			//TODO: This shouldn't be here.
-			ShipDrag.UpdateForce(Mgr.TicksSinceLastUpdateF);
-			ShipFriction.UpdateForce(Mgr.TicksSinceLastUpdateF);
+			ShipDrag.UpdateForce(Mgr.TimeSinceLastFrame.Ticks);
+			//ShipFriction.UpdateForce(Mgr.TimeSinceLastFrame.Ticks);
 			
 			//This should be moved to an door actor
 			if (Ship != null)
@@ -112,8 +112,8 @@ namespace Demo.TwinStickShooter
 			AddActor(Ship);
 			Ship.SetMovementStrategy(new PlayerInputMovementStrategy(Ship, true, true));
 			
-			ShipDrag = new Drag2d(Ship, .5f, 1f);
-			ShipFriction = new Friction2d(Ship);
+			ShipDrag = new Drag2d(Ship, .01f, .05f);
+			//ShipFriction = new Friction2d(Ship);
 		}
 		
 		#endregion

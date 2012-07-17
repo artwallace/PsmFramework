@@ -14,9 +14,9 @@ namespace PsmFramework
 	{
 		#region Constructor, Dispose
 		
-		public AppManager(AppOptionsBase options, GraphicsContext gc)//, FpsPresets maxFps)
+		public AppManager(AppOptionsBase options, GraphicsContext gc)
 		{
-			Initialize(options, gc);//, maxFps);
+			Initialize(options, gc);
 		}
 		
 		public void Dispose()
@@ -28,7 +28,7 @@ namespace PsmFramework
 		
 		#region Initialize, Cleanup
 		
-		private void Initialize(AppOptionsBase options, GraphicsContext gc)//, FpsPresets maxFps)
+		private void Initialize(AppOptionsBase options, GraphicsContext gc)
 		{
 			SetRunStateToInitializing();
 			UpdateRunState();
@@ -37,9 +37,6 @@ namespace PsmFramework
 			InitializeGraphics(gc);
 			
 			InitializeNewTimers();
-			InitializePerformance();//TODO: Delete me
-			InitializeTimers();//TODO: Delete me
-			//InitializeFpsGovernor(maxFps);//TODO: Delete me
 			
 			InitializeModes();
 			InitializeInput();
@@ -51,8 +48,6 @@ namespace PsmFramework
 			CleanupModes();
 			
 			CleanupNewTimers();
-			//CleanupFpsGovernor();//TODO: Delete me
-			CleanupPerformance();//TODO: Delete me
 			
 			CleanupGraphics();
 			CleanupOptions();
@@ -65,34 +60,33 @@ namespace PsmFramework
 		public void AppLoop()
 		{
 			SetRunStateToRunning();
-			InitializeTimers();
-			//InitializeFpsGovernor(DefaultFpsLimit);
 			
 			InitializeCurrentMode();
 			
 			while (RunState != RunState.Ending)
 			{
-				//FpsGovernor();
-				RecalcTimers();
+				CalculateTimeSinceLastFrame();
+				CalculateFramesPerSecond();
 				
 				SystemEvents.CheckEvents();
 				
-				CountFps();
-				
-				PerformanceTimer.Reset();
-				PerformanceTimer.Start();
+				StartUpdateTimer();
 				Update();
-				UpdateTicks = PerformanceTimer.ElapsedTicks;
+				CompleteUpdateTimer();
 				
-				PerformanceTimer.Reset();
-				PerformanceTimer.Start();
+				StartRenderTimer();
 				Render();
-				RenderTicks = PerformanceTimer.ElapsedTicks;
+				CompleteRenderTimer();
 				
 				UpdateRunState();
 				
-				if (RunStateRecentlyChanged && RunState == RunState.Paused)
-					ResetPauseTimer();
+				if (RunStateRecentlyChanged)
+				{
+					if(RunState == RunState.Paused)
+						PauseInGameTimer();
+					else
+						ResumeInGameTimer();
+				}
 			}
 		}
 		
@@ -190,241 +184,110 @@ namespace PsmFramework
 		
 		#endregion
 		
-		#region New Timers, Performace, FpsGovernor
+		#region New Timers, Performace
 		
 		private void InitializeNewTimers()
 		{
-			LoopTimer = new Stopwatch();
+			FrameTimer = new Stopwatch();
 			UpdateTimer = new Stopwatch();
 			RenderTimer = new Stopwatch();
 			SwapBuffersTimer = new Stopwatch();
-			
-			PreviousLoopStart = DateTime.UtcNow;
-			LoopStart = PreviousLoopStart;
 		}
 		
 		private void CleanupNewTimers()
 		{
-			LoopTimer.Stop();
-			LoopTimer = null;
+			FrameTimer.Stop();
+			FrameTimer = null;
+			
 			UpdateTimer.Stop();
 			UpdateTimer = null;
+			
 			RenderTimer.Stop();
 			RenderTimer = null;
+			
 			SwapBuffersTimer.Stop();
 			SwapBuffersTimer = null;
 		}
 		
-		private Stopwatch LoopTimer;
+		private Stopwatch FrameTimer;
 		private Stopwatch UpdateTimer;
 		private Stopwatch RenderTimer;
 		private Stopwatch SwapBuffersTimer;
 		
-		private TimeSpan UpdateLength;
-		private TimeSpan RenderLength;
-		private TimeSpan SwapBuffersLength;
-		private TimeSpan LoopLength;
+		public TimeSpan TimeSinceLastFrame { get; private set; }
+		public TimeSpan UpdateLength { get; private set; }
+		public TimeSpan RenderLength { get; private set; }
+		public TimeSpan SwapBuffersLength { get; private set; }
 		
-		//Be wary of using these for game logic because of ntp time changes.
-		private DateTime PreviousLoopStart;
-		private DateTime LoopStart;
-		
-		private void StartLoopTimer()
+		private void CalculateTimeSinceLastFrame()
 		{
-		}
-		
-		private void CompleteLoopTimer()
-		{
+			TimeSinceLastFrame = FrameTimer.Elapsed;
+			FrameTimer.Reset();
+			FrameTimer.Start();
 		}
 		
 		private void StartUpdateTimer()
 		{
+			UpdateTimer.Reset();
+			UpdateTimer.Start();
 		}
 		
 		private void CompleteUpdateTimer()
 		{
+			UpdateTimer.Stop();
+			UpdateLength = UpdateTimer.Elapsed;
 		}
 		
 		private void StartRenderTimer()
 		{
+			RenderTimer.Reset();
+			RenderTimer.Start();
 		}
 		
 		private void CompleteRenderTimer()
 		{
+			RenderTimer.Stop();
+			RenderLength = RenderTimer.Elapsed;
 		}
 		
 		private void StartSwapBuffersTimer()
 		{
+			SwapBuffersTimer.Reset();
+			SwapBuffersTimer.Start();
 		}
 		
 		private void CompleteSwapBuffersTimer()
 		{
+			SwapBuffersTimer.Stop();
+			SwapBuffersLength = SwapBuffersTimer.Elapsed;
 		}
 		
-		/// <summary>
-		/// Tracks the time since the last frame was completed.
-		/// It includes time spent during pauses so this is not 
-		/// appropriate for game logic.
-		/// </summary>
-		public TimeSpan TimeSinceLastFrame { get; private set; }
-		
-		/// <summary>
-		/// Same as TimeSinceLastFrame except this ignores time spent while
-		/// the game is paused.
-		/// </summary>
-		public TimeSpan TimeSinceLastGameFrame { get; private set; }
-		
-		private void LimitFps()
+		private void PauseInGameTimer()
 		{
-		}
-		
-		#endregion
-		
-		#region Performance
-		
-		private void InitializePerformance()
-		{
-			PerformanceTimer = new Stopwatch();
-			PerformanceTimer.Start();
 			
-			UpdateTicks = 0;
-			RenderTicks = 0;
+		}
+		
+		private void ResumeInGameTimer()
+		{
 			
-			AppLoopsPerSec = 0;
-			CurrentAppLoopsPerSec = 0;
-			LastSecTracked = DateTime.Now.Second;
 		}
 		
-		private void CleanupPerformance()
+		public Int32 FramesPerSecond { get; private set; }
+		private Int32 LastSecondTracked;
+		private Int32 CurrentFramesPerSecond;
+		
+		private void CalculateFramesPerSecond()
 		{
-			PerformanceTimer.Stop();
-			PerformanceTimer = null;
-		}
-		
-		private Stopwatch PerformanceTimer;
-		
-		public Int64 UpdateTicks { get; private set; }
-		public Int64 RenderTicks { get; private set; }
-		
-		private Int32 CurrentSec;
-		private Int32 LastSecTracked;
-		private Int32 CurrentAppLoopsPerSec;
-		public Int32 AppLoopsPerSec { get; private set; }
-		
-		private void CountFps()
-		{
-			CurrentSec = DateTime.Now.Second;
-			if (CurrentSec == LastSecTracked)
-				CurrentAppLoopsPerSec++;
+			Int32 CurrentSec = DateTime.Now.Second;
+			
+			if(LastSecondTracked == CurrentSec)
+				CurrentFramesPerSecond++;
 			else
 			{
-				AppLoopsPerSec = CurrentAppLoopsPerSec;
-				LastSecTracked = CurrentSec;
-				CurrentAppLoopsPerSec = 1;
+				LastSecondTracked = CurrentSec;
+				FramesPerSecond = CurrentFramesPerSecond;
+				CurrentFramesPerSecond = 1;
 			}
-		}
-		
-		#endregion
-		
-		#region Fps Governor
-		
-//		private void InitializeFpsGovernor(FpsPresets defaultFpsLimit)
-//		{
-//			DefaultFpsLimit = defaultFpsLimit;
-//			PausedFpsLimit = FpsPresets.Max15Fps;
-//			NextUpdate = TickCount;
-//			
-//			FpsLimiter = Stopwatch.StartNew();
-//		}
-		
-//		private void CleanupFpsGovernor()
-//		{
-//			FpsLimiter.Stop();
-//			FpsLimiter = null;
-//		}
-		
-		//TODO: Change so that if current update exceeds budget, delay is shortened or eliminated.
-//		private void FpsGovernor()
-//		{
-//			if (RunState != RunState.Paused)
-//				CurrentFpsLimit = CurrentMode.UseCustomFpsLimit ? CurrentMode.FpsLimit : DefaultFpsLimit;
-//			else
-//				CurrentFpsLimit = PausedFpsLimit;
-//			
-//			if (CurrentFpsLimit != FpsPresets.UnlimitedFps)
-//			{
-//				if (NextUpdate > TickCount)
-//					Thread.Sleep((Int32)(NextUpdate - TickCount));
-//				NextUpdate = TickCount + (1000 / (Int32)CurrentFpsLimit);
-//			}
-//		}
-		
-//		private FpsPresets DefaultFpsLimit;
-//		private FpsPresets PausedFpsLimit;
-//		private FpsPresets CurrentFpsLimit;
-//		private Int64 NextUpdate;
-//		
-//		private Stopwatch FpsLimiter;
-		
-		#endregion
-		
-		#region Timers
-		
-		private void InitializeTimers()
-		{
-			LastLoopPass = TickCount - 1;
-			TicksSinceLastLoopPass = 0;
-			
-			LastUpdate = LastLoopPass;
-			TicksSinceLastUpdate = 0;
-			
-			PauseLength = 0;
-		}
-		
-		//should be same as since LastUpdate except when paused.
-		private Int64 LastLoopPass;
-		public Int64 TicksSinceLastLoopPass { get; private set; }
-		
-		private Int64 LastUpdate;
-		public Int64 TicksSinceLastUpdate { get; private set; }
-		public Single TicksSinceLastUpdateF { get { return (Single)TicksSinceLastUpdate; } }
-		
-		private Int64 PauseLength;
-		
-		private void RecalcTimers()
-		{
-			Int64 now = TickCount;
-			
-			TicksSinceLastLoopPass = now - LastLoopPass;
-			LastLoopPass = now;
-			
-			if (RunState != RunState.Paused)
-			{
-				TicksSinceLastUpdate = now - LastUpdate;
-				LastUpdate = now;
-				
-				//TODO: This will always return equivilant to TicksSinceLastLoopPass?
-				if (PauseLength > 0)
-				{
-					TicksSinceLastUpdate -= PauseLength;
-					PauseLength = 0;
-				}
-			}
-			else
-			{
-				TicksSinceLastUpdate = 0;
-				PauseLength += TicksSinceLastLoopPass;
-			}
-		}
-		
-		private void ResetPauseTimer()
-		{
-			PauseLength = 0;
-		}
-		
-		public Int64 TickCount
-		{
-			get { return DateTime.UtcNow.Ticks; }
 		}
 		
 		#endregion
@@ -765,8 +628,8 @@ namespace PsmFramework
 		
 		private CreateModeDelegate NextModeFactory;
 		
-		private const Int32 cMinTicksBetweenModeChanges = 100;
-		private Int64 LastModeChange;
+		private readonly TimeSpan cMinTicksBetweenModeChanges = TimeSpan.FromTicks(100);
+		private DateTime LastModeChange;
 		
 		public ModeBase PreviousMode { get; private set; }
 		public ModeBase CurrentMode { get; private set; }
@@ -776,7 +639,7 @@ namespace PsmFramework
 		{
 			get
 			{
-				return (TickCount - LastModeChange) > cMinTicksBetweenModeChanges;
+				return (DateTime.UtcNow - LastModeChange) > cMinTicksBetweenModeChanges;
 			}
 		}
 		
@@ -787,7 +650,7 @@ namespace PsmFramework
 		
 		public void GoToMode(CreateModeDelegate factory)
 		{
-			LastModeChange = TickCount;
+			LastModeChange = DateTime.UtcNow;
 			PreviousMode = CurrentMode;
 			NextModeFactory = factory;
 			CurrentMode = null;
@@ -797,7 +660,7 @@ namespace PsmFramework
 		//TODO: GoToThenReturn should not dispose of the original mode. perhaps as an option or another method.
 		public void GoToModeThenReturn(CreateModeDelegate factory, ModeBase returnMode)
 		{
-			LastModeChange = TickCount;
+			LastModeChange = DateTime.UtcNow;
 			PreviousMode = CurrentMode;
 			NextModeFactory = factory;
 			CurrentMode = null;
@@ -806,7 +669,7 @@ namespace PsmFramework
 		
 		public void ReturnToMode()
 		{
-			LastModeChange = TickCount;
+			LastModeChange = DateTime.UtcNow;
 			PreviousMode = CurrentMode;
 			CurrentMode = ReturnMode;
 			ReturnMode = null;

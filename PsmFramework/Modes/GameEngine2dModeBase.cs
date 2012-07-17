@@ -230,20 +230,17 @@ namespace PsmFramework.Modes
 			DebugInfo.Append("RAM Used: ");
 			DebugInfo.AppendLine((System.Math.Round(GC.GetTotalMemory(false) / 1048576d, 2)).ToString() + " MiB");
 			
-			DebugInfo.Append("TicksSinceLastPass: ");
-			DebugInfo.AppendLine(Mgr.TicksSinceLastLoopPass.ToString());
-			
-			DebugInfo.Append("TicksSinceLastUpdate: ");
-			DebugInfo.AppendLine(Mgr.TicksSinceLastUpdate.ToString());
+			DebugInfo.Append("TimeSinceLastFrame: ");
+			DebugInfo.AppendLine(Mgr.TimeSinceLastFrame.Ticks.ToString());
 			
 			DebugInfo.Append("Update Ticks: ");
-			DebugInfo.AppendLine(Mgr.UpdateTicks.ToString());
+			DebugInfo.AppendLine(Mgr.UpdateLength.Ticks.ToString());
 			
 			DebugInfo.Append("Render Ticks: ");
-			DebugInfo.AppendLine(Mgr.RenderTicks.ToString());
+			DebugInfo.AppendLine(Mgr.RenderLength.Ticks.ToString());
 			
 			DebugInfo.Append("FPS: ");
-			DebugInfo.AppendLine(Mgr.AppLoopsPerSec.ToString());
+			DebugInfo.AppendLine(Mgr.FramesPerSecond.ToString());
 			
 			GetAdditionalDebugInfo();
 			

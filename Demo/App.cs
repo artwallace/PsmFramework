@@ -11,8 +11,6 @@ namespace Demo
 	{
 		#region Variables
 		
-		//private const FpsPresets cDefaultFpsLimit = FpsPresets.Max60Fps;
-		
 		private static AppManager Mgr;
 		private static AppOptions Opts;
 		
@@ -30,7 +28,7 @@ namespace Demo
 		private static void Initialize()
 		{
 			Opts = new AppOptions();
-			Mgr = new AppManager(Opts, GenerateGraphicsContext());//, cDefaultFpsLimit);
+			Mgr = new AppManager(Opts, GenerateGraphicsContext());
 			
 			Mgr.GoToMode(MainMenuMode.MainMenuModeFactory);
 		}
