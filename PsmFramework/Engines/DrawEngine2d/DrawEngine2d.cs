@@ -64,27 +64,38 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		#endregion
 		
-		#region Update, Render
+		#region Render
 		
-		//TODO: Does DrawEngine2d really need an Update method?
-		public void Update()
-		{
-			//foreach(Layer layer in Layers.Values)
-				//layer.Update();
-		}
+		//TODO: Remove this stupid workaround.
+		private Boolean SecondBufferFilled;
 		
 		public void Render()
 		{
-			if(!RenderRequired)
-				return;
-			ResetRenderRequired();
+			if(RenderRequired)
+			{
+				SecondBufferFilled = false;
+				RenderWork();
+			}
+			else if (!SecondBufferFilled)//TODO: Remove this stupid workaround.
+			{
+				SecondBufferFilled = true;
+				RenderWork();
+			}
 			
+			GraphicsContext.SwapBuffers();
+		}
+		
+		//TODO: Remove this stupid workaround.
+		private void RenderWork()
+		{
+			//Move this all back to the proper Render method
+			// once the workaround isn't needed.
+			ResetRenderRequired();
+				
 			GraphicsContext.Clear();
 			
 			foreach(LayerBase layer in Layers.Values)
 				layer.Render();
-			
-			GraphicsContext.SwapBuffers();
 		}
 		
 		#endregion

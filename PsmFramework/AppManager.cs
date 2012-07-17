@@ -14,9 +14,9 @@ namespace PsmFramework
 	{
 		#region Constructor, Dispose
 		
-		public AppManager(AppOptionsBase options, GraphicsContext gc, FpsPresets maxFps)
+		public AppManager(AppOptionsBase options, GraphicsContext gc)//, FpsPresets maxFps)
 		{
-			Initialize(options, gc, maxFps);
+			Initialize(options, gc);//, maxFps);
 		}
 		
 		public void Dispose()
@@ -28,16 +28,19 @@ namespace PsmFramework
 		
 		#region Initialize, Cleanup
 		
-		private void Initialize(AppOptionsBase options, GraphicsContext gc, FpsPresets maxFps)
+		private void Initialize(AppOptionsBase options, GraphicsContext gc)//, FpsPresets maxFps)
 		{
 			SetRunStateToInitializing();
 			UpdateRunState();
 			
 			InitializeOptions(options);
 			InitializeGraphics(gc);
-			InitializePerformance();
-			InitializeTimers();
-			InitializeFpsGovernor(maxFps);
+			
+			InitializeNewTimers();
+			InitializePerformance();//TODO: Delete me
+			InitializeTimers();//TODO: Delete me
+			//InitializeFpsGovernor(maxFps);//TODO: Delete me
+			
 			InitializeModes();
 			InitializeInput();
 		}
@@ -45,11 +48,14 @@ namespace PsmFramework
 		private void Cleanup()
 		{
 			CleanupInput();
-			CleanupFpsGovernor();
-			CleanupOptions();
-			CleanupPerformance();
 			CleanupModes();
+			
+			CleanupNewTimers();
+			//CleanupFpsGovernor();//TODO: Delete me
+			CleanupPerformance();//TODO: Delete me
+			
 			CleanupGraphics();
+			CleanupOptions();
 		}
 		
 		#endregion
@@ -60,13 +66,13 @@ namespace PsmFramework
 		{
 			SetRunStateToRunning();
 			InitializeTimers();
-			InitializeFpsGovernor(DefaultFpsLimit);
+			//InitializeFpsGovernor(DefaultFpsLimit);
 			
 			InitializeCurrentMode();
 			
 			while (RunState != RunState.Ending)
 			{
-				FpsGovernor();
+				//FpsGovernor();
 				RecalcTimers();
 				
 				SystemEvents.CheckEvents();
@@ -184,6 +190,96 @@ namespace PsmFramework
 		
 		#endregion
 		
+		#region New Timers, Performace, FpsGovernor
+		
+		private void InitializeNewTimers()
+		{
+			LoopTimer = new Stopwatch();
+			UpdateTimer = new Stopwatch();
+			RenderTimer = new Stopwatch();
+			SwapBuffersTimer = new Stopwatch();
+			
+			PreviousLoopStart = DateTime.UtcNow;
+			LoopStart = PreviousLoopStart;
+		}
+		
+		private void CleanupNewTimers()
+		{
+			LoopTimer.Stop();
+			LoopTimer = null;
+			UpdateTimer.Stop();
+			UpdateTimer = null;
+			RenderTimer.Stop();
+			RenderTimer = null;
+			SwapBuffersTimer.Stop();
+			SwapBuffersTimer = null;
+		}
+		
+		private Stopwatch LoopTimer;
+		private Stopwatch UpdateTimer;
+		private Stopwatch RenderTimer;
+		private Stopwatch SwapBuffersTimer;
+		
+		private TimeSpan UpdateLength;
+		private TimeSpan RenderLength;
+		private TimeSpan SwapBuffersLength;
+		private TimeSpan LoopLength;
+		
+		//Be wary of using these for game logic because of ntp time changes.
+		private DateTime PreviousLoopStart;
+		private DateTime LoopStart;
+		
+		private void StartLoopTimer()
+		{
+		}
+		
+		private void CompleteLoopTimer()
+		{
+		}
+		
+		private void StartUpdateTimer()
+		{
+		}
+		
+		private void CompleteUpdateTimer()
+		{
+		}
+		
+		private void StartRenderTimer()
+		{
+		}
+		
+		private void CompleteRenderTimer()
+		{
+		}
+		
+		private void StartSwapBuffersTimer()
+		{
+		}
+		
+		private void CompleteSwapBuffersTimer()
+		{
+		}
+		
+		/// <summary>
+		/// Tracks the time since the last frame was completed.
+		/// It includes time spent during pauses so this is not 
+		/// appropriate for game logic.
+		/// </summary>
+		public TimeSpan TimeSinceLastFrame { get; private set; }
+		
+		/// <summary>
+		/// Same as TimeSinceLastFrame except this ignores time spent while
+		/// the game is paused.
+		/// </summary>
+		public TimeSpan TimeSinceLastGameFrame { get; private set; }
+		
+		private void LimitFps()
+		{
+		}
+		
+		#endregion
+		
 		#region Performance
 		
 		private void InitializePerformance()
@@ -232,43 +328,43 @@ namespace PsmFramework
 		
 		#region Fps Governor
 		
-		private void InitializeFpsGovernor(FpsPresets defaultFpsLimit)
-		{
-			DefaultFpsLimit = defaultFpsLimit;
-			PausedFpsLimit = FpsPresets.Max15Fps;
-			NextUpdate = TickCount;
-			
-			FpsLimiter = Stopwatch.StartNew();
-		}
+//		private void InitializeFpsGovernor(FpsPresets defaultFpsLimit)
+//		{
+//			DefaultFpsLimit = defaultFpsLimit;
+//			PausedFpsLimit = FpsPresets.Max15Fps;
+//			NextUpdate = TickCount;
+//			
+//			FpsLimiter = Stopwatch.StartNew();
+//		}
 		
-		private void CleanupFpsGovernor()
-		{
-			FpsLimiter.Stop();
-			FpsLimiter = null;
-		}
+//		private void CleanupFpsGovernor()
+//		{
+//			FpsLimiter.Stop();
+//			FpsLimiter = null;
+//		}
 		
 		//TODO: Change so that if current update exceeds budget, delay is shortened or eliminated.
-		private void FpsGovernor()
-		{
-			if (RunState != RunState.Paused)
-				CurrentFpsLimit = CurrentMode.UseCustomFpsLimit ? CurrentMode.FpsLimit : DefaultFpsLimit;
-			else
-				CurrentFpsLimit = PausedFpsLimit;
-			
-			if (CurrentFpsLimit != FpsPresets.UnlimitedFps)
-			{
-				if (NextUpdate > TickCount)
-					Thread.Sleep((Int32)(NextUpdate - TickCount));
-				NextUpdate = TickCount + (1000 / (Int32)CurrentFpsLimit);
-			}
-		}
+//		private void FpsGovernor()
+//		{
+//			if (RunState != RunState.Paused)
+//				CurrentFpsLimit = CurrentMode.UseCustomFpsLimit ? CurrentMode.FpsLimit : DefaultFpsLimit;
+//			else
+//				CurrentFpsLimit = PausedFpsLimit;
+//			
+//			if (CurrentFpsLimit != FpsPresets.UnlimitedFps)
+//			{
+//				if (NextUpdate > TickCount)
+//					Thread.Sleep((Int32)(NextUpdate - TickCount));
+//				NextUpdate = TickCount + (1000 / (Int32)CurrentFpsLimit);
+//			}
+//		}
 		
-		private FpsPresets DefaultFpsLimit;
-		private FpsPresets PausedFpsLimit;
-		private FpsPresets CurrentFpsLimit;
-		private Int64 NextUpdate;
-		
-		private Stopwatch FpsLimiter;
+//		private FpsPresets DefaultFpsLimit;
+//		private FpsPresets PausedFpsLimit;
+//		private FpsPresets CurrentFpsLimit;
+//		private Int64 NextUpdate;
+//		
+//		private Stopwatch FpsLimiter;
 		
 		#endregion
 		

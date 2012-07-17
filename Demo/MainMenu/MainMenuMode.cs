@@ -104,12 +104,12 @@ namespace Demo.MainMenu
 		
 		#endregion
 		
-		#region Fps Governor
-		
-		public override Boolean UseCustomFpsLimit { get { return true; } }
-		public override FpsPresets FpsLimit { get { return FpsPresets.Max15Fps; } }
-		
-		#endregion
+		//#region Fps Governor
+		//
+		//public override Boolean UseCustomFpsLimit { get { return true; } }
+		//public override FpsPresets FpsLimit { get { return FpsPresets.Max15Fps; } }
+		//
+		//#endregion
 		
 		#region Mode Factory Delegate
 		

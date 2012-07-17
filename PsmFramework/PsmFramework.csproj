@@ -204,7 +204,6 @@
     <Compile Include="AppManager.cs" />
     <Compile Include="AppOptionsBase.cs" />
     <Compile Include="AppSaveDataBase.cs" />
-    <Compile Include="FpsPresets.cs" />
     <Compile Include="IDisposablePlus.cs" />
     <Compile Include="RandomGenerator.cs" />
     <Compile Include="RunState.cs" />
