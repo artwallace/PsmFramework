@@ -391,6 +391,17 @@ namespace PsmFramework.Engines.DrawEngine2d
 			GraphicsContext.SetTexture(index, Textures[key]);
 		}
 		
+		public Texture2dPlus GetTexture(String key)
+		{
+			if(String.IsNullOrWhiteSpace(key))
+				throw new ArgumentNullException();
+			
+			if(!Textures.ContainsKey(key))
+				throw new ArgumentException("Key is unknown.");
+			
+			return Textures[key];
+		}
+		
 		#endregion
 		
 		#region TiledTexture Manager

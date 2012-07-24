@@ -5,7 +5,7 @@ using Sce.PlayStation.Core.Graphics;
 
 namespace PsmFramework.Engines.DrawEngine2d.Support
 {
-	internal static class DebugFont
+	public static class DebugFont
 	{
 		public const String TextureKey = "DebugFont";
 		
@@ -28,7 +28,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 			// that is just a convenience. The data from both will be 
 			// used during the loop.
 			foreach(Char c in upper.Keys)
-				DecodePixelData(ref upper, ref lower, ref texturePixels, c);
+				DecodePixelData(ref upper, ref lower, ref texturePixels, c, textureWidth);
 			
 			Texture2dPlus texture = new Texture2dPlus(drawEngine2d,TextureCachePolicy.KeepAlways, TextureKey, textureWidth, textureHeight, PixelFormat.Luminance);
 			texture.SetPixels(0, texturePixels, PixelFormat.Luminance);
@@ -167,30 +167,28 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 			lower[c] = lowerData;
 		}
 		
-		private static void DecodePixelData(ref Dictionary<Char, UInt32> upper, ref Dictionary<Char, UInt32> lower, ref Byte[] texturePixels, Char c)
+		private static void DecodePixelData(ref Dictionary<Char, UInt32> upper, ref Dictionary<Char, UInt32> lower, ref Byte[] texturePixels, Char c, Int32 textureWidth)
 		{
 			Int32 charPstn = GetGlyphIndex(c);
-			Int32 charTextureOffset = charPstn * FontWidth * FontHeight;
+			Int32 charTextureOffset = charPstn * FontWidth;
 			Int32 halfway = FontWidth * FontHeight / 2;
 			Boolean pixelIsLit;
 			
 			for (Int32 y = 0; y < FontHeight; y++)
 			{
-				Int32 rowPixelOffset = y * FontHeight;
+				Int32 textureRowPixelOffset = y * textureWidth;
+				Int32 charRowPixelOffset = y * FontWidth;
 				
 				for (Int32 x = 0; x < FontWidth; x++)
 				{
-					Int32 charPixelIndex = rowPixelOffset + x;
+					Int32 charPixelIndex =  x + charRowPixelOffset;
 					
 					if(charPixelIndex < halfway)
 						pixelIsLit = ((upper[c] & (1 << charPixelIndex)) != 0);
 					else
 						pixelIsLit = ((lower[c] & (1 << (charPixelIndex - halfway))) != 0);
 					
-					//(c * CharSizei.X + x) + y * font_size.X
-					//TODO: This calc seems incorrect. Verify fix is correct.
-					//Int32 texturePixelIndex = (charPstn * FontWidth + x) + (FontWidth * y);
-					Int32 texturePixelIndex = charTextureOffset + charPixelIndex;
+					Int32 texturePixelIndex = textureRowPixelOffset + charTextureOffset + x;
 					
 					texturePixels[texturePixelIndex] = pixelIsLit ? PixelLit : PixelDark;
 				}

@@ -7,7 +7,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 	{
 		#region Constructor
 		
-		public Texture2dArea(Int32 left, Int32 top, Int32 right, Int32 bottom)
+		public Texture2dArea(Int32 left, Int32 top, Int32 right, Int32 bottom, Int32 textureWidth, Int32 textureHeight)
 		{
 			_Left = left;
 			_Top = top;
@@ -24,17 +24,17 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 			
 			_CoordinateArray = new Single[8];
 			//TopLeft
-			_CoordinateArray[0] = left;
-			_CoordinateArray[1] = top;
+			_CoordinateArray[0] = (Single)left / textureWidth;
+			_CoordinateArray[1] = (Single)top / textureHeight;
 			//TopRight
-			_CoordinateArray[2] = right;
-			_CoordinateArray[3] = top;
+			_CoordinateArray[2] = (Single)right / textureWidth;
+			_CoordinateArray[3] = (Single)top / textureHeight;
 			//BottomRight
-			_CoordinateArray[4] = right;
-			_CoordinateArray[5] = bottom;
+			_CoordinateArray[4] = (Single)right / textureWidth;
+			_CoordinateArray[5] = (Single)bottom / textureHeight;
 			//BottomLeft
-			_CoordinateArray[6] = left;
-			_CoordinateArray[7] = bottom;
+			_CoordinateArray[6] = (Single)left / textureWidth;
+			_CoordinateArray[7] = (Single)bottom / textureHeight;
 		}
 		
 		#endregion

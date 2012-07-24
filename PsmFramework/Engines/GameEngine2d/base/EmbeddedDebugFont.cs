@@ -163,7 +163,8 @@ namespace Sce.PlayStation.HighLevel.GameEngine2D.Base
 						else
 							white = ((b & (1 << (int)(index - 32))) != 0);
 						
-						data[(c * CharSizei.X + x) + y * font_size.X] = (byte)(white ? 0xff : 0x00);
+						Int32 ddd = (c * CharSizei.X + x) + y * font_size.X;
+						data[ddd] = (byte)(white ? 0xff : 0x00);
 					}
 				}
 			}

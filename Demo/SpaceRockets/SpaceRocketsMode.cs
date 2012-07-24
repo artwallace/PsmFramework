@@ -42,9 +42,16 @@ namespace Demo.SpaceRockets
 			sss2.SetPositionFromCenter(new Coordinate2(96f, 32f));
 			//sss2.Rotation = 45.0f;
 			
+			Texture2dPlus testT2d = DrawEngine2d.GetTexture(DebugFont.TextureKey);
+			TiledTexture ttTest = new TiledTexture(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, "test", testT2d);
+			ttTest.CreateColumnIndex(1);
+			SpriteGroup testSG = new SpriteGroup(l2, ttTest);
+			Sprite testSS = new Sprite(testSG, new TiledTextureIndex(0));
+			testSS.Position = new Coordinate2(32f, 200f);
+			
 			LayerBase debugOverlay = DrawEngine2d.GetOrCreateScreenLayer(2);
 			_DebugTextLabel = new DebugLabel(debugOverlay);
-			_DebugTextLabel.Text = "Test! Test! Test!";
+			_DebugTextLabel.Text = "AAA";
 			_DebugTextLabel.Position = new Coordinate2(100.0f, 100.0f);
 		}
 		
