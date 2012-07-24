@@ -1,9 +1,14 @@
 # Build Folders
 [Bb]in/
 [Oo]bj/
+ipch/
+Debug/
 
 *.pidb
 *.userprefs
+*.sdf
+*.suo
+*.user
 
 .DS_Store
 .DS_Store?
