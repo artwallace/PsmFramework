@@ -106,6 +106,36 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		#endregion
 		
+		#region Performance Tracking
+		
+		private void InitializePerformanceTracking()
+		{
+			ResetDrawArrayCallsCounter();
+		}
+		
+		private void CleanupPerformanceTracking()
+		{
+		}
+		
+		public Int32 DrawArrayCallsCounter;
+		
+		public void ResetDrawArrayCallsCounter()
+		{
+			DrawArrayCallsCounter = 0;
+		}
+		
+		public void IncrementDrawArrayCallsCounter()
+		{
+			DrawArrayCallsCounter++;
+		}
+		
+		public Int32 GetDrawArrayCallsCount()
+		{
+			return DrawArrayCallsCounter;
+		}
+		
+		#endregion
+		
 		#region GraphicsContext
 		
 		private void InitializeGraphicsContext(GraphicsContext graphicsContext)
@@ -114,22 +144,40 @@ namespace PsmFramework.Engines.DrawEngine2d
 			
 			ScreenWidth = GraphicsContext.Screen.Rectangle.Width;
 			ScreenHeight = GraphicsContext.Screen.Rectangle.Height;
+			
+			FrameBufferWidth = GraphicsContext.GetFrameBuffer().Width;
+			FrameBufferWidthAsSingle = (Single)FrameBufferWidth;
+			FrameBufferHeight = GraphicsContext.GetFrameBuffer().Height;
+			FrameBufferHeightAsSingle = (Single)FrameBufferHeight;
 		}
 		
 		private void CleanupGraphicsContext()
 		{
-			GraphicsContext = null;
-			
 			ScreenWidth = 0;
 			ScreenHeight = 0;
+			
+			FrameBufferWidth = 0;
+			FrameBufferWidthAsSingle = 0f;
+			FrameBufferHeight = 0;
+			FrameBufferHeightAsSingle = 0f;
+			
+			GraphicsContext = null;
 		}
 		
 		//TODO: Make this private with wrappers for common functions.
 		//Prevent drawables from doing crazy stuff.
 		internal GraphicsContext GraphicsContext;
 		
-		public Single ScreenWidth { get; private set; }
-		public Single ScreenHeight { get; private set; }
+		//TODO: We'll need a system for orientation changes
+		// once that is added to psm sdk.
+		public Int32 ScreenWidth { get; private set; }
+		public Int32 ScreenHeight { get; private set; }
+		
+		private Int32 FrameBufferWidth;
+		private Int32 FrameBufferHeight;
+		
+		private Single FrameBufferWidthAsSingle;
+		private Single FrameBufferHeightAsSingle;
 		
 		#endregion
 		
@@ -579,11 +627,6 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		private void InitializeGraphics()
 		{
-			FrameBufferWidth = GraphicsContext.GetFrameBuffer().Width;
-			FrameBufferWidthAsSingle = (Single)FrameBufferWidth;
-			FrameBufferHeight = GraphicsContext.GetFrameBuffer().Height;
-			FrameBufferHeightAsSingle = (Single)FrameBufferHeight;
-			
 			//TODO: I'm not sure if the ZNear and ZFar are correct.
 			
 			//TODO: Is this one pixel too tall and wide?
@@ -620,12 +663,6 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		public Matrix4 ProjectionMatrix { get; private set; }
 		public Matrix4 ModelViewMatrix { get; private set; }
-		
-		private Int32 FrameBufferWidth;
-		private Int32 FrameBufferHeight;
-		
-		private Single FrameBufferWidthAsSingle;
-		private Single FrameBufferHeightAsSingle;
 		
 		private Single ProjectionMatrixLeft;
 		private Single ProjectionMatrixRight;
@@ -766,36 +803,6 @@ namespace PsmFramework.Engines.DrawEngine2d
 		}
 		
 		internal FontShader FontShader;
-		
-		#endregion
-		
-		#region Performance Tracking
-		
-		private void InitializePerformanceTracking()
-		{
-			ResetDrawArrayCallsCounter();
-		}
-		
-		private void CleanupPerformanceTracking()
-		{
-		}
-		
-		public Int32 DrawArrayCallsCounter;
-		
-		public void ResetDrawArrayCallsCounter()
-		{
-			DrawArrayCallsCounter = 0;
-		}
-		
-		public void IncrementDrawArrayCallsCounter()
-		{
-			DrawArrayCallsCounter++;
-		}
-		
-		public Int32 GetDrawArrayCallsCount()
-		{
-			return DrawArrayCallsCounter;
-		}
 		
 		#endregion
 	}

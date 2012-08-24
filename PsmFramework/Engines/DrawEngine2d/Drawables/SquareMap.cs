@@ -6,9 +6,9 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 	//Does not support individual tile rotation nor scaling.
 	//Does support world rotation.
 	//Does support map and world scaling.
-	public class Background
+	public class SquareMap : MapBase
 	{
-		public Background()
+		public SquareMap()
 		{
 		}
 	}

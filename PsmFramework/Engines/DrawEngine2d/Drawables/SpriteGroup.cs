@@ -83,7 +83,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			Layer.DrawEngine2d.GraphicsContext.SetShaderProgram(Shader.ShaderProgram);
 			Layer.DrawEngine2d.GraphicsContext.SetTexture(0, TiledTexture.Texture);
 			
-			foreach(Sprite sprite in Sprites)
+			foreach(SpriteGroupItem sprite in Sprites)
 			{
 				
 				Matrix4 scaleMatrix = GetScalingMatrix(sprite.Scale, sprite.TileWidth, sprite.TileHeight);
@@ -155,23 +155,23 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void InitializeSprites()
 		{
-			Sprites = new List<Sprite>();
+			Sprites = new List<SpriteGroupItem>();
 		}
 		
 		private void CleanupSprites()
 		{
-			Sprite[] sprites = Sprites.ToArray();
+			SpriteGroupItem[] sprites = Sprites.ToArray();
 			
-			foreach(Sprite sprite in sprites)
+			foreach(SpriteGroupItem sprite in sprites)
 				sprite.Dispose();
 			Sprites.Clear();
 			
 			Sprites = null;
 		}
 		
-		private List<Sprite> Sprites;
+		private List<SpriteGroupItem> Sprites;
 		
-		internal void AddSprite(Sprite sprite)
+		internal void AddSprite(SpriteGroupItem sprite)
 		{
 			if(sprite == null)
 				throw new ArgumentNullException();
@@ -183,7 +183,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			Layer.DrawEngine2d.SetRenderRequired();
 		}
 		
-		internal void RemoveSprite(Sprite sprite)
+		internal void RemoveSprite(SpriteGroupItem sprite)
 		{
 			if(sprite == null)
 				throw new ArgumentNullException();

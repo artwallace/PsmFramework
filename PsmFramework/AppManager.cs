@@ -161,6 +161,7 @@ namespace PsmFramework
 		private void InitializeGraphics(GraphicsContext gc)
 		{
 			GraphicsContext = gc;
+			
 			ScreenWidth = GraphicsContext.Screen.Width;
 			ScreenHeight = GraphicsContext.Screen.Height;
 			ScreenRectangle = GraphicsContext.Screen.Rectangle;

@@ -5,13 +5,13 @@ using PsmFramework.Engines.DrawEngine2d.Textures;
 namespace PsmFramework.Engines.DrawEngine2d.Drawables
 {
 	//This is not a Drawable, the group is.
-	public sealed class Sprite : IDisposable
+	public sealed class SpriteGroupItem : IDisposable
 	{
 		//TODO: Convert to a struct once we get it working properly.
 		
 		#region Constructor, Dispose
 		
-		public Sprite(SpriteGroup spriteGroup, TiledTextureIndex textureIndex)
+		public SpriteGroupItem(SpriteGroup spriteGroup, TiledTextureIndex textureIndex)
 		{
 			Initialize(spriteGroup, textureIndex);
 		}

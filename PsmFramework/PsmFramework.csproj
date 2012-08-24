@@ -68,8 +68,6 @@
     <Compile Include="Engines\DrawEngine2d\LayerBase.cs" />
     <Compile Include="Engines\DrawEngine2d\ScreenLayer.cs" />
     <Compile Include="Engines\DrawEngine2d\WorldLayer.cs" />
-    <Compile Include="Engines\DrawEngine2d\Drawables\Background.cs" />
-    <Compile Include="Engines\DrawEngine2d\Drawables\BackgroundTile.cs" />
     <Compile Include="Engines\DrawEngine2d\Drawables\Circle.cs" />
     <Compile Include="Engines\DrawEngine2d\Drawables\DebugLabel.cs" />
     <Compile Include="Engines\DrawEngine2d\Drawables\DrawableBase.cs" />
@@ -78,7 +76,6 @@
     <Compile Include="Engines\DrawEngine2d\Drawables\Line.cs" />
     <Compile Include="Engines\DrawEngine2d\Drawables\Point.cs" />
     <Compile Include="Engines\DrawEngine2d\Drawables\Rectangle.cs" />
-    <Compile Include="Engines\DrawEngine2d\Drawables\Sprite.cs" />
     <Compile Include="Engines\DrawEngine2d\Drawables\SpriteGroup.cs" />
     <Compile Include="Engines\DrawEngine2d\Drawables\SpriteTranslationKey.cs" />
     <Compile Include="Engines\DrawEngine2d\Shaders\FontShader.cs" />
@@ -209,6 +206,15 @@
     <Compile Include="RunState.cs" />
     <Compile Include="TextureManager.cs" />
     <Compile Include="TextureUsers.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\Triangle.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\SpriteGroupItem.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\MapBase.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\SquareMap.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\SquareMapTile.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\HexMap.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\HexMapTile.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\DiamondIsometricMap.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\StaggeredIsometricMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedShaderProgram Include="Engines\DrawEngine2d\Shaders\Font.fcg" />

@@ -36,9 +36,9 @@ namespace Demo.SpaceRockets
 			
 			LayerBase l2 = DrawEngine2d.GetOrCreateWorldLayer(1);
 			SpriteGroup sssg = new SpriteGroup(l2, tt);
-			Sprite sss1 = new Sprite(sssg, new TiledTextureIndex(0));
+			SpriteGroupItem sss1 = new SpriteGroupItem(sssg, new TiledTextureIndex(0));
 			sss1.SetPositionFromCenter(new Coordinate2(32f, 32f));
-			Sprite sss2 = new Sprite(sssg, new TiledTextureIndex(0));
+			SpriteGroupItem sss2 = new SpriteGroupItem(sssg, new TiledTextureIndex(0));
 			sss2.SetPositionFromCenter(new Coordinate2(96f, 32f));
 			//sss2.Rotation = 45.0f;
 			
@@ -46,7 +46,7 @@ namespace Demo.SpaceRockets
 			TiledTexture ttTest = new TiledTexture(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, "test", testT2d);
 			ttTest.CreateColumnIndex(1);
 			SpriteGroup testSG = new SpriteGroup(l2, ttTest);
-			Sprite testSS = new Sprite(testSG, new TiledTextureIndex(0));
+			SpriteGroupItem testSS = new SpriteGroupItem(testSG, new TiledTextureIndex(0));
 			testSS.Position = new Coordinate2(32f, 200f);
 			
 			LayerBase debugOverlay = DrawEngine2d.GetOrCreateScreenLayer(2);
