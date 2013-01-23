@@ -35,6 +35,7 @@ namespace Demo.SpaceRockets
 			tt.CreateColumnIndex(1);
 			
 			LayerBase l2 = DrawEngine2d.GetOrCreateWorldLayer(1);
+			
 			SpriteGroup sssg = new SpriteGroup(l2, tt);
 			SpriteGroupItem sss1 = new SpriteGroupItem(sssg, new TiledTextureIndex(0));
 			sss1.SetPositionFromCenter(new Coordinate2(32f, 32f));
@@ -51,7 +52,7 @@ namespace Demo.SpaceRockets
 			
 			LayerBase debugOverlay = DrawEngine2d.GetOrCreateScreenLayer(2);
 			_DebugTextLabel = new DebugLabel(debugOverlay);
-			_DebugTextLabel.Text = "AAA";
+			_DebugTextLabel.Text = "I";
 			_DebugTextLabel.Position = new Coordinate2(100.0f, 100.0f);
 		}
 		

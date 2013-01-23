@@ -158,6 +158,8 @@ namespace PsmFramework
 		
 		#region Graphics
 		
+		//TODO: This doesn't take screen rotation into account because PSM doesn't either.
+		
 		private void InitializeGraphics(GraphicsContext gc)
 		{
 			GraphicsContext = gc;
@@ -165,6 +167,14 @@ namespace PsmFramework
 			ScreenWidth = GraphicsContext.Screen.Width;
 			ScreenHeight = GraphicsContext.Screen.Height;
 			ScreenRectangle = GraphicsContext.Screen.Rectangle;
+			
+			DevicePpiX = SystemParameters.DisplayDpiX;
+			DevicePpiY = SystemParameters.DisplayDpiY;
+			DeviceSizeWidth = (Single)Math.Round(ScreenWidth / DevicePpiX, 1);
+			DeviceSizeHeight = (Single)Math.Round(ScreenHeight / DevicePpiY, 1);
+			
+			DevicePpi = CalculateDevicePpi();
+			DeviceSize = CalculateDeviceSize();
 		}
 		
 		private void CleanupGraphics()
@@ -177,6 +187,34 @@ namespace PsmFramework
 		public Single ScreenWidth { get; private set; }
 		public Single ScreenHeight { get; private set; }
 		public ImageRect ScreenRectangle { get; private set; }
+		public Single DevicePpi { get; private set; }
+		public Single DevicePpiX { get; private set; }
+		public Single DevicePpiY { get; private set; }
+		public Single DeviceSize { get; private set; }
+		public Single DeviceSizeWidth { get; private set; }
+		public Single DeviceSizeHeight { get; private set; }
+		
+		//public Single DeviceStyle { get; private set; }
+		
+		private Single CalculateDevicePpi()
+		{
+			if(DevicePpiX < 1 || DevicePpiY < 1)
+				throw new InvalidProgramException();
+			
+			if(DevicePpiX == DevicePpiY)
+				return DevicePpiX;
+			
+			//Is it best to just average them???
+			return (Single)Math.Round((DevicePpiX + DevicePpiY) / 2, 1);
+		}
+		
+		private Single CalculateDeviceSize()
+		{
+			Single diagonalInPixels = (Single)Math.Sqrt(Math.Pow(ScreenWidth, 2) + Math.Pow(ScreenHeight, 2));
+			Single diagonalInInches = (Single)Math.Round(diagonalInPixels / DevicePpi, 1);
+			
+			return diagonalInInches;
+		}
 		
 		#endregion
 		

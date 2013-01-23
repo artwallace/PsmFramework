@@ -23,7 +23,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		protected override void Initialize()
 		{
-			//InitializeRenderingCache();
+			InitializeRenderingCache();
 			
 			InitializeVertices();
 			InitializeIndices();
@@ -39,7 +39,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		protected override void Cleanup()
 		{
-			//CleanupRenderingCache();
+			CleanupRenderingCache();
 			
 			CleanupScalingMatrixCache();
 			CleanupRotationMatrixCache();
@@ -101,10 +101,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			//Set up the drawing
 			
 			//TODO: These need to be changed as little as possible, as seen in GOSLlib.
+			//or maybe not???
 			DrawEngine2d.GraphicsContext.SetShaderProgram(Shader.ShaderProgram);
 			DrawEngine2d.SetOpenGlTexture(DebugFont.TextureKey);
 			
-			GenerateCachedRendering();
+			if(RenderingRecacheRequired)
+				GenerateCachedRendering();
 			
 			foreach(RenderingCacheData cacheData in CachedRendering)
 			{
@@ -115,10 +117,10 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				VertexBuffer.SetVertices(1, textureCoordinates);
 				DrawEngine2d.GraphicsContext.SetVertexBuffer(0, VertexBuffer);
 				
-				Matrix4 scaleMatrix = GetScalingMatrix(20.0f);
-				//Matrix4 rotMatrix = GetRotationMatrix(.5f);
+				Matrix4 scaleMatrix = GetScalingMatrix(10.0f);
+				//Matrix4 rotMatrix = GetRotationMatrix(3f);
 				Matrix4 transMatrix = GetTranslationMatrix(cacheData.Position.X, cacheData.Position.Y, 1.0f, 0f);
-				Matrix4 modelMatrix = transMatrix * scaleMatrix;// * rotMatrix
+				Matrix4 modelMatrix = transMatrix * scaleMatrix;// * rotMatrix;
 				Matrix4 worldViewProj = DrawEngine2d.ProjectionMatrix * DrawEngine2d.ModelViewMatrix * modelMatrix;
 				
 				Shader.ShaderProgram.SetUniformValue(0, ref worldViewProj);
