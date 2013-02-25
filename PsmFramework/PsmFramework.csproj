@@ -162,9 +162,6 @@
     <Compile Include="Engines\Messaging\NotificationMessageWithCallback.cs" />
     <Compile Include="Engines\Messaging\WeakAction.cs" />
     <Compile Include="Engines\Messaging\WeakActionGeneric.cs" />
-    <Compile Include="Engines\PadServer\ChannelStates.cs" />
-    <Compile Include="Engines\PadServer\ControllerTypes.cs" />
-    <Compile Include="Engines\PadServer\GamepadReader.cs" />
     <Compile Include="Modes\DrawEngine2dModeBase.cs" />
     <Compile Include="Modes\GameEngine2dModeBase.cs" />
     <Compile Include="Modes\ModeBase.cs" />

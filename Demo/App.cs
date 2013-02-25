@@ -45,24 +45,24 @@ namespace Demo
 		
 		#region GenerateGraphicsContext
 		
-		private static Int32 DebugMinScreenWidth = 854;
-		private static Int32 DebugMinScreenHeight = 480;
-		
-		private static Int32 DebugMaxScreenWidth = 1024;
-		private static Int32 DebugMaxScreenHeight = 768;
+//		private static Int32 DebugMinScreenWidth = 854;
+//		private static Int32 DebugMinScreenHeight = 480;
+//		
+//		private static Int32 DebugMaxScreenWidth = 1024;
+//		private static Int32 DebugMaxScreenHeight = 768;
 		
 		private static GraphicsContext GenerateGraphicsContext()
 		{
 			//Return a normal GC if not debugging.
-			if (!Debugger.IsAttached)
+			//if (!Debugger.IsAttached)
 				return new GraphicsContext();
 			
-			Random r = new Random(System.Environment.TickCount);
-			
-			Int32 w = r.Next(DebugMinScreenWidth, DebugMaxScreenWidth + 1);
-			Int32 h = r.Next(DebugMinScreenHeight, DebugMaxScreenHeight + 1);
-			
-			return new GraphicsContext(w, h, PixelFormat.Rgba, PixelFormat.Depth16, MultiSampleMode.Msaa2x);
+//			Random r = new Random(System.Environment.TickCount);
+//			
+//			Int32 w = r.Next(DebugMinScreenWidth, DebugMaxScreenWidth + 1);
+//			Int32 h = r.Next(DebugMinScreenHeight, DebugMaxScreenHeight + 1);
+//			
+//			return new GraphicsContext(w, h, PixelFormat.Rgba, PixelFormat.Depth16, MultiSampleMode.Msaa2x);
 		}
 		
 		#endregion
