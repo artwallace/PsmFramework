@@ -13,8 +13,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 	{
 		//This class will evolve into a more advanced sprite class with more
 		// complicated culling due to rotation and scaling.
-		//A lot of the calcs need to be moved to the sprite class and only recalced
-		// when the props change.
+		//TODO: A lot of the calcs need to be moved to the sprite class and only recalced when the props change.
 		
 		#region Constructor, Dispose
 		
@@ -85,12 +84,11 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			
 			foreach(SpriteGroupItem sprite in Sprites)
 			{
-				
 				Matrix4 scaleMatrix = GetScalingMatrix(sprite.Scale, sprite.TileWidth, sprite.TileHeight);
 				Matrix4 rotMatrix = GetRotationMatrix(sprite.Rotation);
 				Matrix4 transMatrix = GetTranslationMatrix(sprite.Position.X, sprite.Position.Y, sprite.Scale, sprite.Rotation);
 				Matrix4 modelMatrix = transMatrix * rotMatrix * scaleMatrix;
-				Matrix4 worldViewProj = Layer.DrawEngine2d.ProjectionMatrix * Layer.DrawEngine2d.ModelViewMatrix * modelMatrix;
+				Matrix4 worldViewProj = Layer.DrawEngine2d.WorldCameraProjectionMatrix * modelMatrix;// * Layer.DrawEngine2d.ModelViewMatrix
 				
 				Shader.ShaderProgram.SetUniformValue(0, ref worldViewProj);
 				

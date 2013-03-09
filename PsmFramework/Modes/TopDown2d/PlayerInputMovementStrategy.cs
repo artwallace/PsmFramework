@@ -33,7 +33,7 @@ namespace PsmFramework.Modes.TopDown2d
 		{
 			if(Mgr.GamePadData.AnalogLeftX > 0.1f || Mgr.GamePadData.AnalogLeftX < -0.1f)
 			{
-				throw new SystemException("Testing.");
+				//Testing.
 			}
 		}
 		

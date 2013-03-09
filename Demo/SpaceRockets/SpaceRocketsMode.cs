@@ -37,8 +37,8 @@ namespace Demo.SpaceRockets
 			LayerBase l2 = DrawEngine2d.GetOrCreateWorldLayer(1);
 			
 			SpriteGroup sssg = new SpriteGroup(l2, tt);
-			SpriteGroupItem sss1 = new SpriteGroupItem(sssg, new TiledTextureIndex(0));
-			sss1.SetPositionFromCenter(new Coordinate2(32f, 32f));
+			_Ship1 = new SpriteGroupItem(sssg, new TiledTextureIndex(0));
+			_Ship1.SetPositionFromCenter(new Coordinate2(0f, 0f));
 			SpriteGroupItem sss2 = new SpriteGroupItem(sssg, new TiledTextureIndex(0));
 			sss2.SetPositionFromCenter(new Coordinate2(96f, 32f));
 			//sss2.Rotation = 45.0f;
@@ -52,7 +52,7 @@ namespace Demo.SpaceRockets
 			
 			LayerBase debugOverlay = DrawEngine2d.GetOrCreateScreenLayer(2);
 			_DebugTextLabel = new DebugLabel(debugOverlay);
-			_DebugTextLabel.Text = "I";
+			_DebugTextLabel.Text = "LOL";
 			_DebugTextLabel.Position = new Coordinate2(100.0f, 100.0f);
 		}
 		
@@ -77,6 +77,16 @@ namespace Demo.SpaceRockets
 				else
 					Mgr.SetRunStateToRunning();
 			}
+			
+			if (Mgr.GamePad0_Left)
+				_Ship1.Position = new Coordinate2(_Ship1.Position.X - 1f, _Ship1.Position.Y);
+			else if (Mgr.GamePad0_Right)
+				_Ship1.Position = new Coordinate2(_Ship1.Position.X + 1f, _Ship1.Position.Y);
+			
+			if (Mgr.GamePad0_Up)
+				_Ship1.Position = new Coordinate2(_Ship1.Position.X, _Ship1.Position.Y - 1f);
+			else if (Mgr.GamePad0_Down)
+				_Ship1.Position = new Coordinate2(_Ship1.Position.X, _Ship1.Position.Y + 1f);
 		}
 		
 		#endregion
@@ -91,6 +101,8 @@ namespace Demo.SpaceRockets
 		#endregion
 		
 		private DebugLabel _DebugTextLabel;
+		
+		private SpriteGroupItem _Ship1;
 	}
 }
 

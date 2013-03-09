@@ -13,12 +13,12 @@ namespace PsmFramework.Engines.DrawEngine2d
 	{
 		#region Constructor, Dispose
 		
-		public DrawEngine2d(GraphicsContext graphicsContext)
+		public DrawEngine2d(GraphicsContext graphicsContext, CoordinateSystemMode coordinateSystemMode = CoordinateSystemMode.OriginAtUpperLeft)
 		{
 			if (graphicsContext == null)
 				throw new ArgumentNullException();
 			
-			Initialize(graphicsContext);
+			Initialize(graphicsContext, coordinateSystemMode);
 		}
 		
 		public void Dispose()
@@ -33,12 +33,12 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		#region Initialize, Cleanup
 		
-		private void Initialize(GraphicsContext graphicsContext)
+		private void Initialize(GraphicsContext graphicsContext, CoordinateSystemMode coordinateSystemMode)
 		{
-			InitializeGraphicsContext(graphicsContext);
-			InitializeGraphics();
+			InitializeGraphicsContext(graphicsContext, coordinateSystemMode);
 			InitializeClearColor();
-			InitializeCamera();
+			InitializeWorldCamera();
+			InitializeScreenCamera();
 			InitializeRenderRequiredFlag();
 			InitializeShaders();
 			InitializeTexture2dManager();
@@ -59,9 +59,9 @@ namespace PsmFramework.Engines.DrawEngine2d
 			CleanupTexture2dManager();
 			CleanupShaders();
 			CleanupRenderRequiredFlag();
-			CleanupCamera();
+			CleanupScreenCamera();
+			CleanupWorldCamera();
 			CleanupClearColor();
-			CleanupGraphics();
 			CleanupGraphicsContext();
 		}
 		
@@ -115,9 +115,10 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		private void CleanupPerformanceTracking()
 		{
+			ResetDrawArrayCallsCounter();
 		}
 		
-		public Int32 DrawArrayCallsCounter;
+		public Int32 DrawArrayCallsCounter { get; private set; }
 		
 		public void ResetDrawArrayCallsCounter()
 		{
@@ -129,16 +130,11 @@ namespace PsmFramework.Engines.DrawEngine2d
 			DrawArrayCallsCounter++;
 		}
 		
-		public Int32 GetDrawArrayCallsCount()
-		{
-			return DrawArrayCallsCounter;
-		}
-		
 		#endregion
 		
 		#region GraphicsContext
 		
-		private void InitializeGraphicsContext(GraphicsContext graphicsContext)
+		private void InitializeGraphicsContext(GraphicsContext graphicsContext, CoordinateSystemMode coordinateSystemMode)
 		{
 			GraphicsContext = graphicsContext;
 			
@@ -149,10 +145,14 @@ namespace PsmFramework.Engines.DrawEngine2d
 			FrameBufferWidthAsSingle = (Single)FrameBufferWidth;
 			FrameBufferHeight = GraphicsContext.GetFrameBuffer().Height;
 			FrameBufferHeightAsSingle = (Single)FrameBufferHeight;
+			
+			CoordinateSystemMode = coordinateSystemMode;
 		}
 		
 		private void CleanupGraphicsContext()
 		{
+			CoordinateSystemMode = default(CoordinateSystemMode);
+			
 			ScreenWidth = 0;
 			ScreenHeight = 0;
 			
@@ -178,6 +178,8 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		private Single FrameBufferWidthAsSingle;
 		private Single FrameBufferHeightAsSingle;
+		
+		public CoordinateSystemMode CoordinateSystemMode { get; private set; }
 		
 		#endregion
 		
@@ -581,136 +583,134 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		#endregion
 		
-		#region OpenGL Graphics
+		#region WorldCamera
 		
-		//http://en.wikibooks.org/wiki/OpenGL_Programming/Modern_OpenGL_Tutorial_2D
-		
-		//Most OpenGL programs tend to use a perspective projection matrix
-		// to transform the model-space coordinates of a cartesian model into
-		// the "view coordinate" space of the screen.
-		
-		//One of the most common matrices used for orthographic projection
-		// can be defined by a 6-tuple, (left, right, bottom, top, near, far),
-		// which defines the clipping planes. These planes form a box with
-		// the minimum corner at (left, bottom, near) and the maximum
-		// corner at (right, top, far).
-		//The box is translated so that its center is at the origin, then it is
-		// scaled to the unit cube which is defined by having a minimum corner
-		// at (-1,-1,-1) and a maximum corner at (1,1,1).
-		
-		//OpenGL has a special rule to draw fragments at the center of screen pixels,
-		// called "diamond rule" [2] [3]. Consequently, it is recommended to add a
-		// small translation in X,Y before drawing 2D sprite.
-		// glm::translate(glm::mat4(1), glm::vec3(0.375, 0.375, 0.));
-		//or
-		// glMatrixMode (GL_MODELVIEW);
-		// glLoadIdentity ();
-		// glTranslatef (0.375, 0.375, 0.);
-		
-		//http://www.opengl.org/archives/resources/faq/technical/transformations.htm#tran0030
-		
-		//OpenGL works in the following way: You start of a local coordinate system
-		// (of arbitrary units). This coordinate system is transformed to so called
-		// eye space coordinates by the modelview matrix (it is called modelview
-		// matrix, because it combinnes model and view transformations).
-		//The eye space is then transformed to clip space by the projection matrix,
-		// immediately followed by the perspective divide to obtain normalized
-		// device coordinates ( NDC{x,y,z} = Clip{x,y,z}/Clip_w ).
-		// The range [-1,1]^3 in NDC space is mapped to the viewport (x and y)
-		// and the set depth range (z).
-		//So if you leave your transformation matrices (modelview and projection)
-		// identity, then indeed the coordinate ranges [-1,1] will map to the viewport.
-		// However by choosing apropriate transformation and projection you can map
-		// from modelspace units to viewport units arbitrarily.
-		
-		//Essentially, a projection matrix is matrix that projects a vertex on a 2D space.
-		
-		private void InitializeGraphics()
+		private void InitializeWorldCamera()
 		{
-			//TODO: I'm not sure if the ZNear and ZFar are correct.
+			WorldCameraAtOrigin = new Coordinate2(0f, 0f);
+			WorldCameraAtScreenCenter = new Coordinate2(FrameBufferWidth/2, FrameBufferHeight/2);
 			
-			//TODO: Is this one pixel too tall and wide?
-			ProjectionMatrixLeft = 0.0f;
-			ProjectionMatrixRight = FrameBufferWidthAsSingle - 1;
-			ProjectionMatrixBottom = 0.0f;
-			ProjectionMatrixTop = FrameBufferHeightAsSingle - 1;
-			ProjectionMatrixNear = -1.0f;
-			ProjectionMatrixFar = 1.0f;
+			WorldCameraPosition = WorldCameraAtScreenCenter;
+			SetWorldCameraZoomToNormal();
+			SetWorldCameraRotationToNormal();
+		}
+		
+		private void CleanupWorldCamera()
+		{
+			WorldCameraPosition = WorldCameraAtScreenCenter;
+			SetWorldCameraZoomToNormal();
+			SetWorldCameraRotationToNormal();
+		}
+		
+		private Coordinate2 WorldCameraAtOrigin;
+		private Coordinate2 WorldCameraAtScreenCenter;
+		
+		private Coordinate2 _WorldCameraPosition;
+		public Coordinate2 WorldCameraPosition
+		{
+			get { return _WorldCameraPosition; }
+			set
+			{
+				_WorldCameraPosition = value;
+				RecalcWorldCamera();
+			}
+		}
+		
+		private Single WorldCameraZoom;
+		private Single WorldCameraRotation;
+		
+		public Matrix4 WorldCameraProjectionMatrix { get; private set; }
+		
+		private Single WorldCameraProjectionMatrixLeft;
+		private Single WorldCameraProjectionMatrixRight;
+		private Single WorldCameraProjectionMatrixBottom;
+		private Single WorldCameraProjectionMatrixTop;
+		private Single WorldCameraProjectionMatrixNear;
+		private Single WorldCameraProjectionMatrixFar;
+		
+		public void SetWorldCameraAtOrigin()
+		{
+			WorldCameraPosition = WorldCameraAtOrigin;
+		}
+		
+		public void SetWorldCameraAtScreenCenter()
+		{
+			WorldCameraPosition = WorldCameraAtScreenCenter;
+		}
+		
+		public void SetWorldCameraZoomToNormal()
+		{
+			SetRenderRequired();
 			
-			ModelViewMatrixEye = new Vector3(0.0f, FrameBufferHeightAsSingle - 1, 0.0f);
-			ModelViewMatrixCenter = new Vector3(0.0f, FrameBufferHeightAsSingle - 1, 1.0f);
-			ModelViewMatrixUp = new Vector3(0.0f, -1.0f, 0.0f);
+			WorldCameraZoom = 1.0f;
+		}
+		
+		public void SetWorldCameraRotationToNormal()
+		{
+			WorldCameraRotation = 0.0f;
+		}
+		
+		public void RecalcWorldCamera()
+		{
+			//TODO: Include world zoom and rotate here?
 			
-			ProjectionMatrix = Matrix4.Ortho(
-				ProjectionMatrixLeft,
-				ProjectionMatrixRight,
-				ProjectionMatrixBottom,
-				ProjectionMatrixTop,
-				ProjectionMatrixNear,
-				ProjectionMatrixFar
-				);
+			SetRenderRequired();
 			
-			ModelViewMatrix = Matrix4.LookAt(
-				ModelViewMatrixEye,
-				ModelViewMatrixCenter,
-				ModelViewMatrixUp
+			WorldCameraProjectionMatrixNear = -1.0f;
+			WorldCameraProjectionMatrixFar = 1.0f;
+			
+			WorldCameraProjectionMatrixRight = WorldCameraPosition.X + (FrameBufferWidthAsSingle / 2);
+			WorldCameraProjectionMatrixLeft = WorldCameraProjectionMatrixRight - FrameBufferWidthAsSingle;
+			
+			switch(CoordinateSystemMode)
+			{
+				case(CoordinateSystemMode.OriginAtUpperLeft):
+					WorldCameraProjectionMatrixBottom = WorldCameraPosition.Y + (FrameBufferHeightAsSingle / 2);
+					WorldCameraProjectionMatrixTop = WorldCameraProjectionMatrixBottom - FrameBufferHeightAsSingle;
+					break;
+				case(CoordinateSystemMode.OriginAtLowerLeft):
+					WorldCameraProjectionMatrixTop = WorldCameraPosition.Y + (FrameBufferHeightAsSingle / 2);
+					WorldCameraProjectionMatrixBottom = WorldCameraProjectionMatrixTop - FrameBufferHeightAsSingle;
+					break;
+			}
+			
+			WorldCameraProjectionMatrix = Matrix4.Ortho(
+				WorldCameraProjectionMatrixLeft,
+				WorldCameraProjectionMatrixRight,
+				WorldCameraProjectionMatrixBottom,
+				WorldCameraProjectionMatrixTop,
+				WorldCameraProjectionMatrixNear,
+				WorldCameraProjectionMatrixFar
 				);
 		}
 		
-		private void CleanupGraphics()
-		{
-		}
-		
-		public Matrix4 ProjectionMatrix { get; private set; }
-		public Matrix4 ModelViewMatrix { get; private set; }
-		
-		private Single ProjectionMatrixLeft;
-		private Single ProjectionMatrixRight;
-		private Single ProjectionMatrixBottom;
-		private Single ProjectionMatrixTop;
-		private Single ProjectionMatrixNear;
-		private Single ProjectionMatrixFar;
-		
-		private Vector3 ModelViewMatrixEye;
-		private Vector3 ModelViewMatrixCenter;
-		private Vector3 ModelViewMatrixUp;
+//			ModelViewMatrixEye = new Vector3(0.0f, FrameBufferHeightAsSingle - 1, 0.0f);
+//			ModelViewMatrixCenter = new Vector3(0.0f, FrameBufferHeightAsSingle - 1, 1.0f);
+//			ModelViewMatrixUp = new Vector3(0.0f, -1.0f, 0.0f);
+//			
+//			ModelViewMatrix = Matrix4.LookAt(
+//				ModelViewMatrixEye,
+//				ModelViewMatrixCenter,
+//				ModelViewMatrixUp
+//				);
+//		
+//		public Matrix4 ModelViewMatrix { get; private set; }
+//		
+//		private Vector3 ModelViewMatrixEye;
+//		private Vector3 ModelViewMatrixCenter;
+//		private Vector3 ModelViewMatrixUp;
 		
 		#endregion
 		
-		#region Camera
+		#region ScreenCamera
 		
-		private void InitializeCamera()
-		{
-			CameraPosition = Coordinate2.X0Y0;
-			CameraZoom = 1.0f;
-			CameraRotation = 0.0f;
-		}
-		
-		private void CleanupCamera()
-		{
-			CameraPosition = Coordinate2.X0Y0;
-			CameraZoom = 1.0f;
-			CameraRotation = 0.0f;
-		}
-		
-		private Coordinate2 CameraPosition;
-		
-		public void SetCameraPosition()
+		private void InitializeScreenCamera()
 		{
 		}
 		
-		//Switch to an enum instead of separate methods?
-		public void SetCameraPositionFromBottomLeft()
+		private void CleanupScreenCamera()
 		{
 		}
-		
-		public void SetCameraPositionFromTopLeft()
-		{
-		}
-		
-		private Single CameraZoom;
-		
-		private Single CameraRotation;
 		
 		#endregion
 		
@@ -779,13 +779,16 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		private void InitializeDebugFont()
 		{
-			DebugFont.CreateFont(this);
+			DebugFont = new DebugFont(this);
 		}
 		
 		private void CleanupDebugFont()
 		{
-			DebugFont.RemoveFont(this);
+			DebugFont.Dispose();
+			DebugFont = null;
 		}
+		
+		public DebugFont DebugFont { get; private set; }
 		
 		#endregion
 		

@@ -4,6 +4,7 @@ using System.Text;
 using Sce.PlayStation.Core;
 using Sce.PlayStation.HighLevel.GameEngine2D;
 using Sce.PlayStation.HighLevel.GameEngine2D.Base;
+using Sce.PlayStation.Core.Environment;
 
 namespace PsmFramework.Modes
 {
@@ -236,14 +237,8 @@ namespace PsmFramework.Modes
 			DebugInfo.Append("RAM Used: ");
 			DebugInfo.AppendLine((System.Math.Round(GC.GetTotalMemory(false) / 1048576d, 2)).ToString() + " MiB");
 			
-			//DebugInfo.Append("TimeSinceLastFrame: ");
-			//DebugInfo.AppendLine(Mgr.TimeSinceLastFrame.Ticks.ToString());
-			
 			DebugInfo.Append("Update Ticks: ");
 			DebugInfo.AppendLine(Mgr.UpdateLength.Ticks.ToString());
-			
-			//DebugInfo.Append("Render Ticks: ");
-			//DebugInfo.AppendLine(Mgr.RenderLength.Ticks.ToString());
 			
 			DebugInfo.Append("Render Ticks: ");
 			DebugInfo.AppendLine(DrawLength.Ticks.ToString());

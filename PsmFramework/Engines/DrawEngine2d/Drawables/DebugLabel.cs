@@ -8,6 +8,11 @@ using Sce.PlayStation.Core.Graphics;
 
 namespace PsmFramework.Engines.DrawEngine2d.Drawables
 {
+	/// <summary>
+	/// A simple text label class that draws strings using the hardcoded font data
+	/// and does not support rotation.
+	/// DebugLabel is always drawn on top of every other Drawable in a special Render pass.
+	/// </summary>
 	public class DebugLabel : DrawableBase
 	{
 		#region Constructor, Dispose
@@ -100,8 +105,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			
 			//Set up the drawing
 			
-			//TODO: These need to be changed as little as possible, as seen in GOSLlib.
-			//or maybe not???
+			//TODO: These need to be changed as little as possible
 			DrawEngine2d.GraphicsContext.SetShaderProgram(Shader.ShaderProgram);
 			DrawEngine2d.SetOpenGlTexture(DebugFont.TextureKey);
 			
@@ -111,17 +115,16 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			foreach(RenderingCacheData cacheData in CachedRendering)
 			{
 				TiledTexture tt = DrawEngine2d.GetTiledTexture(DebugFont.TextureKey);
-				TiledTextureIndex index = DebugFont.GetCharTileIndex(cacheData.CharCode);
+				TiledTextureIndex index = DrawEngine2d.DebugFont.GetCharTileIndex(cacheData.CharCode);
 				Single[] textureCoordinates = tt.GetTextureCoordinates(index);
 				
 				VertexBuffer.SetVertices(1, textureCoordinates);
 				DrawEngine2d.GraphicsContext.SetVertexBuffer(0, VertexBuffer);
 				
-				Matrix4 scaleMatrix = GetScalingMatrix(10.0f);
-				//Matrix4 rotMatrix = GetRotationMatrix(3f);
+				Matrix4 scaleMatrix = GetScalingMatrix(1.0f);
 				Matrix4 transMatrix = GetTranslationMatrix(cacheData.Position.X, cacheData.Position.Y, 1.0f, 0f);
-				Matrix4 modelMatrix = transMatrix * scaleMatrix;// * rotMatrix;
-				Matrix4 worldViewProj = DrawEngine2d.ProjectionMatrix * DrawEngine2d.ModelViewMatrix * modelMatrix;
+				Matrix4 modelMatrix = transMatrix * scaleMatrix;
+				Matrix4 worldViewProj = DrawEngine2d.WorldCameraProjectionMatrix * modelMatrix;
 				
 				Shader.ShaderProgram.SetUniformValue(0, ref worldViewProj);
 				
@@ -272,8 +275,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			
 			VertexCoordinates_0_TopLeft = new Coordinate2(0.0f, 0.0f);
 			VertexCoordinates_1_BottomLeft = new Coordinate2(0.0f, 1.0f);
-			VertexCoordinates_2_TopRight = new Coordinate2(1.0f, 0.0f);
-			VertexCoordinates_3_BottomRight = new Coordinate2(1.0f, 1.0f);
+			VertexCoordinates_2_BottomRight = new Coordinate2(1.0f, 1.0f);
+			VertexCoordinates_3_TopRight = new Coordinate2(1.0f, 0.0f);
 		}
 		
 		private void CleanupVertices()
@@ -315,7 +318,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			}
 		}
 		
-		private Coordinate2 VertexCoordinates_2_TopRight
+		private Coordinate2 VertexCoordinates_2_BottomRight
 		{
 			get
 			{
@@ -329,7 +332,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			}
 		}
 		
-		private Coordinate2 VertexCoordinates_3_BottomRight
+		private Coordinate2 VertexCoordinates_3_TopRight
 		{
 			get
 			{
