@@ -28,7 +28,6 @@ namespace Demo.SpaceRockets
 			//TODO: Remove this after testing!
 			DrawEngine2d.ClearColor = Colors.Blue;
 			//EnableDebugInfo();
-			DrawEngine2d.SetWorldCameraAtOrigin();
 			
 			String shipSprite = "/Application/TwinStickShooter/Images/Ship64.png";
 			Texture2dPlus t2d = new Texture2dPlus(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, shipSprite);
@@ -53,8 +52,8 @@ namespace Demo.SpaceRockets
 			
 			LayerBase debugOverlay = DrawEngine2d.GetOrCreateScreenLayer(2);
 			_DebugTextLabel = new DebugLabel(debugOverlay);
-			_DebugTextLabel.Text = "LOL ROFL ssxyz";
-			_DebugTextLabel.Position = new Coordinate2(1.0f, 1.0f);
+			_DebugTextLabel.Text = "LOL ROFL ssxyz\nROFL";
+			_DebugTextLabel.Position = new Coordinate2(100.0f, 100.0f);
 		}
 		
 		protected override void Cleanup()
@@ -88,6 +87,11 @@ namespace Demo.SpaceRockets
 				_Ship1.Position = new Coordinate2(_Ship1.Position.X, _Ship1.Position.Y - 1f);
 			else if (Mgr.GamePad0_Down)
 				_Ship1.Position = new Coordinate2(_Ship1.Position.X, _Ship1.Position.Y + 1f);
+			
+			if (Mgr.GamePad0_L1)
+				DrawEngine2d.WorldCameraPosition = new Coordinate2(DrawEngine2d.WorldCameraPosition.X - 1, DrawEngine2d.WorldCameraPosition.Y);
+			else if (Mgr.GamePad0_R1)
+				DrawEngine2d.WorldCameraPosition = new Coordinate2(DrawEngine2d.WorldCameraPosition.X + 1, DrawEngine2d.WorldCameraPosition.Y);
 		}
 		
 		#endregion
