@@ -26,15 +26,16 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 			//TopLeft
 			_CoordinateArray[0] = (Single)left / textureWidth;
 			_CoordinateArray[1] = (Single)top / textureHeight;
-			//TopRight
-			_CoordinateArray[2] = (Single)right / textureWidth;
-			_CoordinateArray[3] = (Single)top / textureHeight;
-			//BottomRight
-			_CoordinateArray[4] = (Single)right / textureWidth;
-			_CoordinateArray[5] = (Single)bottom / textureHeight;
 			//BottomLeft
-			_CoordinateArray[6] = (Single)left / textureWidth;
+			_CoordinateArray[2] = (Single)left / textureWidth;
+			_CoordinateArray[3] = (Single)bottom / textureHeight;
+			//TopRight
+			_CoordinateArray[4] = (Single)right / textureWidth;
+			_CoordinateArray[5] = (Single)top / textureHeight;
+			//BottomRight
+			_CoordinateArray[6] = (Single)right / textureWidth;
 			_CoordinateArray[7] = (Single)bottom / textureHeight;
+			
 		}
 		
 		#endregion

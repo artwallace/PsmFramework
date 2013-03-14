@@ -298,7 +298,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void InitializeIndices()
 		{
-			Indices = new UInt16[4];
+			Indices = new UInt16[IndexCount];
 			Indices[0] = 0;
 			Indices[1] = 1;
 			Indices[2] = 2;
@@ -307,7 +307,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void CleanupIndices()
 		{
-			Indices = new UInt16[0];
+			Indices = default(UInt16[]);;
 		}
 		
 		private const Int32 IndexCount = 4;
@@ -330,7 +330,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void CleanupTextureCoordinates()
 		{
-			TextureCoordinates = new Single[0];
+			TextureCoordinates = default(Single[]);
 		}
 		
 		private Single[] TextureCoordinates;

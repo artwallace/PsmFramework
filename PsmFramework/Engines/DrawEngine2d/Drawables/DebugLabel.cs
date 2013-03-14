@@ -5,7 +5,6 @@ using PsmFramework.Engines.DrawEngine2d.Support;
 using PsmFramework.Engines.DrawEngine2d.Textures;
 using Sce.PlayStation.Core;
 using Sce.PlayStation.Core.Graphics;
-using System.Text;
 
 namespace PsmFramework.Engines.DrawEngine2d.Drawables
 {
@@ -29,7 +28,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		protected override void Initialize()
 		{
-			InitializeRenderingCache();
+			InitializeCharacterCoordinateCache();
 			
 			InitializeVertices();
 			InitializeIndices();
@@ -45,7 +44,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		protected override void Cleanup()
 		{
-			CleanupRenderingCache();
+			CleanupCharacterCoordinateCache();
 			
 			CleanupScalingMatrixCache();
 			CleanupRotationMatrixCache();
@@ -72,11 +71,13 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			DrawEngine2d.SetOpenGlTexture(DebugFont.TextureKey);
 			
 			if(RenderingRecacheRequired)
-				GenerateCachedRendering();
+				GenerateCharacterCoordinateCache();
+			
+			TiledTexture tt = DrawEngine2d.GetTiledTexture(DebugFont.TextureKey);
 			
 			foreach(RenderingCacheData cacheData in CachedRendering)
 			{
-				TiledTexture tt = DrawEngine2d.GetTiledTexture(DebugFont.TextureKey);
+				
 				TiledTextureIndex index = DrawEngine2d.DebugFont.GetCharTileIndex(cacheData.CharCode);
 				Single[] textureCoordinates = tt.GetTextureCoordinates(index);
 				
@@ -95,24 +96,28 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			}
 			
 			//Clean up the drawing
-			//
+		}
+		
+		private void RenderChar()
+		{
 		}
 		
 		#endregion
 		
-		#region Rendering Cache
+		#region CharacterCoordinateCache
 		
-		private void InitializeRenderingCache()
+		private void InitializeCharacterCoordinateCache()
 		{
 			RenderingRecacheRequired = true;
 		}
 		
-		private void CleanupRenderingCache()
+		private void CleanupCharacterCoordinateCache()
 		{
-			CachedRendering = new RenderingCacheData[0];
+			RenderingRecacheRequired = false;
+			CachedRendering = default(RenderingCacheData[]);
 		}
 		
-		private void GenerateCachedRendering()
+		private void GenerateCharacterCoordinateCache()
 		{
 			RenderingRecacheRequired = false;
 			
@@ -238,8 +243,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			
 			VertexCoordinates_0_TopLeft = new Coordinate2(0.0f, 0.0f);
 			VertexCoordinates_1_BottomLeft = new Coordinate2(0.0f, 1.0f);
-			VertexCoordinates_2_BottomRight = new Coordinate2(1.0f, 1.0f);
-			VertexCoordinates_3_TopRight = new Coordinate2(1.0f, 0.0f);
+			VertexCoordinates_2_TopRight = new Coordinate2(1.0f, 0.0f);
+			VertexCoordinates_3_BottomRight = new Coordinate2(1.0f, 1.0f);
 		}
 		
 		private void CleanupVertices()
@@ -281,7 +286,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			}
 		}
 		
-		private Coordinate2 VertexCoordinates_2_BottomRight
+		private Coordinate2 VertexCoordinates_2_TopRight
 		{
 			get
 			{
@@ -295,7 +300,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			}
 		}
 		
-		private Coordinate2 VertexCoordinates_3_TopRight
+		private Coordinate2 VertexCoordinates_3_BottomRight
 		{
 			get
 			{

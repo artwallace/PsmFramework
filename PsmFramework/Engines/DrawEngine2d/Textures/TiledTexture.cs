@@ -179,7 +179,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		#region ColumnIndex
 		
 		//Right now we will only support a single ColumnIndex.
-		//In the future, add support for an array of named ColumnIndex'es,
+		//In the future, add support for an array of named ColumnIndexes,
 		// built from different source areas within the texture.
 		private void InitializeColumnIndex()
 		{

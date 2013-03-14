@@ -28,6 +28,7 @@ namespace Demo.SpaceRockets
 			//TODO: Remove this after testing!
 			DrawEngine2d.ClearColor = Colors.Blue;
 			//EnableDebugInfo();
+			DrawEngine2d.SetWorldCameraAtOrigin();
 			
 			String shipSprite = "/Application/TwinStickShooter/Images/Ship64.png";
 			Texture2dPlus t2d = new Texture2dPlus(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, shipSprite);
@@ -52,7 +53,7 @@ namespace Demo.SpaceRockets
 			
 			LayerBase debugOverlay = DrawEngine2d.GetOrCreateScreenLayer(2);
 			_DebugTextLabel = new DebugLabel(debugOverlay);
-			_DebugTextLabel.Text = "? Ä LOL";
+			_DebugTextLabel.Text = "? Ä LOL\nROFL";
 			_DebugTextLabel.Position = new Coordinate2(100.0f, 100.0f);
 		}
 		
