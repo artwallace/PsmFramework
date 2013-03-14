@@ -5,6 +5,7 @@ using PsmFramework.Engines.DrawEngine2d.Support;
 using PsmFramework.Engines.DrawEngine2d.Textures;
 using Sce.PlayStation.Core;
 using Sce.PlayStation.Core.Graphics;
+using System.Text;
 
 namespace PsmFramework.Engines.DrawEngine2d.Drawables
 {
@@ -64,45 +65,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		public override void Render()
 		{
-//			if(RenderingRecacheRequired)
-//				GenerateCachedRendering();
-//			
-//			DrawEngine2d.FontShader.SetVertexBuffer();
-//			DrawEngine2d.FontShader.SetShaderProgram();
-//			
-//			Texture2D t = new Texture2D("/Application/TwinStickShooter/Images/Ship64.png", false);
-//			DrawEngine2d.GraphicsContext.SetTexture(0, t);
-//			//if (DrawEngine2d.GraphicsContext.GetTexture(0) != DrawEngine2d.DebugFont.Texture)
-//			//DrawEngine2d.GraphicsContext.SetTexture(0, DrawEngine2d.DebugFont.Texture);
-//			
-//			foreach(RenderingCacheData cacheData in CachedRendering)
-//			{
-//				Vector3 scaleVector = new Vector3(DebugFont.FontWidth, DebugFont.FontHeight, 1.0f);
-//				Matrix4 scaleMatrix = Matrix4.Scale(scaleVector);
-//				Vector3 translationVector = new Vector3(cacheData.Position.X, cacheData.Position.Y, 1.0f);
-//				Matrix4 transMatrix = Matrix4.Translation(translationVector);
-//				Matrix4 modelMatrix = transMatrix * scaleMatrix;
-//				Matrix4 worldViewProj = Layer.DrawEngine2d.ProjectionMatrix * Layer.DrawEngine2d.ModelViewMatrix;// * modelMatrix;
-//				
-//				DrawEngine2d.FontShader.SetWorldViewProjection(ref worldViewProj);
-//				
-//				//TODO: this needs to be changed to be an array of VBOs, like ge2d.
-//				DrawEngine2d.FontShader.DrawArrays();
-//			}
-//			
-//			for(Int32 c = 0; c < CachedRendering.Length; c++)
-//			{
-//				//Matrix4 scaleMatrix = Matrix4.Scale(new Vector3(DebugFont.FontWidth, DebugFont.FontHeight, 1.0f));
-//				//Matrix4 transMatrix = Matrix4.Translation(new Vector3(CachedRendering[c].Position.X, CachedRendering[c].Position.Y, 0.0f));
-//				//Matrix4 modelMatrix = transMatrix * scaleMatrix;
-//				Matrix4 worldViewProj = DrawEngine2d.ProjectionMatrix * DrawEngine2d.ModelViewMatrix;// * modelMatrix;
-//				
-//				DrawEngine2d.FontShader.SetWorldViewProjection(ref worldViewProj);
-//				
-//				//TODO: this needs to be changed to be an array of VBOs, like ge2d.
-//				DrawEngine2d.FontShader.DrawArrays();
-//			}
-			
 			//Set up the drawing
 			
 			//TODO: These need to be changed as little as possible
@@ -189,7 +151,11 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				
 				//TODO: Needs spacing added.
 				//TODO: Add support for opposite Coordinate Mode here.
-				CachedRendering[cacheIndex].CharCode = c;
+				
+				if(DrawEngine2d.DebugFont.ContainsCharacterGlyph(c))
+					CachedRendering[cacheIndex].CharCode = c;
+				else
+					CachedRendering[cacheIndex].CharCode = FallbackChar;
 				CachedRendering[cacheIndex].Position.X = Position.X + (DebugFont.FontWidth * charOnThisLineNumber);
 				CachedRendering[cacheIndex].Position.Y = Position.Y + (DebugFont.FontHeight * lineNumber);
 				
@@ -209,6 +175,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			public Char CharCode;
 		}
 		
+		private const Char FallbackChar = '?';
+		
 		#endregion
 		
 		#region Text
@@ -224,13 +192,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				
 				MarkAsChanged();
 				
-				_Text = Clean(value);
+				_Text = value;
 			}
-		}
-		
-		private static String Clean(String text)
-		{
-			return text.Trim();
 		}
 		
 		#endregion

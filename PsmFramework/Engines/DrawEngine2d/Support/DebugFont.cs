@@ -31,14 +31,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 			InitializeDrawEngine2d(drawEngine2d);
 			InitializeHardcodedFontInfo();
 			InitializeCharacterData();
-			InitializePixelData();
 			InitializeTexture();
 		}
 		
 		private void Cleanup()
 		{
 			CleanupTexture();
-			CleanupPixelData();
 			CleanupCharacterData();
 			CleanupHardcodedFontInfo();
 			CleanupDrawEngine2d();
@@ -88,11 +86,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		private const Byte PixelDark = (Byte)0x00;
 		private const Byte PixelLit = (Byte)0xff;
 		
-		private Int32 GetGlyphIndex(Char c)
-		{
-			return (Int32)c - NonPrintableChars;
-		}
-		
 		#endregion
 		
 		#region Character Data
@@ -114,7 +107,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 			LowerCharData = null;
 		}
 		
-		//These two should be in sync all the time.
+		//These two should be in sync at all times.
 		//They should be unified by combining the upper and lower data
 		// into a single value and kept as a single dict.
 		private Dictionary<Char, UInt32> UpperCharData;
@@ -232,25 +225,41 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 			LowerCharData[c] = lowerData;
 		}
 		
+		private Int32 GetGlyphIndex(Char c)
+		{
+			return (Int32)c - NonPrintableChars;
+		}
+		
+		public Boolean ContainsCharacterGlyph(Char c)
+		{
+			return UpperCharData.ContainsKey(c);
+		}
+		
 		#endregion
 		
-		#region PixelData
+		#region Texture
 		
-		//TODO: To save RAM, pixel data needs to be cleared after use, not at Dispose.
-		
-		private void InitializePixelData()
+		private void InitializeTexture()
 		{
 			TexturePixels = new Byte[TextureWidth * TextureHeight];
 			
 			PopulatePixelData();
-		}
-		
-		private void CleanupPixelData()
-		{
+			BuildTexture();
+			
 			TexturePixels = null;
 		}
 		
+		private void CleanupTexture()
+		{
+			TiledFontTexture.Dispose();
+			TiledFontTexture = null;
+		}
+		
+		public const String TextureKey = "DebugFont";
+		
 		private Byte[] TexturePixels;
+		
+		private TiledTexture TiledFontTexture;
 		
 		private void PopulatePixelData()
 		{
@@ -289,29 +298,17 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 			}
 		}
 		
-		#endregion
-		
-		#region Texture
-		
-		private void InitializeTexture()
+		private void BuildTexture()
 		{
-			FontTexture = new Texture2dPlus(DrawEngine2d, TextureCachePolicy.KeepAlways, TextureKey, TextureWidth, TextureHeight, PixelFormat.Luminance);
+			Texture2dPlus FontTexture = new Texture2dPlus(DrawEngine2d, TextureCachePolicy.KeepAlways, TextureKey, TextureWidth, TextureHeight, PixelFormat.Luminance);
 			FontTexture.SetPixels(0, TexturePixels, PixelFormat.Luminance);
 			FontTexture.SetFilter(TextureFilterMode.Nearest, TextureFilterMode.Nearest, TextureFilterMode.Nearest);
 			
 			TiledFontTexture = new TiledTexture(DrawEngine2d, TextureCachePolicy.KeepAlways, TextureKey, FontTexture);
 			TiledFontTexture.CreateColumnIndex(MaxTextureCharCapacity);
-		}
-		
-		private void CleanupTexture()
-		{
+			
 			FontTexture = null;
-			TiledFontTexture = null;
 		}
-		
-		private Texture2dPlus FontTexture;
-		private TiledTexture TiledFontTexture;
-		public const String TextureKey = "DebugFont";
 		
 		//TODO: Should this be cached?
 		public TiledTextureIndex GetCharTileIndex(Char c)

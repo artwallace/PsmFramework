@@ -52,7 +52,7 @@ namespace Demo.SpaceRockets
 			
 			LayerBase debugOverlay = DrawEngine2d.GetOrCreateScreenLayer(2);
 			_DebugTextLabel = new DebugLabel(debugOverlay);
-			_DebugTextLabel.Text = "LOL";
+			_DebugTextLabel.Text = "? Ä LOL";
 			_DebugTextLabel.Position = new Coordinate2(100.0f, 100.0f);
 		}
 		
