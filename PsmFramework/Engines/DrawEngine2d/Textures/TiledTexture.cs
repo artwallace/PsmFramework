@@ -214,8 +214,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 			{
 				Int32 left = i * tileWidth;
 				Int32 top = 0;
-				Int32 right = left + tileWidth - 1; //zero indexed, so -1.
-				Int32 bottom = tileHeight - 1; //zero indexed, so -1.
+				Int32 right = left + tileWidth;
+				Int32 bottom = tileHeight;
 				
 				Texture2dArea area = new Texture2dArea(left, top, right, bottom, Texture.Width, Texture.Height);
 				

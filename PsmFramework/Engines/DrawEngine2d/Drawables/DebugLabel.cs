@@ -77,7 +77,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			
 			foreach(RenderingCacheData cacheData in CachedRendering)
 			{
-				
 				TiledTextureIndex index = DrawEngine2d.DebugFont.GetCharTileIndex(cacheData.CharCode);
 				Single[] textureCoordinates = tt.GetTextureCoordinates(index);
 				
@@ -114,7 +113,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		private void CleanupCharacterCoordinateCache()
 		{
 			RenderingRecacheRequired = false;
-			CachedRendering = default(RenderingCacheData[]);
+			CachedRendering = null;
 		}
 		
 		private void GenerateCharacterCoordinateCache()
