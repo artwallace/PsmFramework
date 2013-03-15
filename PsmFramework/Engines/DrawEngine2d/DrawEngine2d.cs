@@ -738,8 +738,6 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		public void RecalcWorldCamera()
 		{
-			//TODO: Include world zoom here.
-			
 			ResetWorldCameraRecalc();
 			
 			Single WorldCameraProjectionMatrixRight = WorldCameraPosition.X + (FrameBufferWidthAsSingle / 2);
@@ -770,28 +768,17 @@ namespace PsmFramework.Engines.DrawEngine2d
 				WorldCameraProjectionMatrixFar
 				);
 			
-			if(WorldCameraRotation != 0f)
+			if(WorldCameraZoom != 0.0f)
+			{
+				WorldCameraProjectionMatrix = WorldCameraProjectionMatrix * Matrix4.Scale(WorldCameraZoom, WorldCameraZoom, 1.0f);
+			}
+			
+			if(WorldCameraRotation != 0.0f)
 			{
 				Single angleInRadians = MatrixHelper.GetRadianAngle(WorldCameraRotation);
 				WorldCameraProjectionMatrix = WorldCameraProjectionMatrix * Matrix4.RotationZ(angleInRadians);
 			}
 		}
-		
-//			ModelViewMatrixEye = new Vector3(0.0f, FrameBufferHeightAsSingle - 1, 0.0f);
-//			ModelViewMatrixCenter = new Vector3(0.0f, FrameBufferHeightAsSingle - 1, 1.0f);
-//			ModelViewMatrixUp = new Vector3(0.0f, -1.0f, 0.0f);
-//			
-//			ModelViewMatrix = Matrix4.LookAt(
-//				ModelViewMatrixEye,
-//				ModelViewMatrixCenter,
-//				ModelViewMatrixUp
-//				);
-//		
-//		public Matrix4 ModelViewMatrix { get; private set; }
-//		
-//		private Vector3 ModelViewMatrixEye;
-//		private Vector3 ModelViewMatrixCenter;
-//		private Vector3 ModelViewMatrixUp;
 		
 		#endregion
 		

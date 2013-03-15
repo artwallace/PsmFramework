@@ -104,6 +104,11 @@ namespace Demo.SpaceRockets
 				DrawEngine2d.WorldCameraRotation -= 1.0f;
 			else if (Mgr.GamePad0_R1)
 				DrawEngine2d.WorldCameraRotation += 1.0f;
+			
+			if (Mgr.GamePad0_Triangle)
+				DrawEngine2d.WorldCameraZoom += 0.1f;
+			else if (Mgr.GamePad0_Cross)
+				DrawEngine2d.WorldCameraZoom -= 0.1f;
 		}
 		
 		#endregion
