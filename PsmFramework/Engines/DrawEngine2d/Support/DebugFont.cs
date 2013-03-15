@@ -5,7 +5,7 @@ using Sce.PlayStation.Core.Graphics;
 
 namespace PsmFramework.Engines.DrawEngine2d.Support
 {
-	public class DebugFont : IDisposablePlus
+	internal class DebugFont : IDisposablePlus
 	{
 		#region Constructor, Dispose
 		
@@ -251,6 +251,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		
 		private void CleanupTexture()
 		{
+			//TODO: It's probably better to let the TiledTextureManager do this.
 			TiledFontTexture.Dispose();
 			TiledFontTexture = null;
 		}

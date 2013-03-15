@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using PsmFramework.Engines.DrawEngine2d.Layers;
 using PsmFramework.Engines.DrawEngine2d.Shaders;
 using PsmFramework.Engines.DrawEngine2d.Support;
 using PsmFramework.Engines.DrawEngine2d.Textures;
@@ -153,7 +154,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				else if(c == '\r')
 					continue;
 				
-				//TODO: Needs spacing added.
 				//TODO: Add support for opposite Coordinate Mode here.
 				
 				if(DrawEngine2d.DebugFont.ContainsCharacterGlyph(c))
@@ -558,7 +558,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void GenerateRotationMatrix(Single angle)
 		{
-			Single RadianAngle = DegreeToRadian(angle);
+			Single RadianAngle = MatrixHelper.GetRadianAngle(angle);
 			Matrix4 m = Matrix4.RotationZ(RadianAngle);
 			
 			//Add to cache
@@ -631,7 +631,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void GenerateTranslationMatrix(SpriteTranslationKey key)
 		{
-			Single RadianAngle = DegreeToRadian(key.Angle);
+			Single RadianAngle = MatrixHelper.GetRadianAngle(key.Angle);
 			
 			//TODO: Verify that these formulas are correct.
 			Single x = key.X + (key.Scale * (FMath.Sin(RadianAngle) - FMath.Cos(RadianAngle)));
@@ -658,19 +658,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		private Int32 GetTranslationMatrixCacheLimit()
 		{
 			return Text.Length * TranslationMatrixCacheLimitFactor;
-		}
-		
-		#endregion
-		
-		#region Angle utilities
-		
-		//TODO: Move to a generic math class.
-		
-		//TODO: Verify that this formula is correct.
-		private static Single DegreeToRadianValue = (Single)(Math.PI / 180D);
-		private static Single DegreeToRadian(Single angle)
-		{
-			return angle * DegreeToRadianValue;
 		}
 		
 		#endregion

@@ -40,6 +40,7 @@
   <ItemGroup>
     <Folder Include="Engines\" />
     <Folder Include="Modes\" />
+    <Folder Include="Engines\DrawEngine2d\Layers\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engines\RawSpriteTileArray.cs" />
@@ -65,9 +66,6 @@
     <Compile Include="Engines\CyclonePhysics3d\Forces\Gravity3d.cs" />
     <Compile Include="Engines\CyclonePhysics3d\Forces\Spring3d.cs" />
     <Compile Include="Engines\DrawEngine2d\DrawEngine2d.cs" />
-    <Compile Include="Engines\DrawEngine2d\LayerBase.cs" />
-    <Compile Include="Engines\DrawEngine2d\ScreenLayer.cs" />
-    <Compile Include="Engines\DrawEngine2d\WorldLayer.cs" />
     <Compile Include="Engines\DrawEngine2d\Drawables\Circle.cs" />
     <Compile Include="Engines\DrawEngine2d\Drawables\DebugLabel.cs" />
     <Compile Include="Engines\DrawEngine2d\Drawables\DrawableBase.cs" />
@@ -212,6 +210,12 @@
     <Compile Include="Engines\DrawEngine2d\Drawables\HexMapTile.cs" />
     <Compile Include="Engines\DrawEngine2d\Drawables\DiamondIsometricMap.cs" />
     <Compile Include="Engines\DrawEngine2d\Drawables\StaggeredIsometricMap.cs" />
+    <Compile Include="Engines\DrawEngine2d\Layers\LayerBase.cs" />
+    <Compile Include="Engines\DrawEngine2d\Layers\ScreenLayer.cs" />
+    <Compile Include="Engines\DrawEngine2d\Layers\WorldLayer.cs" />
+    <Compile Include="Engines\DrawEngine2d\Layers\WorldDebugLayer.cs" />
+    <Compile Include="Engines\DrawEngine2d\Layers\ScreenDebugLayer.cs" />
+    <Compile Include="Engines\DrawEngine2d\Support\MatrixHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedShaderProgram Include="Engines\DrawEngine2d\Shaders\Font.fcg" />

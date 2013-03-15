@@ -1,6 +1,6 @@
 using System;
 
-namespace PsmFramework.Engines.DrawEngine2d
+namespace PsmFramework.Engines.DrawEngine2d.Layers
 {
 	//TODO: Add scales with world
 	//TODO: Add rotates with world

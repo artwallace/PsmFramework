@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using PsmFramework.Engines.DrawEngine2d.Drawables;
 
-namespace PsmFramework.Engines.DrawEngine2d
+namespace PsmFramework.Engines.DrawEngine2d.Layers
 {
 	public abstract class LayerBase : IDisposablePlus
 	{
@@ -61,21 +61,6 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		#endregion
 		
-		#region ZIndex
-		
-		private void InitializeZIndex(Int32 zIndex)
-		{
-			ZIndex = zIndex;
-		}
-		
-		private void CleanupZIndex()
-		{
-		}
-		
-		public Int32 ZIndex { get; private set; }
-		
-		#endregion
-		
 		#region DrawEngine
 		
 		private void InitializeDrawEngine2d(DrawEngine2d drawEngine2d)
@@ -91,6 +76,21 @@ namespace PsmFramework.Engines.DrawEngine2d
 		}
 		
 		internal DrawEngine2d DrawEngine2d;
+		
+		#endregion
+		
+		#region ZIndex
+		
+		private void InitializeZIndex(Int32 zIndex)
+		{
+			ZIndex = zIndex;
+		}
+		
+		private void CleanupZIndex()
+		{
+		}
+		
+		public Int32 ZIndex { get; private set; }
 		
 		#endregion
 		

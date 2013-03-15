@@ -3,6 +3,7 @@ using Demo.MainMenu;
 using PsmFramework;
 using PsmFramework.Engines.DrawEngine2d;
 using PsmFramework.Engines.DrawEngine2d.Drawables;
+using PsmFramework.Engines.DrawEngine2d.Layers;
 using PsmFramework.Engines.DrawEngine2d.Support;
 using PsmFramework.Engines.DrawEngine2d.Textures;
 using PsmFramework.Modes;
@@ -43,16 +44,16 @@ namespace Demo.SpaceRockets
 			sss2.SetPositionFromCenter(new Coordinate2(96f, 32f));
 			//sss2.Rotation = 45.0f;
 			
-			Texture2dPlus testT2d = DrawEngine2d.GetTexture(DebugFont.TextureKey);
-			TiledTexture ttTest = new TiledTexture(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, "test", testT2d);
-			ttTest.CreateColumnIndex(1);
-			SpriteGroup testSG = new SpriteGroup(l2, ttTest);
-			SpriteGroupItem testSS = new SpriteGroupItem(testSG, new TiledTextureIndex(0));
-			testSS.Position = new Coordinate2(32f, 200f);
+//			Texture2dPlus testT2d = DrawEngine2d.GetTexture(DebugFont.TextureKey);
+//			TiledTexture ttTest = new TiledTexture(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, "test", testT2d);
+//			ttTest.CreateColumnIndex(1);
+//			SpriteGroup testSG = new SpriteGroup(l2, ttTest);
+//			SpriteGroupItem testSS = new SpriteGroupItem(testSG, new TiledTextureIndex(0));
+//			testSS.Position = new Coordinate2(32f, 200f);
 			
 			LayerBase debugOverlay = DrawEngine2d.GetOrCreateScreenLayer(2);
 			_DebugTextLabel = new DebugLabel(debugOverlay);
-			_DebugTextLabel.Text = "LOL ROFL ssxyz\nROFL";
+			_DebugTextLabel.Text = "This text is in a world layer\nbut it should be in a screen layer.";
 			_DebugTextLabel.Position = new Coordinate2(100.0f, 100.0f);
 		}
 		
@@ -78,20 +79,31 @@ namespace Demo.SpaceRockets
 					Mgr.SetRunStateToRunning();
 			}
 			
-			if (Mgr.GamePad0_Left)
-				_Ship1.Position = new Coordinate2(_Ship1.Position.X - 1f, _Ship1.Position.Y);
-			else if (Mgr.GamePad0_Right)
-				_Ship1.Position = new Coordinate2(_Ship1.Position.X + 1f, _Ship1.Position.Y);
+			Single xMove = 0.0f;
+			Single yMove = 0.0f;
+			if(Math.Abs(Mgr.GamePadData.AnalogLeftX) > 0.1f)
+				xMove = Mgr.GamePadData.AnalogLeftX * 2;
+			if(Math.Abs(Mgr.GamePadData.AnalogLeftY) > 0.1f)
+				yMove = Mgr.GamePadData.AnalogLeftY * 2;
+			_Ship1.Position = new Coordinate2(_Ship1.Position.X + xMove, _Ship1.Position.Y + yMove);
 			
+			
+			Single xCam = 0.0f;
+			Single yCam = 0.0f;
+			if (Mgr.GamePad0_Left)
+				xCam = -1f;
+			else if (Mgr.GamePad0_Right)
+				xCam = 1f;
 			if (Mgr.GamePad0_Up)
-				_Ship1.Position = new Coordinate2(_Ship1.Position.X, _Ship1.Position.Y - 1f);
+				yCam = -1f;
 			else if (Mgr.GamePad0_Down)
-				_Ship1.Position = new Coordinate2(_Ship1.Position.X, _Ship1.Position.Y + 1f);
+				yCam = 1f;
+			DrawEngine2d.WorldCameraPosition = new Coordinate2(DrawEngine2d.WorldCameraPosition.X + xCam, DrawEngine2d.WorldCameraPosition.Y + yCam);
 			
 			if (Mgr.GamePad0_L1)
-				DrawEngine2d.WorldCameraPosition = new Coordinate2(DrawEngine2d.WorldCameraPosition.X - 1, DrawEngine2d.WorldCameraPosition.Y);
+				DrawEngine2d.WorldCameraRotation -= 1.0f;
 			else if (Mgr.GamePad0_R1)
-				DrawEngine2d.WorldCameraPosition = new Coordinate2(DrawEngine2d.WorldCameraPosition.X + 1, DrawEngine2d.WorldCameraPosition.Y);
+				DrawEngine2d.WorldCameraRotation += 1.0f;
 		}
 		
 		#endregion

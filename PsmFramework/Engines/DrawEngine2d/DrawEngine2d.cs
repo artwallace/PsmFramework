@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using PsmFramework.Engines.DrawEngine2d.Drawables;
+using PsmFramework.Engines.DrawEngine2d.Layers;
 using PsmFramework.Engines.DrawEngine2d.Shaders;
 using PsmFramework.Engines.DrawEngine2d.Support;
 using PsmFramework.Engines.DrawEngine2d.Textures;
@@ -70,6 +71,11 @@ namespace PsmFramework.Engines.DrawEngine2d
 		#region Render
 		
 		//TODO: Remove this stupid workaround.
+		//This workaround is required because the SwapBuffers command
+		// is responsible for the fps limiting delay. So we have to ensure that
+		// both buffers are filled so we can swap them (to get the fps delay)
+		// even when there is nothing new to render. Therefore both buffers
+		// contain the exact same image.
 		private Boolean SecondBufferFilled;
 		
 		public void Render()
@@ -240,7 +246,12 @@ namespace PsmFramework.Engines.DrawEngine2d
 					throw new ArgumentException("The requested layer is not a WorldLayer.");
 			}
 			else
-				return new WorldLayer(this, zIndex);
+			{
+				if(zIndex > LayerMaxZIndex || zIndex < LayerMinZIndex)
+					throw new ArgumentOutOfRangeException();
+				else
+					return new WorldLayer(this, zIndex);
+			}
 		}
 		
 		public ScreenLayer GetOrCreateScreenLayer(Int32 zIndex)
@@ -253,7 +264,28 @@ namespace PsmFramework.Engines.DrawEngine2d
 					throw new ArgumentException("The requested layer is not a ScreenLayer.");
 			}
 			else
-				return new ScreenLayer(this, zIndex);
+			{
+				if(zIndex > LayerMaxZIndex || zIndex < LayerMinZIndex)
+					throw new ArgumentOutOfRangeException();
+				else
+					return new ScreenLayer(this, zIndex);
+			}
+		}
+		
+		internal WorldDebugLayer GetOrCreateWorldDebugLayer()
+		{
+			if(Layers.ContainsKey(WorldDebugLayerZIndex))
+				return (WorldDebugLayer)Layers[WorldDebugLayerZIndex];
+			else
+				return new WorldDebugLayer(this, WorldDebugLayerZIndex);
+		}
+		
+		internal ScreenDebugLayer GetOrCreateScreenDebugLayer()
+		{
+			if(Layers.ContainsKey(ScreenDebugLayerZIndex))
+				return (ScreenDebugLayer)Layers[ScreenDebugLayerZIndex];
+			else
+				return new ScreenDebugLayer(this, ScreenDebugLayerZIndex);
 		}
 		
 		internal void AddLayer(LayerBase layer, Int32 zIndex)
@@ -286,6 +318,11 @@ namespace PsmFramework.Engines.DrawEngine2d
 		{
 			return Layers.ContainsKey(zIndex);
 		}
+		
+		public const Int32 LayerMinZIndex = -10000;
+		public const Int32 LayerMaxZIndex = 10000;
+		private const Int32 WorldDebugLayerZIndex = 10001;
+		private const Int32 ScreenDebugLayerZIndex = 10002;
 		
 		#endregion
 		
@@ -585,6 +622,8 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		#region WorldCamera
 		
+		//TODO: Need to ensure that all camera changes are done before the rendering phase starts.
+		
 		private void InitializeWorldCamera()
 		{
 			WorldCameraAtOrigin = new Coordinate2(0f, 0f);
@@ -602,6 +641,19 @@ namespace PsmFramework.Engines.DrawEngine2d
 			SetWorldCameraRotationToNormal();
 		}
 		
+		private Boolean WorldCameraRequiresRecalc;
+		
+		private void MarkWorldCameraForRecalc()
+		{
+			WorldCameraRequiresRecalc = true;
+			SetRenderRequired();
+		}
+		
+		private void ResetWorldCameraRecalc()
+		{
+			WorldCameraRequiresRecalc = false;
+		}
+		
 		private Coordinate2 WorldCameraAtOrigin;
 		private Coordinate2 WorldCameraAtScreenCenter;
 		
@@ -612,21 +664,55 @@ namespace PsmFramework.Engines.DrawEngine2d
 			set
 			{
 				_WorldCameraPosition = value;
-				RecalcWorldCamera();
+				MarkWorldCameraForRecalc();
 			}
 		}
 		
-		private Single WorldCameraZoom;
-		private Single WorldCameraRotation;
+		private Single _WorldCameraZoom;
+		public Single WorldCameraZoom
+		{
+			get { return _WorldCameraZoom; }
+			set
+			{
+				_WorldCameraZoom = value;
+				MarkWorldCameraForRecalc();
+			}
+		}
 		
-		public Matrix4 WorldCameraProjectionMatrix { get; private set; }
+		private Single _WorldCameraRotation;
+		public Single WorldCameraRotation
+		{
+			get { return _WorldCameraRotation; }
+			set
+			{
+				Single newValue = value;
+				
+				if(newValue < 0.0f || newValue > 360.0f)
+					newValue = newValue % 360.0f;
+				
+				if(newValue < 0.0f)
+					newValue = 360.0f - Math.Abs(newValue);
+				
+				_WorldCameraRotation = newValue;
+				MarkWorldCameraForRecalc();
+			}
+		}
 		
-		private Single WorldCameraProjectionMatrixLeft;
-		private Single WorldCameraProjectionMatrixRight;
-		private Single WorldCameraProjectionMatrixBottom;
-		private Single WorldCameraProjectionMatrixTop;
-		private Single WorldCameraProjectionMatrixNear;
-		private Single WorldCameraProjectionMatrixFar;
+		private Matrix4 _WorldCameraProjectionMatrix;
+		public Matrix4 WorldCameraProjectionMatrix
+		{
+			get
+			{
+				if(WorldCameraRequiresRecalc)
+					RecalcWorldCamera();
+				
+				return _WorldCameraProjectionMatrix;
+			}
+			private set
+			{
+				_WorldCameraProjectionMatrix = value;
+			}
+		}
 		
 		public void SetWorldCameraAtOrigin()
 		{
@@ -652,15 +738,16 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		public void RecalcWorldCamera()
 		{
-			//TODO: Include world zoom and rotate here?
+			//TODO: Include world zoom here.
 			
-			SetRenderRequired();
+			ResetWorldCameraRecalc();
 			
-			WorldCameraProjectionMatrixNear = -1.0f;
-			WorldCameraProjectionMatrixFar = 1.0f;
-			
-			WorldCameraProjectionMatrixRight = WorldCameraPosition.X + (FrameBufferWidthAsSingle / 2);
-			WorldCameraProjectionMatrixLeft = WorldCameraProjectionMatrixRight - FrameBufferWidthAsSingle;
+			Single WorldCameraProjectionMatrixRight = WorldCameraPosition.X + (FrameBufferWidthAsSingle / 2);
+			Single WorldCameraProjectionMatrixLeft = WorldCameraProjectionMatrixRight - FrameBufferWidthAsSingle;
+			Single WorldCameraProjectionMatrixBottom = 0.0f;
+			Single WorldCameraProjectionMatrixTop = 0.0f;
+			Single WorldCameraProjectionMatrixNear = -1.0f;
+			Single WorldCameraProjectionMatrixFar = 1.0f;
 			
 			switch(CoordinateSystemMode)
 			{
@@ -682,6 +769,12 @@ namespace PsmFramework.Engines.DrawEngine2d
 				WorldCameraProjectionMatrixNear,
 				WorldCameraProjectionMatrixFar
 				);
+			
+			if(WorldCameraRotation != 0f)
+			{
+				Single angleInRadians = MatrixHelper.GetRadianAngle(WorldCameraRotation);
+				WorldCameraProjectionMatrix = WorldCameraProjectionMatrix * Matrix4.RotationZ(angleInRadians);
+			}
 		}
 		
 //			ModelViewMatrixEye = new Vector3(0.0f, FrameBufferHeightAsSingle - 1, 0.0f);
@@ -788,7 +881,7 @@ namespace PsmFramework.Engines.DrawEngine2d
 			DebugFont = null;
 		}
 		
-		public DebugFont DebugFont { get; private set; }
+		internal DebugFont DebugFont { get; private set; }
 		
 		#endregion
 		
