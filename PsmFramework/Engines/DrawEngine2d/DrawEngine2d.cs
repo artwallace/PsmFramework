@@ -143,16 +143,18 @@ namespace PsmFramework.Engines.DrawEngine2d
 		private void InitializeGraphicsContext(GraphicsContext graphicsContext, CoordinateSystemMode coordinateSystemMode)
 		{
 			GraphicsContext = graphicsContext;
+			CoordinateSystemMode = coordinateSystemMode;
 			
 			ScreenWidth = GraphicsContext.Screen.Rectangle.Width;
 			ScreenHeight = GraphicsContext.Screen.Rectangle.Height;
 			
-			FrameBufferWidth = GraphicsContext.GetFrameBuffer().Width;
-			FrameBufferWidthAsSingle = (Single)FrameBufferWidth;
-			FrameBufferHeight = GraphicsContext.GetFrameBuffer().Height;
-			FrameBufferHeightAsSingle = (Single)FrameBufferHeight;
+			FrameBuffer fb = GraphicsContext.GetFrameBuffer();
 			
-			CoordinateSystemMode = coordinateSystemMode;
+			FrameBufferWidth = fb.Width;
+			FrameBufferHeight = fb.Height;
+			
+			FrameBufferWidthAsSingle = (Single)FrameBufferWidth;
+			FrameBufferHeightAsSingle = (Single)FrameBufferHeight;
 		}
 		
 		private void CleanupGraphicsContext()
@@ -179,11 +181,11 @@ namespace PsmFramework.Engines.DrawEngine2d
 		public Int32 ScreenWidth { get; private set; }
 		public Int32 ScreenHeight { get; private set; }
 		
-		private Int32 FrameBufferWidth;
-		private Int32 FrameBufferHeight;
+		public Int32 FrameBufferWidth { get; private set; }
+		public Int32 FrameBufferHeight { get; private set; }
 		
-		private Single FrameBufferWidthAsSingle;
-		private Single FrameBufferHeightAsSingle;
+		public Single FrameBufferWidthAsSingle { get; private set; }
+		public Single FrameBufferHeightAsSingle { get; private set; }
 		
 		public CoordinateSystemMode CoordinateSystemMode { get; private set; }
 		
