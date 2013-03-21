@@ -626,7 +626,7 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		//TODO: Need to ensure that all camera changes are done before the rendering phase starts.
 		
-		//TODO: Need a helper to rotate from a specified point.
+		//TODO: Need a helper to rotate on a specified point.
 		
 		private void InitializeWorldCamera()
 		{
