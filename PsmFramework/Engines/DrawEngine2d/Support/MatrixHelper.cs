@@ -6,17 +6,17 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 	{
 		//TODO: Verify that these are not in the PSM base libraries somewhere.
 		
-		#region Angle utilities
-		
-		//TODO: Verify that this formula is correct.
-		private static Single DegreeToRadianValue = (Single)(Math.PI / 180D);
-		
-		public static Single GetRadianAngle(Single angle)
-		{
-			return angle * DegreeToRadianValue;
-		}
-		
-		#endregion
+//		#region Angle utilities
+//		
+//		//TODO: Verify that this formula is correct.
+//		private static Single DegreeToRadianValue = (Single)(Math.PI / 180D);
+//		
+//		public static Single GetRadianAngle(Single angle)
+//		{
+//			return angle * DegreeToRadianValue;
+//		}
+//		
+//		#endregion
 	}
 }
 

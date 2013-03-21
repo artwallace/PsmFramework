@@ -98,12 +98,12 @@ namespace Demo.SpaceRockets
 				yCam = -1f;
 			else if (Mgr.GamePad0_Down)
 				yCam = 1f;
-			DrawEngine2d.WorldCamera.Center = new Coordinate2(DrawEngine2d.WorldCameraPosition.X + xCam, DrawEngine2d.WorldCameraPosition.Y + yCam);
+			DrawEngine2d.WorldCamera.SetCenter(DrawEngine2d.WorldCamera.Center.X + xCam, DrawEngine2d.WorldCamera.Center.Y + yCam);
 			
 			if (Mgr.GamePad0_L1)
-				DrawEngine2d.WorldCamera.Rotation -= 1.0f;
+				DrawEngine2d.WorldCamera.Rotation = new Angle2(DrawEngine2d.WorldCamera.Rotation.Degree - 1.0f);
 			else if (Mgr.GamePad0_R1)
-				DrawEngine2d.WorldCamera.Rotation += 1.0f;
+				DrawEngine2d.WorldCamera.Rotation = new Angle2(DrawEngine2d.WorldCamera.Rotation.Degree + 1.0f);
 			
 			if (Mgr.GamePad0_Triangle)
 				DrawEngine2d.WorldCamera.Zoom += 0.1f;

@@ -17,8 +17,11 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		#region ProjectionMatrix
 		
-		protected override void RecalcProjectionMatrix()
+		protected override void RecalcProjectionMatrixHelper()
 		{
+			if(IsDisposed)
+				return;
+			
 			ProjectionMatrix = Matrix4.Ortho(Left, Right, Bottom, Top, Near, Far);
 		}
 		
@@ -53,6 +56,21 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		protected override void InitializeBounds()
 		{
+			RecalcBounds();
+		}
+		
+		protected override void CleanupBounds()
+		{
+			_Top = default(Single);
+			_Bottom = default(Single);
+			_Left = default(Single);
+			_Right = default(Single);
+			
+			_Bounds = default(RectangularArea2);
+		}
+		
+		private void RecalcBounds()
+		{
 			switch(DrawEngine2d.CoordinateSystemMode)
 			{
 				case(CoordinateSystemMode.OriginAtUpperLeft):
@@ -73,16 +91,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 			_Bounds = new RectangularArea2(_Left, _Top, _Right, _Bottom);
 			
 			SetRecalcRequired();
-		}
-		
-		protected override void CleanupBounds()
-		{
-			_Top = default(Single);
-			_Bottom = default(Single);
-			_Left = default(Single);
-			_Right = default(Single);
-			
-			_Bounds = default(RectangularArea2);
 		}
 		
 		private Single _Top;

@@ -8,8 +8,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		
 		public Angle2(Single degree)
 		{
-			_Degree = degree;
-			_NormalizedDegree = GetNormalizedDegree(degree);
+			_Degree = GetNormalizedDegree(degree);
+			Radian = GetRadianAngle(_Degree);
 			
 			_HashCodeDirty = true;
 			_HashCode = 0;
@@ -19,22 +19,20 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		
 		#region Degree
 		
+		/// <summary>
+		/// Always stored as 0 =< x < 360.
+		/// </summary>
 		private Single _Degree;
 		public Single Degree
 		{
 			get { return _Degree; }
 			set
 			{
-				_Degree = value;
-				_NormalizedDegree = GetNormalizedDegree(value);
+				_Degree = GetNormalizedDegree(value);
+				Radian = GetRadianAngle(_Degree);
+				
 				_HashCodeDirty = true;
 			}
-		}
-		
-		private Single _NormalizedDegree;
-		public Single NormalizedDegree
-		{
-			get { return _NormalizedDegree; }
 		}
 		
 		public static Single GetNormalizedDegree(Single degree)
@@ -46,6 +44,19 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 				degree = 360.0f - Math.Abs(degree);
 			
 			return degree;
+		}
+		
+		#endregion
+		
+		#region Radian
+		
+		public Single Radian;
+		
+		private static Single DegreeToRadianValue = (Single)(Math.PI / 180D);
+		
+		public static Single GetRadianAngle(Single degree)
+		{
+			return degree * DegreeToRadianValue;
 		}
 		
 		#endregion

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using PsmFramework.Engines.DrawEngine2d.Drawables;
+using PsmFramework.Engines.DrawEngine2d.Cameras;
 
 namespace PsmFramework.Engines.DrawEngine2d.Layers
 {
@@ -76,6 +77,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Layers
 		}
 		
 		internal DrawEngine2d DrawEngine2d;
+		
+		#endregion
+		
+		#region Camera
+		
+		public abstract CameraBase Camera { get; }
 		
 		#endregion
 		

@@ -38,18 +38,18 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			InitializeVertexBuffer();
 			InitializeShaderProgram();
 			
-			InitializeScalingMatrixCache();
-			InitializeRotationMatrixCache();
-			InitializeTransformationMatrixCache();
+//			InitializeScalingMatrixCache();
+//			InitializeRotationMatrixCache();
+//			InitializeTransformationMatrixCache();
 		}
 		
 		protected override void Cleanup()
 		{
 			CleanupCharacterCoordinateCache();
 			
-			CleanupScalingMatrixCache();
-			CleanupRotationMatrixCache();
-			CleanupTransformationMatrixCache();
+//			CleanupScalingMatrixCache();
+//			CleanupRotationMatrixCache();
+//			CleanupTransformationMatrixCache();
 			
 			CleanupShaderProgram();
 			CleanupVertexBuffer();
@@ -87,7 +87,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				Matrix4 scaleMatrix = GetScalingMatrix(1.0f);
 				Matrix4 transMatrix = GetTranslationMatrix(cacheData.Position.X, cacheData.Position.Y, 1.0f, 0f);
 				Matrix4 modelMatrix = transMatrix * scaleMatrix;
-				Matrix4 worldViewProj = DrawEngine2d.WorldCamera.ProjectionMatrix * modelMatrix;
+				Matrix4 worldViewProj = Layer.Camera.ProjectionMatrix * modelMatrix;
 				
 				Shader.ShaderProgram.SetUniformValue(0, ref worldViewProj);
 				
@@ -442,49 +442,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		#endregion
 		
-		#region Scaling Matrix Cache
-		
-		private void InitializeScalingMatrixCache()
-		{
-			ScalingMatrixCacheIndex = new Queue<Single>();
-			
-			ScalingMatrixCache = new Dictionary<Single, Matrix4>();
-			
-			ScalingMatrixCacheLimitFactor = 1;
-		}
-		
-		private void CleanupScalingMatrixCache()
-		{
-			ScalingMatrixCacheIndex.Clear();
-			ScalingMatrixCacheIndex = null;
-			
-			ScalingMatrixCache.Clear();
-			ScalingMatrixCache = null;
-		}
-		
-		private Queue<Single> ScalingMatrixCacheIndex;
-		private Dictionary<Single, Matrix4> ScalingMatrixCache;
-		
-		private Int32 _ScalingMatrixCacheLimitFactor;
-		public Int32 ScalingMatrixCacheLimitFactor
-		{
-			get { return _ScalingMatrixCacheLimitFactor; }
-			set
-			{
-				if(value < 1)
-					throw new ArgumentOutOfRangeException();
-				_ScalingMatrixCacheLimitFactor = value;
-			}
-		}
-		
 		public Matrix4 GetScalingMatrix(Single scale)
-		{
-			if(!ScalingMatrixCache.ContainsKey(scale))
-				GenerateScalingMatrix(scale);
-			return ScalingMatrixCache[scale];
-		}
-		
-		private void GenerateScalingMatrix(Single scale)
 		{
 			Single scaleX = DebugFont.FontWidth * scale;
 			Single scaleY = DebugFont.FontHeight * scale;
@@ -494,173 +452,21 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			
 			Matrix4 m = Matrix4.Scale(scaleV);
 			
-			//Add to cache
-			ScalingMatrixCacheIndex.Enqueue(scale);
-			ScalingMatrixCache.Add(scale, m);
-			
-			//Remove extra from cache
-			Int32 limit = GetScalingMatrixLimit();
-			while(ScalingMatrixCache.Count > limit)
-			{
-				Single old = ScalingMatrixCacheIndex.Dequeue();
-				ScalingMatrixCache.Remove(old);
-			}
+			return m;
 		}
 		
-		private Int32 GetScalingMatrixLimit()
+		public Matrix4 GetTranslationMatrix(Single x, Single y, Single scale, Single radianAngle)
 		{
-			return Text.Length * ScalingMatrixCacheLimitFactor;
-		}
-		
-		#endregion
-		
-		#region Rotation Matrix Cache
-		
-		private void InitializeRotationMatrixCache()
-		{
-			RotationMatrixCacheIndex = new Queue<Single>();
-			
-			RotationMatrixCache = new Dictionary<Single, Matrix4>();
-			
-			RotationMatrixCacheLimitFactor = 1;
-		}
-		
-		private void CleanupRotationMatrixCache()
-		{
-			RotationMatrixCacheIndex.Clear();
-			RotationMatrixCacheIndex = null;
-			
-			RotationMatrixCache.Clear();
-			RotationMatrixCache = null;
-		}
-		
-		private Queue<Single> RotationMatrixCacheIndex;
-		private Dictionary<Single, Matrix4> RotationMatrixCache;
-		
-		private Int32 _RotationMatrixCacheLimitFactor;
-		public Int32 RotationMatrixCacheLimitFactor
-		{
-			get { return _RotationMatrixCacheLimitFactor; }
-			set
-			{
-				if(value < 1)
-					throw new ArgumentOutOfRangeException();
-				_RotationMatrixCacheLimitFactor = value;
-			}
-		}
-		
-		public Matrix4 GetRotationMatrix(Single angle)
-		{
-			if(!RotationMatrixCache.ContainsKey(angle))
-				GenerateRotationMatrix(angle);
-			return RotationMatrixCache[angle];
-		}
-		
-		private void GenerateRotationMatrix(Single angle)
-		{
-			Single RadianAngle = MatrixHelper.GetRadianAngle(angle);
-			Matrix4 m = Matrix4.RotationZ(RadianAngle);
-			
-			//Add to cache
-			RotationMatrixCacheIndex.Enqueue(angle);
-			RotationMatrixCache.Add(angle, m);
-			
-			//Remove extra from cache
-			Int32 limit = GetRotationMatrixCacheLimit();
-			while(RotationMatrixCache.Count > limit)
-			{
-				Single old = RotationMatrixCacheIndex.Dequeue();
-				RotationMatrixCache.Remove(old);
-			}
-		}
-		
-		private Int32 GetRotationMatrixCacheLimit()
-		{
-			return Text.Length * RotationMatrixCacheLimitFactor;
-		}
-		
-		#endregion
-		
-		#region Transformation Matrix Cache
-		
-		//TODO: This especially seems like it should be moved to the sprite.
-		// There shouldn't be much if any benefit to a shared cache.
-		// Should just cache it in each sprite.
-		
-		private void InitializeTransformationMatrixCache()
-		{
-			TranslationMatrixCacheIndex = new Queue<SpriteTranslationKey>();
-			
-			TranslationMatrixCache = new Dictionary<SpriteTranslationKey, Matrix4>();
-			
-			TranslationMatrixCacheLimitFactor = 1;
-		}
-		
-		private void CleanupTransformationMatrixCache()
-		{
-			TranslationMatrixCacheIndex.Clear();
-			TranslationMatrixCacheIndex = null;
-			
-			TranslationMatrixCache.Clear();
-			TranslationMatrixCache = null;
-		}
-		
-		private Queue<SpriteTranslationKey> TranslationMatrixCacheIndex;
-		private Dictionary<SpriteTranslationKey, Matrix4> TranslationMatrixCache;
-		
-		private Int32 _TranslationMatrixCacheLimitFactor;
-		public Int32 TranslationMatrixCacheLimitFactor
-		{
-			get { return _TranslationMatrixCacheLimitFactor; }
-			set
-			{
-				if(value < 1)
-					throw new ArgumentOutOfRangeException();
-				_TranslationMatrixCacheLimitFactor = value;
-			}
-		}
-		
-		public Matrix4 GetTranslationMatrix(Single x, Single y, Single scale, Single angle)
-		{
-			SpriteTranslationKey key = new SpriteTranslationKey(x, y, scale, angle);
-			
-			if(!TranslationMatrixCache.ContainsKey(key))
-				GenerateTranslationMatrix(key);
-			return TranslationMatrixCache[key];
-		}
-		
-		private void GenerateTranslationMatrix(SpriteTranslationKey key)
-		{
-			Single RadianAngle = MatrixHelper.GetRadianAngle(key.Angle);
-			
-			//TODO: Verify that these formulas are correct.
-			Single x = key.X + (key.Scale * (FMath.Sin(RadianAngle) - FMath.Cos(RadianAngle)));
-			Single y = key.Y + (key.Scale * (FMath.Cos(RadianAngle) + FMath.Sin(RadianAngle)));
+			Single nx = x + (scale * (FMath.Sin(radianAngle) - FMath.Cos(radianAngle)));
+			Single ny = y + (scale * (FMath.Cos(radianAngle) + FMath.Sin(radianAngle)));
 			Single z = 0.0f;
 			
-			Vector3 transV = new Vector3(x, y, z);
+			Vector3 transV = new Vector3(nx, ny, z);
 			
 			Matrix4 m = Matrix4.Translation(transV);
 			
-			//Add to cache
-			TranslationMatrixCacheIndex.Enqueue(key);
-			TranslationMatrixCache.Add(key, m);
-			
-			//Remove extra from cache
-			Int32 limit = GetTranslationMatrixCacheLimit();
-			while(TranslationMatrixCache.Count > limit)
-			{
-				SpriteTranslationKey old = TranslationMatrixCacheIndex.Dequeue();
-				TranslationMatrixCache.Remove(old);
-			}
+			return m;
 		}
-		
-		private Int32 GetTranslationMatrixCacheLimit()
-		{
-			return Text.Length * TranslationMatrixCacheLimitFactor;
-		}
-		
-		#endregion
 	}
 }
 

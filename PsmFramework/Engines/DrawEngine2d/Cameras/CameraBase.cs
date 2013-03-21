@@ -123,7 +123,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 			get
 			{
 				if(RecalcRequired)
-					RecalcProjectionMatrixInternal();
+					RecalcProjectionMatrix();
 				
 				return _ProjectionMatrix;
 			}
@@ -133,18 +133,18 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		public Single Near { get; private set; }
 		public Single Far { get; private set; }
 		
-		private void RecalcProjectionMatrixInternal()
+		protected void RecalcProjectionMatrix()
 		{
 			ClearRecalcRequired();
 			
-			RecalcProjectionMatrix();
+			RecalcProjectionMatrixHelper();
 		}
 		
 		/// <summary>
 		/// Responsible for calculating the ProjectionMatrix and 
 		/// any necessary left/top/right/bottom/height/width/bounds vars.
 		/// </summary>
-		protected abstract void RecalcProjectionMatrix();
+		protected abstract void RecalcProjectionMatrixHelper();
 		
 		#endregion
 		

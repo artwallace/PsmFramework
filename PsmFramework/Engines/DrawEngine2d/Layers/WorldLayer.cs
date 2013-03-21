@@ -1,4 +1,5 @@
 using System;
+using PsmFramework.Engines.DrawEngine2d.Cameras;
 
 namespace PsmFramework.Engines.DrawEngine2d.Layers
 {
@@ -12,6 +13,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Layers
 			: base(drawEngine2d, zIndex)
 		{
 		}
+		
+		#endregion
+		
+		#region Camera
+		
+		public override CameraBase Camera { get { return DrawEngine2d.WorldCamera; } }
 		
 		#endregion
 	}

@@ -35,9 +35,43 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		#region ProjectionMatrix
 		
-		protected override void RecalcProjectionMatrix()
+		protected override void RecalcProjectionMatrixHelper()
 		{
-			throw new NotImplementedException();
+			if(IsDisposed)
+				return;
+			
+			_Width = DrawEngine2d.FrameBufferWidthAsSingle;
+			_Height = DrawEngine2d.FrameBufferHeightAsSingle;
+			
+			if(Zoom != DefaultZoom)
+			{
+				_Width *= Zoom;
+				_Height *= Zoom;
+			}
+			
+			_Left = Center.X - (_Width / 2);
+			_Right = _Left + _Width;
+			
+			switch(DrawEngine2d.CoordinateSystemMode)
+			{
+				case(CoordinateSystemMode.OriginAtUpperLeft):
+					_Top = Center.Y - (_Height / 2);
+					_Bottom = _Top + _Height;
+					break;
+				case(CoordinateSystemMode.OriginAtLowerLeft):
+					_Bottom = Center.Y - (_Height / 2);
+					_Top = _Bottom + _Height;
+					break;
+				default:
+					throw new NotSupportedException();
+			}
+			
+			_Bounds = new RectangularArea2(_Left, _Top, _Right, _Bottom);
+			
+			ProjectionMatrix = Matrix4.Ortho(Left, Right, Bottom, Top, Near, Far);
+			
+			if(Rotation != DefaultRotation)
+				ProjectionMatrix *= Matrix4.RotationZ(Rotation.Radian);
 		}
 		
 		#endregion
@@ -59,12 +93,14 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		public void SetCenter(Coordinate2 center)
 		{
-			throw new NotImplementedException();
+			_Center = center;
+			SetRecalcRequired();
 		}
 		
 		public void SetCenter(Single x, Single y)
 		{
-			throw new NotImplementedException();
+			_Center = new Coordinate2(x, y);
+			SetRecalcRequired();
 		}
 		
 		public void SetCenterAtOrigin()
@@ -81,6 +117,9 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		public void SetCenterToPointWithinBounds(Coordinate2 point, RectangularArea2 bounds)
 		{
+			//_Center = 
+			SetRecalcRequired();
+			
 			throw new NotImplementedException();
 		}
 		
@@ -90,26 +129,36 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		protected override void InitializeDimensions()
 		{
-			throw new NotImplementedException();
+			SetRecalcRequired();
 		}
 		
 		protected override void CleanupDimensions()
 		{
-			throw new NotImplementedException();
+			_Width = default(Single);
+			_Height = default(Single);
 		}
 		
+		private Single _Width;
 		public override Single Width
 		{
 			get
 			{
-				throw new NotImplementedException();
+				if(RecalcRequired)
+					RecalcProjectionMatrix();
+				
+				return _Width;
 			}
 		}
+		
+		private Single _Height;
 		public override Single Height
 		{
 			get
 			{
-				throw new NotImplementedException();
+				if(RecalcRequired)
+					RecalcProjectionMatrix();
+				
+				return _Height;
 			}
 		}
 		
@@ -119,34 +168,11 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		protected override void InitializeBounds()
 		{
-			throw new NotImplementedException();
-			
-//			switch(CoordinateSystemMode)
-//			{
-//				case(CoordinateSystemMode.OriginAtUpperLeft):
-//					_Top = 0.0f;
-//					_Bottom = DrawEngine2d.FrameBufferHeightAsSingle;
-//					break;
-//				case(CoordinateSystemMode.OriginAtLowerLeft):
-//					_Top = DrawEngine2d.FrameBufferHeightAsSingle;
-//					_Bottom = 0.0f;
-//					break;
-//				default:
-//					throw new NotSupportedException();
-//			}
-//			
-//			_Left = 0.0f;
-//			_Right = DrawEngine2d.FrameBufferWidthAsSingle;
-//			
-//			_Bounds = new RectangularArea2(_Left, _Top, _Right, _Bottom);
-			
 			SetRecalcRequired();
 		}
 		
 		protected override void CleanupBounds()
 		{
-			throw new NotImplementedException();
-			
 			_Top = default(Single);
 			_Bottom = default(Single);
 			_Left = default(Single);
@@ -176,12 +202,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		private void InitializeZoom()
 		{
-			throw new NotImplementedException();
+			SetZoomToDefault();
 		}
 		
 		private void CleanupZoom()
 		{
-			throw new NotImplementedException();
+			_Zoom = default(Single);
 		}
 		
 		private Single _Zoom;
@@ -199,12 +225,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 			}
 		}
 		
-		public const Single DefaultZoom = 1.0f;
-		
 		public void SetZoomToDefault()
 		{
 			Zoom = DefaultZoom;
 		}
+		
+		public const Single DefaultZoom = 1.0f;
 		
 		#endregion
 		
@@ -212,12 +238,13 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		private void InitializeRotation()
 		{
-			throw new NotImplementedException();
+			SetRotationToDefault();
 		}
 		
 		private void CleanupRotation()
 		{
-			throw new NotImplementedException();
+			_Rotation = default(Angle2);
+			_RotationPoint = default(Coordinate2);
 		}
 		
 		private Angle2 _Rotation;
@@ -235,12 +262,29 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 			}
 		}
 		
-		public readonly Angle2 DefaultRotation = Angle2.Zero;
+		private Coordinate2 _RotationPoint;
+		public Coordinate2 RotationPoint
+		{
+			get { return _RotationPoint; }
+			private set
+			{
+				if(_RotationPoint == value)
+					return;
+				
+				_RotationPoint = value;
+				
+				SetRecalcRequired();
+			}
+		}
 		
 		public void SetRotationToDefault()
 		{
 			Rotation = DefaultRotation;
+			RotationPoint = DefaultRotationPoint;
 		}
+		
+		public readonly Angle2 DefaultRotation = Angle2.Zero;
+		public readonly Coordinate2 DefaultRotationPoint = Coordinate2.X0Y0;
 		
 		#endregion
 	}
