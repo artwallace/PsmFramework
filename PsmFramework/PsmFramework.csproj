@@ -217,10 +217,10 @@
     <Compile Include="Engines\DrawEngine2d\Layers\WorldDebugLayer.cs" />
     <Compile Include="Engines\DrawEngine2d\Layers\ScreenDebugLayer.cs" />
     <Compile Include="Engines\DrawEngine2d\Support\MatrixHelper.cs" />
-    <Compile Include="Engines\DrawEngine2d\Support\Angle.cs" />
     <Compile Include="Engines\DrawEngine2d\Cameras\CameraBase.cs" />
     <Compile Include="Engines\DrawEngine2d\Cameras\WorldCamera.cs" />
     <Compile Include="Engines\DrawEngine2d\Cameras\ScreenCamera.cs" />
+    <Compile Include="Engines\DrawEngine2d\Support\Angle2.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedShaderProgram Include="Engines\DrawEngine2d\Shaders\Font.fcg" />

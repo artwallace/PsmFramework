@@ -7,6 +7,7 @@ using PsmFramework.Engines.DrawEngine2d.Support;
 using PsmFramework.Engines.DrawEngine2d.Textures;
 using Sce.PlayStation.Core;
 using Sce.PlayStation.Core.Graphics;
+using PsmFramework.Engines.DrawEngine2d.Cameras;
 
 namespace PsmFramework.Engines.DrawEngine2d
 {
@@ -626,164 +627,18 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		//TODO: Need to ensure that all camera changes are done before the rendering phase starts.
 		
-		//TODO: Need a helper to rotate on a specified point.
-		
 		private void InitializeWorldCamera()
 		{
-			WorldCameraAtOrigin = new Coordinate2(0f, 0f);
-			WorldCameraAtScreenCenter = new Coordinate2(FrameBufferWidth/2, FrameBufferHeight/2);
-			
-			WorldCameraPosition = WorldCameraAtScreenCenter;
-			SetWorldCameraZoomToNormal();
-			SetWorldCameraRotationToNormal();
+			WorldCamera = new WorldCamera(this);
 		}
 		
 		private void CleanupWorldCamera()
 		{
-			WorldCameraPosition = WorldCameraAtScreenCenter;
-			SetWorldCameraZoomToNormal();
-			SetWorldCameraRotationToNormal();
+			WorldCamera.Dispose();
+			WorldCamera = null;
 		}
 		
-		private Boolean WorldCameraRequiresRecalc;
-		
-		private void MarkWorldCameraForRecalc()
-		{
-			WorldCameraRequiresRecalc = true;
-			SetRenderRequired();
-		}
-		
-		private void ResetWorldCameraRecalc()
-		{
-			WorldCameraRequiresRecalc = false;
-		}
-		
-		private Coordinate2 WorldCameraAtOrigin;
-		private Coordinate2 WorldCameraAtScreenCenter;
-		
-		private Coordinate2 _WorldCameraPosition;
-		public Coordinate2 WorldCameraPosition
-		{
-			get { return _WorldCameraPosition; }
-			set
-			{
-				_WorldCameraPosition = value;
-				MarkWorldCameraForRecalc();
-			}
-		}
-		
-		private Single _WorldCameraZoom;
-		public Single WorldCameraZoom
-		{
-			get { return _WorldCameraZoom; }
-			set
-			{
-				_WorldCameraZoom = value;
-				MarkWorldCameraForRecalc();
-			}
-		}
-		
-		//TODO: Move to an angle class.
-		private Single _WorldCameraRotation;
-		public Single WorldCameraRotation
-		{
-			get { return _WorldCameraRotation; }
-			set
-			{
-				Single newValue = value;
-				
-				if(newValue < 0.0f || newValue > 360.0f)
-					newValue = newValue % 360.0f;
-				
-				if(newValue < 0.0f)
-					newValue = 360.0f - Math.Abs(newValue);
-				
-				_WorldCameraRotation = newValue;
-				MarkWorldCameraForRecalc();
-			}
-		}
-		
-		private Matrix4 _WorldCameraProjectionMatrix;
-		public Matrix4 WorldCameraProjectionMatrix
-		{
-			get
-			{
-				if(WorldCameraRequiresRecalc)
-					RecalcWorldCamera();
-				
-				return _WorldCameraProjectionMatrix;
-			}
-			private set
-			{
-				_WorldCameraProjectionMatrix = value;
-			}
-		}
-		
-		public void SetWorldCameraAtOrigin()
-		{
-			WorldCameraPosition = WorldCameraAtOrigin;
-		}
-		
-		public void SetWorldCameraAtScreenCenter()
-		{
-			WorldCameraPosition = WorldCameraAtScreenCenter;
-		}
-		
-		public void SetWorldCameraZoomToNormal()
-		{
-			SetRenderRequired();
-			
-			WorldCameraZoom = 1.0f;
-		}
-		
-		public void SetWorldCameraRotationToNormal()
-		{
-			WorldCameraRotation = 0.0f;
-		}
-		
-		public void RecalcWorldCamera()
-		{
-			ResetWorldCameraRecalc();
-			
-			Single WorldCameraProjectionMatrixRight = WorldCameraPosition.X + (FrameBufferWidthAsSingle / 2);
-			Single WorldCameraProjectionMatrixLeft = WorldCameraProjectionMatrixRight - FrameBufferWidthAsSingle;
-			Single WorldCameraProjectionMatrixBottom = 0.0f;
-			Single WorldCameraProjectionMatrixTop = 0.0f;
-			Single WorldCameraProjectionMatrixNear = -1.0f;
-			Single WorldCameraProjectionMatrixFar = 1.0f;
-			
-			switch(CoordinateSystemMode)
-			{
-				case(CoordinateSystemMode.OriginAtUpperLeft):
-					WorldCameraProjectionMatrixBottom = WorldCameraPosition.Y + (FrameBufferHeightAsSingle / 2);
-					WorldCameraProjectionMatrixTop = WorldCameraProjectionMatrixBottom - FrameBufferHeightAsSingle;
-					break;
-				case(CoordinateSystemMode.OriginAtLowerLeft):
-					WorldCameraProjectionMatrixTop = WorldCameraPosition.Y + (FrameBufferHeightAsSingle / 2);
-					WorldCameraProjectionMatrixBottom = WorldCameraProjectionMatrixTop - FrameBufferHeightAsSingle;
-					break;
-			}
-			
-			WorldCameraProjectionMatrix = Matrix4.Ortho(
-				WorldCameraProjectionMatrixLeft,
-				WorldCameraProjectionMatrixRight,
-				WorldCameraProjectionMatrixBottom,
-				WorldCameraProjectionMatrixTop,
-				WorldCameraProjectionMatrixNear,
-				WorldCameraProjectionMatrixFar
-				);
-			
-			if(WorldCameraZoom != 0.0f)
-			{
-				WorldCameraProjectionMatrix = WorldCameraProjectionMatrix * Matrix4.Scale(WorldCameraZoom, WorldCameraZoom, 1.0f);
-			}
-			
-			if(WorldCameraRotation != 0.0f)
-			{
-				Single angleInRadians = MatrixHelper.GetRadianAngle(WorldCameraRotation);
-				WorldCameraProjectionMatrix = WorldCameraProjectionMatrix * Matrix4.RotationZ(angleInRadians);
-			}
-		}
+		public WorldCamera WorldCamera { get; private set; }
 		
 		#endregion
 		
@@ -791,11 +646,16 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		private void InitializeScreenCamera()
 		{
+			ScreenCamera = new ScreenCamera(this);
 		}
 		
 		private void CleanupScreenCamera()
 		{
+			ScreenCamera.Dispose();
+			ScreenCamera = null;
 		}
+		
+		public ScreenCamera ScreenCamera { get; private set; }
 		
 		#endregion
 		

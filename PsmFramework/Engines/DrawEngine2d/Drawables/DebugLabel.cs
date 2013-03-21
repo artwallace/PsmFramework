@@ -87,7 +87,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				Matrix4 scaleMatrix = GetScalingMatrix(1.0f);
 				Matrix4 transMatrix = GetTranslationMatrix(cacheData.Position.X, cacheData.Position.Y, 1.0f, 0f);
 				Matrix4 modelMatrix = transMatrix * scaleMatrix;
-				Matrix4 worldViewProj = DrawEngine2d.WorldCameraProjectionMatrix * modelMatrix;
+				Matrix4 worldViewProj = DrawEngine2d.WorldCamera.ProjectionMatrix * modelMatrix;
 				
 				Shader.ShaderProgram.SetUniformValue(0, ref worldViewProj);
 				

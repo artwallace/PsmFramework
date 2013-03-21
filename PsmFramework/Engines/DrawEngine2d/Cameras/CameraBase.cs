@@ -138,11 +138,11 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 			ClearRecalcRequired();
 			
 			RecalcProjectionMatrix();
-			RecalcBounds();
 		}
 		
 		/// <summary>
-		/// Responsible for calculating the ProjectionMatrix and left/top/right/bottom vars.
+		/// Responsible for calculating the ProjectionMatrix and 
+		/// any necessary left/top/right/bottom/height/width/bounds vars.
 		/// </summary>
 		protected abstract void RecalcProjectionMatrix();
 		
@@ -150,193 +150,49 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		#region Center
 		
-		//TODO: Altering these in the wrong manner could result in an endless loop of recalcs.
-		
-		private void InitializeCenter()
+		protected virtual void InitializeCenter()
 		{
-			SetDefaultCenter();
 		}
 		
-		private void CleanupCenter()
+		protected virtual void CleanupCenter()
 		{
-			Center = default(Coordinate2);
 		}
 		
-		private Coordinate2 _Center;
-		public Coordinate2 Center
-		{
-			get { return _Center; }
-			protected set
-			{
-				if(_Center == value)
-					return;
-				
-				SetRecalcRequired();
-				
-				_Center = value;
-			}
-		}
-		
-		public virtual void SetDefaultCenter()
-		{
-			Center = Coordinate2.X0Y0;
-		}
+		public abstract Coordinate2 Center { get; }
 		
 		#endregion
 		
 		#region Dimensions
 		
-		//TODO: Altering these in the wrong manner could result in an endless loop of recalcs.
-		
-		private void InitializeDimensions()
+		protected virtual void InitializeDimensions()
 		{
-			SetDefaultDimensions();
 		}
 		
-		private void CleanupDimensions()
+		protected virtual void CleanupDimensions()
 		{
-			Width = default(Single);
-			Height = default(Single);
 		}
 		
-		private Single _Width;
-		public Single Width
-		{
-			get { return _Width; }
-			protected set
-			{
-				if(_Width == value)
-					return;
-				
-				SetRecalcRequired();
-				
-				_Width = value;
-			}
-		}
-		
-		private Single _Height;
-		public Single Height
-		{
-			get { return _Height; }
-			protected set
-			{
-				if(_Height == value)
-					return;
-				
-				SetRecalcRequired();
-				
-				_Height = value;
-			}
-		}
-		
-		public virtual void SetDefaultDimensions()
-		{
-			Width = DrawEngine2d.FrameBufferWidthAsSingle;
-			Height = DrawEngine2d.FrameBufferHeightAsSingle;
-		}
+		public abstract Single Width { get; }
+		public abstract Single Height { get; }
 		
 		#endregion
 		
 		#region Bounds
 		
-		private void InitializeBounds()
+		protected virtual void InitializeBounds()
 		{
 		}
 		
-		private void CleanupBounds()
+		protected virtual void CleanupBounds()
 		{
 		}
 		
-		private Single _Top;
-		public Single Top
-		{
-			get
-			{
-				if(RecalcRequired)
-					RecalcProjectionMatrixInternal();
-				
-				return _Top;
-			}
-			protected set { _Top = value; }
-		}
+		public abstract Single Top { get; }
+		public abstract Single Bottom { get; }
+		public abstract Single Left { get; }
+		public abstract Single Right { get; }
 		
-		private Single _Bottom;
-		public Single Bottom
-		{
-			get
-			{
-				if(RecalcRequired)
-					RecalcProjectionMatrixInternal();
-				
-				return _Bottom;
-			}
-			protected set { _Bottom = value; }
-		}
-		
-		private Single _Left;
-		public Single Left
-		{
-			get
-			{
-				if(RecalcRequired)
-					RecalcProjectionMatrixInternal();
-				
-				return _Left;
-			}
-			protected set { _Left = value; }
-		}
-		
-		private Single _Right;
-		public Single Right
-		{
-			get
-			{
-				if(RecalcRequired)
-					RecalcProjectionMatrixInternal();
-				
-				return _Right;
-			}
-			protected set { _Right = value; }
-		}
-		
-		private RectangularArea2 _Bounds;
-		public RectangularArea2 Bounds
-		{
-			get
-			{
-				if(RecalcRequired)
-					RecalcProjectionMatrixInternal();
-				
-				return _Bounds;
-			}
-			protected set { _Bounds = value; }
-		}
-		
-		private void RecalcBounds()
-		{
-			Bounds = new RectangularArea2(Left, Top, Right, Bottom);
-		}
-		
-//		public Single Width
-//		{
-//			get { return Right - Left; }
-//		}
-//		
-//		public Single Height
-//		{
-//			get
-//			{
-//				switch(DrawEngine2d.CoordinateSystemMode)
-//				{
-//					case(CoordinateSystemMode.OriginAtUpperLeft):
-//						return Bottom - Top;
-//					case(CoordinateSystemMode.OriginAtLowerLeft):
-//						return Top - Bottom;
-//					default:
-//						throw new InvalidProgramException();
-//				}
-//			}
-//		}
+		public abstract RectangularArea2 Bounds { get; }
 		
 		#endregion
 	}

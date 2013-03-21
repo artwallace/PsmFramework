@@ -21,6 +21,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 			_TopRight = new Coordinate2(right, top);
 			_BottomRight = new Coordinate2(right, bottom);
 			
+			//TODO: is +1 correct here?
 			_Width = right - left + 1; //zero based
 			_Height = top - bottom + 1; //zero based
 		}

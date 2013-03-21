@@ -89,7 +89,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				Matrix4 rotMatrix = GetRotationMatrix(sprite.Rotation);
 				Matrix4 transMatrix = GetTranslationMatrix(sprite.Position.X, sprite.Position.Y, sprite.Scale, sprite.Rotation);
 				Matrix4 modelMatrix = transMatrix * rotMatrix * scaleMatrix;
-				Matrix4 worldViewProj = Layer.DrawEngine2d.WorldCameraProjectionMatrix * modelMatrix;// * Layer.DrawEngine2d.ModelViewMatrix
+				Matrix4 worldViewProj = Layer.DrawEngine2d.WorldCamera.ProjectionMatrix * modelMatrix;// * Layer.DrawEngine2d.ModelViewMatrix
 				
 				Shader.ShaderProgram.SetUniformValue(0, ref worldViewProj);
 				
