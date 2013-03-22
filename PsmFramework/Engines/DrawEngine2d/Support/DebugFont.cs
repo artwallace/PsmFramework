@@ -16,6 +16,9 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		
 		public void Dispose()
 		{
+			if(IsDisposed)
+				return;
+			
 			Cleanup();
 			IsDisposed = true;
 		}

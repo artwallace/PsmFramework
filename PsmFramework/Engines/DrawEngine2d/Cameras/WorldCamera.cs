@@ -37,9 +37,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		protected override void RecalcProjectionMatrixHelper()
 		{
-			if(IsDisposed)
-				return;
-			
 			_Width = DrawEngine2d.FrameBufferWidthAsSingle;
 			_Height = DrawEngine2d.FrameBufferHeightAsSingle;
 			
@@ -71,7 +68,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 			ProjectionMatrix = Matrix4.Ortho(Left, Right, Bottom, Top, Near, Far);
 			
 			if(Rotation != DefaultRotation)
+			{
+				if(RotationPoint != DefaultRotationPoint)
+					throw new NotImplementedException();
+				
 				ProjectionMatrix *= Matrix4.RotationZ(Rotation.Radian);
+			}
 		}
 		
 		#endregion

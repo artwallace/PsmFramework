@@ -53,7 +53,7 @@ namespace Demo.SpaceRockets
 			
 			LayerBase debugOverlay = DrawEngine2d.GetOrCreateScreenLayer(2);
 			_DebugTextLabel = new DebugLabel(debugOverlay);
-			_DebugTextLabel.Text = "This text is in a world layer\nbut it should be in a screen layer.";
+			_DebugTextLabel.Text = "This text is in a screen layer.";
 			_DebugTextLabel.Position = new Coordinate2(100.0f, 100.0f);
 		}
 		

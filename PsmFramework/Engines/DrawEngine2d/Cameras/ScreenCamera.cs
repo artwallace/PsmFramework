@@ -19,9 +19,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		protected override void RecalcProjectionMatrixHelper()
 		{
-			if(IsDisposed)
-				return;
-			
 			ProjectionMatrix = Matrix4.Ortho(Left, Right, Bottom, Top, Near, Far);
 		}
 		

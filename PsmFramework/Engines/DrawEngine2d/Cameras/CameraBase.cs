@@ -16,6 +16,9 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		public void Dispose()
 		{
+			if(IsDisposed)
+				return;
+			
 			Cleanup();
 			CleanupInternal();
 			IsDisposed = true;
@@ -135,6 +138,9 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		protected void RecalcProjectionMatrix()
 		{
+			if(IsDisposed)
+				return;
+			
 			ClearRecalcRequired();
 			
 			RecalcProjectionMatrixHelper();

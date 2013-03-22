@@ -16,6 +16,9 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		public void Dispose()
 		{
+			if(IsDisposed)
+				return;
+			
 			Cleanup();
 			CleanupInternal();
 			IsDisposed = true;
@@ -31,6 +34,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		{
 			InitializeLayer(layer);
 			InitializeDrawEngine2d();
+			
 			InitializeChanged();
 			InitializeVisible();
 			InitializeBounds();
@@ -41,6 +45,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			CleanupBounds();
 			CleanupVisible();
 			CleanupChanged();
+			
 			CleanupDrawEngine2d();
 			CleanupLayer();
 		}
@@ -183,7 +188,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		{
 			get
 			{
-				if(Changed)
+				if(Changed)//This seems illogical.
 					UpdateBounds();
 				return _Bounds;
 			}

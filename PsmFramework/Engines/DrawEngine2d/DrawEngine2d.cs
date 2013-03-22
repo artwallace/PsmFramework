@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
+using PsmFramework.Engines.DrawEngine2d.Cameras;
 using PsmFramework.Engines.DrawEngine2d.Drawables;
 using PsmFramework.Engines.DrawEngine2d.Layers;
 using PsmFramework.Engines.DrawEngine2d.Shaders;
 using PsmFramework.Engines.DrawEngine2d.Support;
 using PsmFramework.Engines.DrawEngine2d.Textures;
-using Sce.PlayStation.Core;
 using Sce.PlayStation.Core.Graphics;
-using PsmFramework.Engines.DrawEngine2d.Cameras;
 
 namespace PsmFramework.Engines.DrawEngine2d
 {
@@ -25,6 +24,9 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		public void Dispose()
 		{
+			if(IsDisposed)
+				return;
+			
 			Cleanup();
 			IsDisposed = true;
 		}

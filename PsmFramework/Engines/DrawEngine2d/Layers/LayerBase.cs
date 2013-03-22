@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using PsmFramework.Engines.DrawEngine2d.Drawables;
 using PsmFramework.Engines.DrawEngine2d.Cameras;
+using PsmFramework.Engines.DrawEngine2d.Drawables;
 
 namespace PsmFramework.Engines.DrawEngine2d.Layers
 {
@@ -17,6 +17,9 @@ namespace PsmFramework.Engines.DrawEngine2d.Layers
 		
 		public void Dispose()
 		{
+			if(IsDisposed)
+				return;
+			
 			Cleanup();
 			CleanupInternal();
 			IsDisposed = true;
