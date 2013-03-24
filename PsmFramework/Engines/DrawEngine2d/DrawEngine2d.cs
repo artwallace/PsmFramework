@@ -222,6 +222,8 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		#region Layers
 		
+		//TODO: Move to a single DebugLayer?
+		
 		private void InitializeLayers()
 		{
 			Layers = new SortedList<Int32, LayerBase>();
@@ -333,12 +335,10 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		#region Render Required
 		
-		//TODO: Need a better name. dirty?
-		
 		private void InitializeRenderRequiredFlag()
 		{
-			//Ensure first past is rendered.
-			RenderRequired = true;
+			//Ensure first pass is rendered.
+			SetRenderRequired();
 		}
 		
 		private void CleanupRenderRequiredFlag()

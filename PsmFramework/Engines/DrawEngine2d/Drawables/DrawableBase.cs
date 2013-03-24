@@ -188,7 +188,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		{
 			get
 			{
-				if(Changed)//This seems illogical.
+				if(Changed)//TODO: This seems illogical. Changed and UpdateBounds have little-to-no correlation.
 					UpdateBounds();
 				return _Bounds;
 			}

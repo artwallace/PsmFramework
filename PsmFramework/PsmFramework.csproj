@@ -239,4 +239,7 @@
     <EmbeddedShaderProgram Include="Engines\GameEngine2d\shaders\sprite_directional_fade.fcg" />
     <EmbeddedShaderProgram Include="Engines\GameEngine2d\shaders\sprite_directional_fade.vcg" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ToDoList.txt" />
+  </ItemGroup>
 </Project>

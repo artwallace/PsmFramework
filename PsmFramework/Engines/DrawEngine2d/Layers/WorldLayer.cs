@@ -3,8 +3,8 @@ using PsmFramework.Engines.DrawEngine2d.Cameras;
 
 namespace PsmFramework.Engines.DrawEngine2d.Layers
 {
-	//TODO: Add scales with world
-	//TODO: Add rotates with world
+	//All world layers use the same camera.
+	//Perhaps in future I will allow custom cameras for certain layers.
 	public sealed class WorldLayer : LayerBase
 	{
 		#region Constructor, Dispose

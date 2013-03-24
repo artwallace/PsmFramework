@@ -3,6 +3,7 @@ using PsmFramework.Engines.DrawEngine2d.Cameras;
 
 namespace PsmFramework.Engines.DrawEngine2d.Layers
 {
+	//TODO: Move to a single DebugLayer?
 	internal sealed class WorldDebugLayer : LayerBase
 	{
 		#region Constructor, Dispose

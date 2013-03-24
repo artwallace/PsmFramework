@@ -6,21 +6,14 @@ using Demo.Zombies;
 using PsmFramework;
 using PsmFramework.Modes;
 using Sce.PlayStation.Core;
-using Sce.PlayStation.HighLevel.GameEngine2D;
-using Sce.PlayStation.HighLevel.GameEngine2D.Base;
 
-namespace Demo.MainMenu
+namespace Demo.MainMenuAlt
 {
-	public class MainMenuMode : GameEngine2dModeBase
+	public class MainMenuAltMode : DrawEngine2dModeBase
 	{
-		protected override UInt32 SpritesCapacity { get { return 50; } }
-		protected override UInt32 DrawHelpersCapacity { get { return 50; } }
-		protected override Vector4 ClearColor { get { return Colors.Black; } }
-		protected override Boolean DrawDebugGrid { get { return false; } }
-		
 		#region Constructor, Dispose
 		
-		protected MainMenuMode(AppManager mgr)
+		public MainMenuAltMode(AppManager mgr)
 			: base(mgr)
 		{
 		}
@@ -31,7 +24,7 @@ namespace Demo.MainMenu
 		
 		protected override void Initialize()
 		{
-			EnableDebugInfo();
+			//EnableDebugInfo();
 			
 			InitializeLogo();
 		}
@@ -84,33 +77,34 @@ namespace Demo.MainMenu
 		
 		#region Logo
 		
-		private SpriteUV LogoSprite;
+//		private SpriteUV LogoSprite;
 		
 		private void InitializeLogo()
 		{
-			TextureManager.AddTextureAsset(Assets.Image_Logo, this);
-			LogoSprite = TextureManager.CreateSpriteUV(Assets.Image_Logo);
-			LogoSprite.Position = GameScene.Camera2D.Center;
-			AddToScene(LogoSprite);
+//			TextureManager.AddTextureAsset(Assets.Image_Logo, this);
+//			LogoSprite = TextureManager.CreateSpriteUV(Assets.Image_Logo);
+//			LogoSprite.Position = GameScene.Camera2D.Center;
+//			AddToScene(LogoSprite);
 		}
 		
 		private void CleanupLogo()
 		{
-			RemoveFromScene(LogoSprite);
-			LogoSprite.Cleanup();
-			LogoSprite = null;
-			TextureManager.RemoveAllTexturesForUser(this);
+//			RemoveFromScene(LogoSprite);
+//			LogoSprite.Cleanup();
+//			LogoSprite = null;
+//			TextureManager.RemoveAllTexturesForUser(this);
 		}
 		
 		#endregion
 		
 		#region Mode Factory Delegate
 		
-		public static ModeBase MainMenuModeFactory(AppManager mgr)
+		public static ModeBase MainMenuAltModeFactory(AppManager mgr)
 		{
-			return new MainMenuMode(mgr);
+			return new MainMenuAltMode(mgr);
 		}
 		
 		#endregion
 	}
 }
+

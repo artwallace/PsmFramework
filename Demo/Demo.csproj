@@ -64,6 +64,7 @@
     <Compile Include="Zombies\Level1.cs" />
     <Compile Include="Zombies\Level1Room1.cs" />
     <Compile Include="Zombies\ZombieMode.cs" />
+    <Compile Include="MainMenuAlt\MainMenuAltMode.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Fireworks\" />
@@ -71,6 +72,7 @@
     <Folder Include="SpaceRockets\" />
     <Folder Include="TwinStickShooter\" />
     <Folder Include="Zombies\" />
+    <Folder Include="MainMenuAlt\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="MainMenu\MainMenu.png" />
