@@ -19,6 +19,9 @@ namespace PsmFramework.Modes
 		
 		public void Dispose()
 		{
+			if(IsDisposed)
+				return;
+			
 			Cleanup();
 			CleanupInternal();
 			

@@ -9,25 +9,32 @@ using Sce.PlayStation.Core.Input;
 
 namespace PsmFramework
 {
-	public sealed class AppManager
+	public sealed class AppManager : IDisposablePlus
 	{
 		#region Constructor, Dispose
 		
-		public AppManager(AppOptionsBase options, GraphicsContext gc)
+		public AppManager(AppOptionsBase options, GraphicsContext gc, CreateModeDelegate defaultTitleScreen = null, CreateModeDelegate defaultOptionsScreen = null)
 		{
-			Initialize(options, gc);
+			Initialize(options, gc, defaultTitleScreen, defaultOptionsScreen);
 		}
 		
 		public void Dispose()
 		{
+			if(IsDisposed)
+				return;
+			
 			Cleanup();
+			
+			IsDisposed = true;
 		}
+		
+		public Boolean IsDisposed { get; private set; }
 		
 		#endregion
 		
 		#region Initialize, Cleanup
 		
-		private void Initialize(AppOptionsBase options, GraphicsContext gc)
+		private void Initialize(AppOptionsBase options, GraphicsContext gc, CreateModeDelegate defaultTitleScreen, CreateModeDelegate defaultOptionsScreen)
 		{
 			SetRunStateToInitializing();
 			UpdateRunState();
@@ -35,7 +42,7 @@ namespace PsmFramework
 			InitializeOptions(options);
 			InitializeGraphics(gc);
 			InitializeTimers();
-			InitializeModes();
+			InitializeModes(defaultTitleScreen, defaultOptionsScreen);
 			InitializeInput();
 		}
 		
@@ -610,11 +617,14 @@ namespace PsmFramework
 		
 		#region Modes
 		
-		private void InitializeModes()
+		private void InitializeModes(CreateModeDelegate defaultTitleScreen, CreateModeDelegate defaultOptionsScreen)
 		{
 			PreviousMode = null;
 			CurrentMode = null;
 			ReturnMode = null;
+			
+			DefaultTitleScreenFactory = defaultTitleScreen;
+			DefaultOptionsScreenFactory = defaultOptionsScreen;
 		}
 		
 		private void CleanupModes()
@@ -636,9 +646,15 @@ namespace PsmFramework
 				ReturnMode.Dispose();
 				ReturnMode = null;
 			}
+			
+			DefaultTitleScreenFactory = null;
+			DefaultOptionsScreenFactory = null;
 		}
 		
 		public delegate ModeBase CreateModeDelegate(AppManager mgr);
+		
+		public CreateModeDelegate DefaultTitleScreenFactory { get; private set; }
+		public CreateModeDelegate DefaultOptionsScreenFactory { get; private set; }
 		
 		private CreateModeDelegate NextModeFactory;
 		
@@ -703,6 +719,11 @@ namespace PsmFramework
 			//TODO: Re-enable this after Node finalizer is fixed!!!
 			//if (!Debugger.IsAttached)
 			GC.Collect();
+		}
+		
+		public void GoToTitleScreenMode()
+		{
+			GoToMode(DefaultTitleScreenFactory);
 		}
 		
 		#endregion

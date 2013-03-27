@@ -240,6 +240,8 @@
     <EmbeddedShaderProgram Include="Engines\GameEngine2d\shaders\sprite_directional_fade.vcg" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ToDoList.txt" />
+    <None Include="ToDoList.txt">
+      <Gettext-ScanForTranslations>false</Gettext-ScanForTranslations>
+    </None>
   </ItemGroup>
 </Project>

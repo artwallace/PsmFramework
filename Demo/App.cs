@@ -1,4 +1,5 @@
 using Demo.MainMenu;
+using Demo.MainMenuAlt;
 using PsmFramework;
 using Sce.PlayStation.Core.Graphics;
 
@@ -19,15 +20,12 @@ namespace Demo
 		
 		#region Initialize & Cleanup
 		
-		private static AppManager Mgr;
-		private static AppOptions Opts;
-		
 		private static void Initialize()
 		{
 			Opts = new AppOptions();
-			Mgr = new AppManager(Opts, GenerateGraphicsContext());
+			Mgr = new AppManager(Opts, GenerateGraphicsContext(), MainMenuAltMode.MainMenuAltModeFactory);
 			
-			Mgr.GoToMode(MainMenuMode.MainMenuModeFactory);
+			Mgr.GoToTitleScreenMode();
 		}
 		
 		private static void Cleanup()
@@ -38,6 +36,9 @@ namespace Demo
 			//Persist your options here if you haven't already.
 			Opts = null;
 		}
+		
+		private static AppManager Mgr;
+		private static AppOptions Opts;
 		
 		#endregion
 		

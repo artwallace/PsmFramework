@@ -42,7 +42,7 @@ namespace Demo.Zombies
 		{
 			if (Mgr.GamePad0_Start_Pressed && Mgr.ModeChangeAllowed)
 			{
-				Mgr.GoToMode(MainMenuMode.MainMenuModeFactory);
+				Mgr.GoToTitleScreenMode();
 				return;
 			}
 			

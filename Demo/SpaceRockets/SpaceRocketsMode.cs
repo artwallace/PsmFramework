@@ -67,7 +67,7 @@ namespace Demo.SpaceRockets
 		{
 			if (Mgr.GamePad0_Start_Pressed && Mgr.ModeChangeAllowed)
 			{
-				Mgr.GoToMode(MainMenuMode.MainMenuModeFactory);
+				Mgr.GoToTitleScreenMode();
 				return;
 			}
 			
