@@ -46,7 +46,13 @@ namespace PsmFramework.Modes
 		
 		#region Update, Render
 		
-		internal abstract void UpdateInternal();
+		internal virtual void UpdateInternalPre()
+		{
+		}
+		
+		internal virtual void UpdateInternalPost()
+		{
+		}
 		
 		internal abstract void RenderInternal();
 		

@@ -3,7 +3,7 @@ using Sce.PlayStation.Core;
 
 namespace PsmFramework
 {
-	public class RandomGenerator : IDisposable
+	public sealed class RandomGenerator : IDisposablePlus
 	{
 		#region Constructor, Dispose
 		
@@ -14,9 +14,14 @@ namespace PsmFramework
 		
 		public void Dispose()
 		{
-			//Dispose doesn't really do anything in this class but whatever.
+			if(IsDisposed)
+				return;
+			
 			Cleanup();
+			IsDisposed = true;
 		}
+		
+		public Boolean IsDisposed { get; private set; }
 		
 		#endregion
 		

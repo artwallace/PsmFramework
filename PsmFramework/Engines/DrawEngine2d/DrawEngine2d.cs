@@ -83,6 +83,8 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		public void Render()
 		{
+			ResetDrawArrayCallsCounter();
+			
 			if(RenderRequired)
 			{
 				SecondBufferFilled = false;
@@ -345,7 +347,7 @@ namespace PsmFramework.Engines.DrawEngine2d
 		{
 		}
 		
-		private Boolean RenderRequired;
+		public Boolean RenderRequired { get; private set; }
 		
 		public void SetRenderRequired()
 		{

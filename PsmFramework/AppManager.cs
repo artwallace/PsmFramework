@@ -24,7 +24,6 @@ namespace PsmFramework
 				return;
 			
 			Cleanup();
-			
 			IsDisposed = true;
 		}
 		
@@ -44,10 +43,12 @@ namespace PsmFramework
 			InitializeTimers();
 			InitializeModes(defaultTitleScreen, defaultOptionsScreen);
 			InitializeInput();
+			InitializeRandomGenerator();
 		}
 		
 		private void Cleanup()
 		{
+			CleanupRandomGenerator();
 			CleanupInput();
 			CleanupModes();
 			CleanupTimers();
@@ -96,8 +97,10 @@ namespace PsmFramework
 		{
 			RefreshInputData();
 			
-			CurrentMode.UpdateInternal();
+			CurrentMode.UpdateInternalPre();
 			CurrentMode.Update();
+			if (CurrentMode != null)
+				CurrentMode.UpdateInternalPost();
 			
 			if (ModeChanged)
 			{
@@ -287,10 +290,12 @@ namespace PsmFramework
 		
 		private void PauseInGameTimer()
 		{
+			//throw new NotImplementedException();
 		}
 		
 		private void ResumeInGameTimer()
 		{
+			//throw new NotImplementedException();
 		}
 		
 		public Int32 FramesPerSecond { get; private set; }
@@ -712,18 +717,26 @@ namespace PsmFramework
 		
 		public void CleanupPreviousMode()
 		{
-			//PreviousMode.CleanupInternal();
 			PreviousMode.Dispose();
 			PreviousMode = null;
 			
-			//TODO: Re-enable this after Node finalizer is fixed!!!
-			//if (!Debugger.IsAttached)
 			GC.Collect();
 		}
 		
 		public void GoToTitleScreenMode()
 		{
+			if(DefaultTitleScreenFactory == null)
+				throw new ArgumentNullException();
+			
 			GoToMode(DefaultTitleScreenFactory);
+		}
+		
+		public void GoToOptionsScreenMode()
+		{
+			if(DefaultOptionsScreenFactory == null)
+				throw new ArgumentNullException();
+			
+			GoToMode(DefaultOptionsScreenFactory);
 		}
 		
 		#endregion
@@ -747,8 +760,16 @@ namespace PsmFramework
 		
 		#region Random Numbers
 		
-		private RandomGenerator _RandomGenerator = new RandomGenerator(System.Environment.TickCount);
-		public RandomGenerator RandomGenerator { get { return _RandomGenerator; } }
+		private void InitializeRandomGenerator()
+		{
+			RandomGenerator = new RandomGenerator(System.Environment.TickCount);
+		}
+		
+		private void CleanupRandomGenerator()
+		{
+		}
+		
+		public RandomGenerator RandomGenerator { get; private set; }
 		
 		#endregion
 	}

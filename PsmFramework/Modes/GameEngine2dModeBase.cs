@@ -54,7 +54,7 @@ namespace PsmFramework.Modes
 		
 		#region Update, Render
 		
-		internal override void UpdateInternal()
+		internal override void UpdateInternalPre()
 		{
 			if (!Mgr.ModeChanged)
 				Director.Instance.Update();

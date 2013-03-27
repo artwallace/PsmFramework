@@ -65,6 +65,7 @@
     <Compile Include="Zombies\Level1Room1.cs" />
     <Compile Include="Zombies\ZombieMode.cs" />
     <Compile Include="MainMenuAlt\MainMenuAltMode.cs" />
+    <Compile Include="MainMenuAlt\Assets.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Fireworks\" />
@@ -84,6 +85,7 @@
     <Content Include="TwinStickShooter\Images\Spam64.png" />
     <Content Include="TwinStickShooter\Images\Teleporter64.png" />
     <Content Include="Zombies\Images\Background.png" />
+    <Content Include="MainMenuAlt\MainMenu.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Zombies\Level1Room1Background.xml" />

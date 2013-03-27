@@ -4,8 +4,12 @@ using Demo.SpaceRockets;
 using Demo.TwinStickShooter;
 using Demo.Zombies;
 using PsmFramework;
+using PsmFramework.Engines.DrawEngine2d.Drawables;
+using PsmFramework.Engines.DrawEngine2d.Layers;
+using PsmFramework.Engines.DrawEngine2d.Textures;
 using PsmFramework.Modes;
 using Sce.PlayStation.Core;
+using PsmFramework.Engines.DrawEngine2d.Support;
 
 namespace Demo.MainMenuAlt
 {
@@ -20,18 +24,25 @@ namespace Demo.MainMenuAlt
 		
 		#endregion
 		
+		#region Mode Factory Delegate
+		
+		public static ModeBase MainMenuAltModeFactory(AppManager mgr)
+		{
+			return new MainMenuAltMode(mgr);
+		}
+		
+		#endregion
+		
 		#region Mode Logic
 		
 		protected override void Initialize()
 		{
-			//EnableDebugInfo();
-			
-			InitializeLogo();
+			InitializeLayersAndSprites();
 		}
 		
 		protected override void Cleanup()
 		{
-			CleanupLogo();
+			CleanupLayersAndSprites();
 		}
 		
 		public override void Update()
@@ -75,34 +86,32 @@ namespace Demo.MainMenuAlt
 		
 		#endregion
 		
-		#region Logo
+		#region Layers and Sprites
 		
-//		private SpriteUV LogoSprite;
-		
-		private void InitializeLogo()
+		private void InitializeLayersAndSprites()
 		{
-//			TextureManager.AddTextureAsset(Assets.Image_Logo, this);
-//			LogoSprite = TextureManager.CreateSpriteUV(Assets.Image_Logo);
-//			LogoSprite.Position = GameScene.Camera2D.Center;
-//			AddToScene(LogoSprite);
+			//Create the layer to draw sprites into.
+			ScreenLayer = DrawEngine2d.GetOrCreateScreenLayer(2);
+			
+			//Load the logo png into a texture and create a single tile.
+			Texture2dPlus LogoTexture = new Texture2dPlus(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, Assets.Logo);
+			TiledTexture LogoTiledTexture = new TiledTexture(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, Assets.Logo, LogoTexture);
+			LogoTiledTexture.CreateColumnIndex(1);
+			
+			//Create the sprite and add it to the layer.
+			SpriteGroup LogoSpriteGroup = new SpriteGroup(ScreenLayer, LogoTiledTexture);
+			SpriteGroupItem Logo = new SpriteGroupItem(LogoSpriteGroup, new TiledTextureIndex(0));
+			Logo.SetPositionFromCenter(ScreenLayer.Camera.Center);
 		}
 		
-		private void CleanupLogo()
+		private void CleanupLayersAndSprites()
 		{
-//			RemoveFromScene(LogoSprite);
-//			LogoSprite.Cleanup();
-//			LogoSprite = null;
-//			TextureManager.RemoveAllTexturesForUser(this);
+			ScreenLayer = null;
 		}
 		
-		#endregion
+		private const Int32 ScreenLayerId = 2;
 		
-		#region Mode Factory Delegate
-		
-		public static ModeBase MainMenuAltModeFactory(AppManager mgr)
-		{
-			return new MainMenuAltMode(mgr);
-		}
+		private ScreenLayer ScreenLayer;
 		
 		#endregion
 	}

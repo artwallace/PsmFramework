@@ -33,9 +33,9 @@ namespace PsmFramework.Modes.TopDown2d
 		
 		#region Update, Render
 		
-		internal override void UpdateInternal()
+		internal override void UpdateInternalPre()
 		{
-			base.UpdateInternal();
+			base.UpdateInternalPre();
 			
 			if (!Mgr.ModeChanged)
 				if (Mgr.RunState == RunState.Running)

@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using PsmFramework.Engines.DrawEngine2d;
 
 namespace PsmFramework.Modes
@@ -19,10 +20,12 @@ namespace PsmFramework.Modes
 		protected override void InitializeInternal()
 		{
 			InitializeDrawEngine2d();
+			InitializeDebugInfo();
 		}
 		
 		protected override void CleanupInternal()
 		{
+			CleanupDebugInfo();
 			CleanupDrawEngine2d();
 		}
 		
@@ -30,8 +33,10 @@ namespace PsmFramework.Modes
 		
 		#region Update, Render
 		
-		internal override void UpdateInternal()
+		internal override void UpdateInternalPost()
 		{
+			if (DebugInfoEnabled)
+				GetDebugInfo();
 		}
 		
 		internal override void RenderInternal()
@@ -64,6 +69,82 @@ namespace PsmFramework.Modes
 		}
 		
 		protected DrawEngine2d DrawEngine2d;
+		
+		#endregion
+		
+		#region Debug
+		
+		private void InitializeDebugInfo()
+		{
+			DebugInfoEnabled = false;
+			DebugInfoForcesRender = true;
+			DebugInfo = new StringBuilder();
+		}
+		
+		private void CleanupDebugInfo()
+		{
+			DebugInfoEnabled = false;
+			DebugInfoForcesRender = false;
+			
+			DebugInfo.Clear();
+			DebugInfo.Capacity = 0;
+			DebugInfo = null;
+		}
+		
+		public Boolean DebugInfoEnabled;
+		
+		public Boolean DebugInfoForcesRender;
+		
+		private StringBuilder DebugInfo;
+		
+		private const String DebugInfoSeparator = ": ";
+		
+		private void GetDebugInfo()
+		{
+			if (!DrawEngine2d.RenderRequired && !DebugInfoForcesRender)
+				return;
+			
+			DrawEngine2d.SetRenderRequired();
+			
+			DebugInfo.Clear();
+			
+			AddDebugInfoLine("RAM Used", (System.Math.Round(GC.GetTotalMemory(false) / 1048576d, 2)).ToString() + " MiB");
+			AddDebugInfoLine("Update Ticks", Mgr.UpdateLength.Ticks);
+			AddDebugInfoLine("Render Ticks", DrawLength.Ticks);
+			AddDebugInfoLine("Swap Buffers Ticks", SwapBuffersLength.Ticks);
+			AddDebugInfoLine("FPS", Mgr.FramesPerSecond);
+			AddDebugInfoLine("OpenGL Draws", DrawEngine2d.DrawArrayCallsCounter);//and +1 for this
+			
+			GetAdditionalDebugInfo();
+		}
+		
+		//TODO: needs a better name.
+		protected virtual void GetAdditionalDebugInfo()
+		{
+		}
+		
+		protected void AddDebugInfoLine(String name, String data)
+		{
+			DebugInfo.Append(name);
+			DebugInfo.Append(DebugInfoSeparator);
+			DebugInfo.AppendLine(data);
+		}
+		
+		protected void AddDebugInfoLine(String name, Int32 data)
+		{
+			DebugInfo.Append(name);
+			DebugInfo.Append(DebugInfoSeparator);
+			DebugInfo.Append(data);
+			DebugInfo.AppendLine();
+		}
+		
+		protected void AddDebugInfoLine(String name, Int64 data)
+		{
+			DebugInfo.Append(name);
+			DebugInfo.Append(DebugInfoSeparator);
+			DebugInfo.Append(data);
+			DebugInfo.AppendLine();
+		}
 		
 		#endregion
 	}
