@@ -171,8 +171,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 					RenderCache[cacheIndex].Character = c;
 				else
 					RenderCache[cacheIndex].Character = FallbackChar;
-				RenderCache[cacheIndex].Position.X = Position.X + (DebugFont.FontWidth * charOnThisLineNumber);
-				RenderCache[cacheIndex].Position.Y = Position.Y + (DebugFont.FontHeight * lineNumber);
+				RenderCache[cacheIndex].Position.X = Position.X + ((DebugFont.FontWidth + SpacingAdjustmentX) * charOnThisLineNumber);
+				RenderCache[cacheIndex].Position.Y = Position.Y + ((DebugFont.FontHeight + SpacingAdjustmentY) * lineNumber);
 				
 				//Final things to do.
 				cacheIndex++;
@@ -201,6 +201,10 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		}
 		
 		private const Char FallbackChar = '?';
+		
+		//Used to tweak the layout. Copies spacing seen in GameEngine2d.
+		private const Int32 SpacingAdjustmentX = -1;
+		private const Int32 SpacingAdjustmentY = 1;
 		
 		#endregion
 		

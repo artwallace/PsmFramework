@@ -87,7 +87,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Shaders
 		
 		private void InitializeShaderProgramInternal()
 		{
-			ShaderProgram = LoadEmbeddedShader(Path);
+			LoadEmbeddedShader();
 		}
 		
 		private void CleanupShaderProgramInternal()
@@ -102,31 +102,27 @@ namespace PsmFramework.Engines.DrawEngine2d.Shaders
 		
 		public ShaderProgram ShaderProgram { get; private set; }
 		
-		#endregion
-		
-		#region Shader Resource Loader
-		
-		private static Assembly ResourceAssembly = Assembly.GetExecutingAssembly();
-		
-		private static ShaderProgram LoadEmbeddedShader(String resourcePath)
+		private void LoadEmbeddedShader()
 		{
-			if (ResourceAssembly.GetManifestResourceInfo(resourcePath) == null)
+			Assembly resourceAssembly = Assembly.GetExecutingAssembly();
+			
+			if (resourceAssembly.GetManifestResourceInfo(Path) == null)
 			{
-				String[] allResources = ResourceAssembly.GetManifestResourceNames();
-				throw new ArgumentException("Unable to load shader from resource: " + resourcePath);
+				//String[] debugText = resourceAssembly.GetManifestResourceNames();
+				throw new ArgumentException("Unable to load shader from resource: " + Path);
 			}
 			
 			Byte[] data;
-			using(Stream stream = ResourceAssembly.GetManifestResourceStream(resourcePath))
+			using(Stream stream = resourceAssembly.GetManifestResourceStream(Path))
 			{
 				data = new Byte[stream.Length];
 				stream.Read(data, 0, data.Length);
 				stream.Close();
 			}
 			
-			ShaderProgram shader = new ShaderProgram(data);
+			ShaderProgram = new ShaderProgram(data);
 			
-			return shader;
+			data = null;
 		}
 		
 		#endregion

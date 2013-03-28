@@ -175,6 +175,127 @@ namespace PsmFramework
 		
 		#endregion
 		
+		#region Modes
+		
+		private void InitializeModes(CreateModeDelegate defaultTitleScreen, CreateModeDelegate defaultOptionsScreen)
+		{
+			PreviousMode = null;
+			CurrentMode = null;
+			ReturnMode = null;
+			
+			DefaultTitleScreenFactory = defaultTitleScreen;
+			DefaultOptionsScreenFactory = defaultOptionsScreen;
+		}
+		
+		private void CleanupModes()
+		{
+			if (PreviousMode != null)
+			{
+				PreviousMode.Dispose();
+				PreviousMode = null;
+			}
+			
+			if (CurrentMode != null)
+			{
+				CurrentMode.Dispose();
+				CurrentMode = null;
+			}
+			
+			if (ReturnMode != null)
+			{
+				ReturnMode.Dispose();
+				ReturnMode = null;
+			}
+			
+			DefaultTitleScreenFactory = null;
+			DefaultOptionsScreenFactory = null;
+		}
+		
+		public delegate ModeBase CreateModeDelegate(AppManager mgr);
+		
+		public CreateModeDelegate DefaultTitleScreenFactory { get; private set; }
+		public CreateModeDelegate DefaultOptionsScreenFactory { get; private set; }
+		
+		private CreateModeDelegate NextModeFactory;
+		
+		private readonly TimeSpan cMinTicksBetweenModeChanges = TimeSpan.FromTicks(100);
+		private DateTime LastModeChange;
+		
+		public ModeBase PreviousMode { get; private set; }
+		public ModeBase CurrentMode { get; private set; }
+		public ModeBase ReturnMode { get; private set; }
+		
+		public Boolean ModeChangeAllowed
+		{
+			get
+			{
+				return (DateTime.UtcNow - LastModeChange) > cMinTicksBetweenModeChanges;
+			}
+		}
+		
+		public Boolean ModeChanged
+		{
+			get { return PreviousMode != null; }
+		}
+		
+		public void GoToMode(CreateModeDelegate factory)
+		{
+			LastModeChange = DateTime.UtcNow;
+			PreviousMode = CurrentMode;
+			NextModeFactory = factory;
+			CurrentMode = null;
+			ReturnMode = null;
+		}
+		
+		//TODO: GoToThenReturn should not dispose of the original mode. perhaps as an option or another method.
+		public void GoToModeThenReturn(CreateModeDelegate factory, ModeBase returnMode)
+		{
+			LastModeChange = DateTime.UtcNow;
+			PreviousMode = CurrentMode;
+			NextModeFactory = factory;
+			CurrentMode = null;
+			ReturnMode = returnMode;
+		}
+		
+		public void ReturnToMode()
+		{
+			LastModeChange = DateTime.UtcNow;
+			PreviousMode = CurrentMode;
+			CurrentMode = ReturnMode;
+			ReturnMode = null;
+		}
+		
+		public void InitializeCurrentMode()
+		{
+			CurrentMode = NextModeFactory(this);
+		}
+		
+		public void CleanupPreviousMode()
+		{
+			PreviousMode.Dispose();
+			PreviousMode = null;
+			
+			GC.Collect();
+		}
+		
+		public void GoToTitleScreenMode()
+		{
+			if(DefaultTitleScreenFactory == null)
+				throw new ArgumentNullException();
+			
+			GoToMode(DefaultTitleScreenFactory);
+		}
+		
+		public void GoToOptionsScreenMode()
+		{
+			if(DefaultOptionsScreenFactory == null)
+				throw new ArgumentNullException();
+			
+			GoToMode(DefaultOptionsScreenFactory);
+		}
+		
+		#endregion
+		
 		#region Graphics
 		
 		//TODO: This doesn't take screen rotation into account because PSM doesn't either.
@@ -324,6 +445,40 @@ namespace PsmFramework
 				CurrentFramesPerSecond = 1;
 			}
 		}
+		
+		#endregion
+		
+		#region Options
+		
+		private void InitializeOptions(AppOptionsBase options)
+		{
+			Options = options;
+		}
+		
+		private void CleanupOptions()
+		{
+			Options.Dispose();
+			Options = null;
+		}
+		
+		public AppOptionsBase Options { get; private set; }
+		
+		#endregion
+		
+		#region Random Numbers
+		
+		private void InitializeRandomGenerator()
+		{
+			RandomGenerator = new RandomGenerator(System.Environment.TickCount);
+		}
+		
+		private void CleanupRandomGenerator()
+		{
+			RandomGenerator.Dispose();
+			RandomGenerator = null;
+		}
+		
+		public RandomGenerator RandomGenerator { get; private set; }
 		
 		#endregion
 		
@@ -626,161 +781,6 @@ namespace PsmFramework
 		#endregion
 		
 		#endregion
-		
-		#endregion
-		
-		#region Modes
-		
-		private void InitializeModes(CreateModeDelegate defaultTitleScreen, CreateModeDelegate defaultOptionsScreen)
-		{
-			PreviousMode = null;
-			CurrentMode = null;
-			ReturnMode = null;
-			
-			DefaultTitleScreenFactory = defaultTitleScreen;
-			DefaultOptionsScreenFactory = defaultOptionsScreen;
-		}
-		
-		private void CleanupModes()
-		{
-			if (PreviousMode != null)
-			{
-				PreviousMode.Dispose();
-				PreviousMode = null;
-			}
-			
-			if (CurrentMode != null)
-			{
-				CurrentMode.Dispose();
-				CurrentMode = null;
-			}
-			
-			if (ReturnMode != null)
-			{
-				ReturnMode.Dispose();
-				ReturnMode = null;
-			}
-			
-			DefaultTitleScreenFactory = null;
-			DefaultOptionsScreenFactory = null;
-		}
-		
-		public delegate ModeBase CreateModeDelegate(AppManager mgr);
-		
-		public CreateModeDelegate DefaultTitleScreenFactory { get; private set; }
-		public CreateModeDelegate DefaultOptionsScreenFactory { get; private set; }
-		
-		private CreateModeDelegate NextModeFactory;
-		
-		private readonly TimeSpan cMinTicksBetweenModeChanges = TimeSpan.FromTicks(100);
-		private DateTime LastModeChange;
-		
-		public ModeBase PreviousMode { get; private set; }
-		public ModeBase CurrentMode { get; private set; }
-		public ModeBase ReturnMode { get; private set; }
-		
-		public Boolean ModeChangeAllowed
-		{
-			get
-			{
-				return (DateTime.UtcNow - LastModeChange) > cMinTicksBetweenModeChanges;
-			}
-		}
-		
-		public Boolean ModeChanged
-		{
-			get { return PreviousMode != null; }
-		}
-		
-		public void GoToMode(CreateModeDelegate factory)
-		{
-			LastModeChange = DateTime.UtcNow;
-			PreviousMode = CurrentMode;
-			NextModeFactory = factory;
-			CurrentMode = null;
-			ReturnMode = null;
-		}
-		
-		//TODO: GoToThenReturn should not dispose of the original mode. perhaps as an option or another method.
-		public void GoToModeThenReturn(CreateModeDelegate factory, ModeBase returnMode)
-		{
-			LastModeChange = DateTime.UtcNow;
-			PreviousMode = CurrentMode;
-			NextModeFactory = factory;
-			CurrentMode = null;
-			ReturnMode = returnMode;
-		}
-		
-		public void ReturnToMode()
-		{
-			LastModeChange = DateTime.UtcNow;
-			PreviousMode = CurrentMode;
-			CurrentMode = ReturnMode;
-			ReturnMode = null;
-		}
-		
-		public void InitializeCurrentMode()
-		{
-			CurrentMode = NextModeFactory(this);
-		}
-		
-		public void CleanupPreviousMode()
-		{
-			PreviousMode.Dispose();
-			PreviousMode = null;
-			
-			GC.Collect();
-		}
-		
-		public void GoToTitleScreenMode()
-		{
-			if(DefaultTitleScreenFactory == null)
-				throw new ArgumentNullException();
-			
-			GoToMode(DefaultTitleScreenFactory);
-		}
-		
-		public void GoToOptionsScreenMode()
-		{
-			if(DefaultOptionsScreenFactory == null)
-				throw new ArgumentNullException();
-			
-			GoToMode(DefaultOptionsScreenFactory);
-		}
-		
-		#endregion
-		
-		#region Options
-		
-		private void InitializeOptions(AppOptionsBase options)
-		{
-			Options = options;
-		}
-		
-		private void CleanupOptions()
-		{
-			Options.Dispose();
-			Options = null;
-		}
-		
-		public AppOptionsBase Options { get; private set; }
-		
-		#endregion
-		
-		#region Random Numbers
-		
-		private void InitializeRandomGenerator()
-		{
-			RandomGenerator = new RandomGenerator(System.Environment.TickCount);
-		}
-		
-		private void CleanupRandomGenerator()
-		{
-			RandomGenerator.Dispose();
-			RandomGenerator = null;
-		}
-		
-		public RandomGenerator RandomGenerator { get; private set; }
 		
 		#endregion
 	}

@@ -101,20 +101,21 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		public void SetCenter(Single x, Single y)
 		{
+			if (_Center.X == x && _Center.Y == y)
+				return;
+			
 			_Center = new Coordinate2(x, y);
 			SetRecalcRequired();
 		}
 		
 		public void SetCenterAtOrigin()
 		{
-			_Center = Coordinate2.X0Y0;
-			SetRecalcRequired();
+			SetCenter(Coordinate2.X0Y0);
 		}
 		
 		public void SetCenterAtScreenCenter()
 		{
-			_Center = new Coordinate2(DrawEngine2d.FrameBufferWidth/2, DrawEngine2d.FrameBufferHeight/2);
-			SetRecalcRequired();
+			SetCenter(new Coordinate2(DrawEngine2d.FrameBufferWidth/2, DrawEngine2d.FrameBufferHeight/2));
 		}
 		
 		public void SetCenterToPointWithinBounds(Coordinate2 point, RectangularArea2 bounds)

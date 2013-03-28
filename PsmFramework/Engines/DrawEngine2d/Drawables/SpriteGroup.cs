@@ -458,12 +458,11 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void InitializeShaderProgram()
 		{
-			Shader = new SpriteShader(Layer.DrawEngine2d);
+			Shader = Layer.DrawEngine2d.SpriteShader;
 		}
 		
 		private void CleanupShaderProgram()
 		{
-			Shader.Dispose();
 			Shader = null;
 		}
 		

@@ -23,6 +23,7 @@ namespace PsmFramework.Modes
 		{
 			InitializeDrawEngine2d();
 			InitializeDebugInfo();
+			JustInitialized = true;
 		}
 		
 		protected override void CleanupInternal()
@@ -31,15 +32,36 @@ namespace PsmFramework.Modes
 			CleanupDrawEngine2d();
 		}
 		
+		private Boolean JustInitialized;
+		
 		#endregion
 		
 		#region Update, Render
 		
 		internal override void UpdateInternalPre()
 		{
+			if (JustInitialized)
+			{
+				JustInitialized = false;
+				DrawEngine2d.SetRenderRequired();
+			}
+			
 			//This is going to get data from the previous frame.
 			if (DebugInfoEnabled)
-				GetDebugInfo();
+			{
+				if (DrawEngine2d.RenderRequired || DebugInfoForcesRender || DrawEngine2d.RenderRequiredLastFrame)
+					GetDebugInfo();
+			}
+		}
+		
+		internal override void UpdateInternalPost()
+		{
+			//This is going to get data from the previous frame.
+			if (DebugInfoEnabled)
+			{
+				if (DrawEngine2d.RenderRequired || DebugInfoForcesRender)
+					DrawDebugInfo();
+			}
 		}
 		
 		internal override void RenderInternal()
@@ -122,6 +144,8 @@ namespace PsmFramework.Modes
 				CreateDebugInfoLabel();
 			else
 				RemoveDebugInfoLabel();
+			
+			DrawEngine2d.SetRenderRequired();
 		}
 		
 		private void CreateDebugInfoLabel()
@@ -155,11 +179,6 @@ namespace PsmFramework.Modes
 		
 		private void GetDebugInfo()
 		{
-			if (!DrawEngine2d.RenderRequired && !DebugInfoForcesRender)
-				return;
-			
-			DrawEngine2d.SetRenderRequired();
-			
 			DebugInfo.Clear();
 			
 			AddDebugInfoLine("RAM Used", (System.Math.Round(GC.GetTotalMemory(false) / 1048576d, 2)).ToString() + " MiB");
@@ -170,8 +189,6 @@ namespace PsmFramework.Modes
 			AddDebugInfoLine("OpenGL Draws", DrawEngine2d.DrawArrayCallsCounter);//and +1 for this
 			
 			GetAdditionalDebugInfo();
-			
-			DebugInfoLabel.Text = DebugInfo.ToString();
 		}
 		
 		//TODO: needs a better name.
@@ -200,6 +217,12 @@ namespace PsmFramework.Modes
 			DebugInfo.Append(DebugInfoSeparator);
 			DebugInfo.Append(data);
 			DebugInfo.AppendLine();
+		}
+		
+		private void DrawDebugInfo()
+		{
+			//DrawEngine2d.SetRenderRequired();
+			DebugInfoLabel.Text = DebugInfo.ToString();
 		}
 		
 		#endregion

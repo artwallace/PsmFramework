@@ -79,6 +79,7 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		private void InitializeRender()
 		{
+			ResetDrawArrayCallsCounter();
 		}
 		
 		private void CleanupRender()
@@ -113,7 +114,7 @@ namespace PsmFramework.Engines.DrawEngine2d
 			foreach(LayerBase layer in Layers.Values)
 				layer.Render();
 			
-			Console.WriteLine("de2d: RenderWork");
+			//Console.WriteLine("DrawEngine2d RenderWork " + DateTime.Now.Ticks);
 		}
 		
 		public void RenderSwapBuffers()
@@ -382,6 +383,8 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		public Boolean RenderRequired { get; private set; }
 		
+		public Boolean RenderRequiredLastFrame { get; private set; }
+		
 		public void SetRenderRequired()
 		{
 			RenderRequired = true;
@@ -389,6 +392,7 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		private void ResetRenderRequired()
 		{
+			RenderRequiredLastFrame = RenderRequired;
 			RenderRequired = false;
 		}
 		

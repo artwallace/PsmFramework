@@ -97,7 +97,7 @@ namespace Demo.MainMenuAlt
 		private void InitializeLayersAndSprites()
 		{
 			DebugInfoEnabled = true;
-			DebugInfoForcesRender = false; //TODO: Remove this when swapbuffers bug is fixed.
+			//DebugInfoForcesRender = false; //TODO: Remove this when swapbuffers bug is fixed.
 			
 			//Create the layer to draw sprites into.
 			ScreenLayer = DrawEngine2d.GetOrCreateScreenLayer(2);
