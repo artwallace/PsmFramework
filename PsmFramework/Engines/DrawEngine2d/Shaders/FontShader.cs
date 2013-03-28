@@ -62,6 +62,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Shaders
 		
 		public void DrawArrays()
 		{
+			DrawEngine2d.IncrementDrawArrayCallsCounter();
 			DrawEngine2d.GraphicsContext.DrawArrays(DrawMode.TriangleStrip, 0, IndexCount);
 		}
 		

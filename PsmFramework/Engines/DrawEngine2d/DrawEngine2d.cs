@@ -105,11 +105,12 @@ namespace PsmFramework.Engines.DrawEngine2d
 			//Move this all back to the proper Render method
 			// if/once the workaround isn't needed.
 			ResetRenderRequired();
-				
+			
 			GraphicsContext.Clear();
 			
 			foreach(LayerBase layer in Layers.Values)
 				layer.Render();
+			Console.WriteLine("de2d: RenderWork");
 		}
 		
 		public void RenderSwapBuffers()
@@ -684,6 +685,8 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		#region Debug Ruler
 		
+		//TODO: do something with this.
+		
 		private void InitializeDebugRuler()
 		{
 //			EnableDebugRuler = false;
@@ -745,6 +748,8 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		#region Shaders
 		
+		//TODO: Rework this. Hardcode common shaders and also turn it into a list so other shaders can be added.
+		
 		private void InitializeShaders()
 		{
 			FontShader = new FontShader(this);
@@ -761,8 +766,6 @@ namespace PsmFramework.Engines.DrawEngine2d
 		#endregion
 		
 		#region OpenGlBlendMode
-		
-		//TODO: Temp catchall home for this stuff till I get a better sense of what is needed.
 		
 		private void InitializeOpenGlBlendMode()
 		{
@@ -817,6 +820,7 @@ namespace PsmFramework.Engines.DrawEngine2d
 		public void DisableBlendMode()
 		{
 			GraphicsContext.Disable(EnableMode.Blend);
+			SetRenderRequired();
 		}
 		
 		private void SetBlendMode(BlendFunc blendFunc)
@@ -825,11 +829,9 @@ namespace PsmFramework.Engines.DrawEngine2d
 			//if(!GraphicsContext.IsEnabled(EnableMode.Blend))
 			GraphicsContext.Enable(EnableMode.Blend);
 			GraphicsContext.SetBlendFunc(blendFunc);
+			SetRenderRequired();
 		}
 		
-		#endregion
-		
-		#region
 		#endregion
 	}
 }

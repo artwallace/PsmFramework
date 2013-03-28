@@ -94,6 +94,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				Shader.ShaderProgram.SetUniformValue(0, ref worldViewProj);
 				
 				//TODO: this needs to be changed to be an array of VBOs, like ge2d.
+				Layer.DrawEngine2d.IncrementDrawArrayCallsCounter();
 				Layer.DrawEngine2d.GraphicsContext.DrawArrays(DrawMode.TriangleStrip, 0, IndexCount);
 			}
 			
