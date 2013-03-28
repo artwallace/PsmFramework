@@ -7,9 +7,9 @@ using Demo.Zombies;
 using PsmFramework;
 using PsmFramework.Engines.DrawEngine2d.Drawables;
 using PsmFramework.Engines.DrawEngine2d.Layers;
+using PsmFramework.Engines.DrawEngine2d.Support;
 using PsmFramework.Engines.DrawEngine2d.Textures;
 using PsmFramework.Modes;
-using PsmFramework.Engines.DrawEngine2d.Support;
 
 namespace Demo.MainMenuAlt
 {
@@ -96,6 +96,9 @@ namespace Demo.MainMenuAlt
 		
 		private void InitializeLayersAndSprites()
 		{
+			DebugInfoEnabled = true;
+			DebugInfoForcesRender = false; //TODO: Remove this when swapbuffers bug is fixed.
+			
 			//Create the layer to draw sprites into.
 			ScreenLayer = DrawEngine2d.GetOrCreateScreenLayer(2);
 			

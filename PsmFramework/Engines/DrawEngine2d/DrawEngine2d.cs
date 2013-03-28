@@ -41,7 +41,7 @@ namespace PsmFramework.Engines.DrawEngine2d
 		{
 			InitializeGraphicsContext(graphicsContext, coordinateSystemMode);
 			InitializeClearColor();
-			InitializeOpenGl();
+			InitializeOpenGlBlendMode();
 			InitializeWorldCamera();
 			InitializeScreenCamera();
 			InitializeRenderRequiredFlag();
@@ -66,7 +66,7 @@ namespace PsmFramework.Engines.DrawEngine2d
 			CleanupRenderRequiredFlag();
 			CleanupScreenCamera();
 			CleanupWorldCamera();
-			CleanupOpenGl();
+			CleanupOpenGlBlendMode();
 			CleanupClearColor();
 			CleanupGraphicsContext();
 		}
@@ -665,6 +665,23 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		#endregion
 		
+		#region Debug Font
+		
+		private void InitializeDebugFont()
+		{
+			DebugFont = new DebugFont(this);
+		}
+		
+		private void CleanupDebugFont()
+		{
+			DebugFont.Dispose();
+			DebugFont = null;
+		}
+		
+		internal DebugFont DebugFont { get; private set; }
+		
+		#endregion
+		
 		#region Debug Ruler
 		
 		private void InitializeDebugRuler()
@@ -726,23 +743,6 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		#endregion
 		
-		#region Debug Font
-		
-		private void InitializeDebugFont()
-		{
-			DebugFont = new DebugFont(this);
-		}
-		
-		private void CleanupDebugFont()
-		{
-			DebugFont.Dispose();
-			DebugFont = null;
-		}
-		
-		internal DebugFont DebugFont { get; private set; }
-		
-		#endregion
-		
 		#region Shaders
 		
 		private void InitializeShaders()
@@ -760,11 +760,11 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		#endregion
 		
-		#region OpenGL
+		#region OpenGlBlendMode
 		
 		//TODO: Temp catchall home for this stuff till I get a better sense of what is needed.
 		
-		private void InitializeOpenGl()
+		private void InitializeOpenGlBlendMode()
 		{
 			//These are copied from GameEngine2d. I only have a vague idea what they do.
 			NoBlendFunc = new BlendFunc(BlendFuncMode.Add, BlendFuncFactor.One, BlendFuncFactor.One);
@@ -774,7 +774,7 @@ namespace PsmFramework.Engines.DrawEngine2d
 			PremultipliedAlphaBlendFunc = new BlendFunc(BlendFuncMode.Add, BlendFuncFactor.One, BlendFuncFactor.OneMinusSrcAlpha);
 		}
 		
-		private void CleanupOpenGl()
+		private void CleanupOpenGlBlendMode()
 		{
 			NoBlendFunc = default(BlendFunc);
 			NormalBlendFunc = default(BlendFunc);
@@ -827,6 +827,9 @@ namespace PsmFramework.Engines.DrawEngine2d
 			GraphicsContext.SetBlendFunc(blendFunc);
 		}
 		
+		#endregion
+		
+		#region
 		#endregion
 	}
 }

@@ -35,7 +35,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			InitializeLayer(layer);
 			InitializeDrawEngine2d();
 			
-			InitializeChanged();
+			InitializeRecalcRequired();
 			InitializeVisible();
 			InitializeBounds();
 		}
@@ -44,7 +44,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		{
 			CleanupBounds();
 			CleanupVisible();
-			CleanupChanged();
+			CleanupRecalcRequired();
 			
 			CleanupDrawEngine2d();
 			CleanupLayer();
@@ -94,55 +94,44 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		#endregion
 		
-		#region Render
+		#region RecalcRequired
 		
-		public abstract void Render();
+		private void InitializeRecalcRequired()
+		{
+			SetRecalcRequired();
+		}
+		
+		private void CleanupRecalcRequired()
+		{
+			ClearRecalcRequired();
+		}
+		
+		protected Boolean RecalcRequired { get; private set; }
+		
+		protected void SetRecalcRequired()
+		{
+			RecalcRequired = true;
+			DrawEngine2d.SetRenderRequired();
+		}
+		
+		private void ClearRecalcRequired()
+		{
+			RecalcRequired = false;
+		}
 		
 		#endregion
 		
-		#region Changed
+		#region Render
 		
-		private void InitializeChanged()
+		public void Render()
 		{
-			//TODO: force changed here?
+			if(!Visible)
+				return;
+			
+			RenderHelper();
 		}
 		
-		private void CleanupChanged()
-		{
-		}
-		
-		private Boolean _Changed;
-		protected Boolean Changed
-		{
-			get { return _Changed; }
-			private set
-			{
-				if (_Changed == value)
-					return;
-				
-				_Changed = value;
-				
-				if(_Changed)
-					DrawEngine2d.SetRenderRequired();
-				
-				ChangedHelper();
-			}
-		}
-		
-		protected void MarkAsChanged()
-		{
-			Changed = true;
-		}
-		
-		protected void ClearChanged()
-		{
-			Changed = false;
-		}
-		
-		//Poor-man's OnChanged event.
-		protected virtual void ChangedHelper()
-		{
-		}
+		public abstract void RenderHelper();
 		
 		#endregion
 		
@@ -155,6 +144,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void CleanupVisible()
 		{
+			Visible = default(Boolean);
 		}
 		
 		private Boolean _Visible;
@@ -167,7 +157,9 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 					return;
 				
 				_Visible = value;
-				MarkAsChanged();
+				
+				if(_Visible)//TODO: It may be better to recalc always. This could be dangerous.
+					SetRecalcRequired();
 			}
 		}
 		
@@ -181,6 +173,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void CleanupBounds()
 		{
+			_Bounds = default(RectangularArea2);
 		}
 		
 		private  RectangularArea2 _Bounds;
@@ -188,23 +181,38 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		{
 			get
 			{
-				if(Changed)//TODO: This seems illogical. Changed and UpdateBounds have little-to-no correlation.
-					UpdateBounds();
+				if(RecalcRequired)
+					Recalc();
+				
 				return _Bounds;
 			}
 			protected set { _Bounds = value; }
 		}
 		
-		protected abstract void UpdateBounds();
-		
 		#endregion
 		
 		#region OnScreen
 		
-		public Boolean DetermineIfOnScreen()
+		public Boolean IsOnScreen()
 		{
 			throw new NotImplementedException();
 		}
+		
+		#endregion
+		
+		#region Recalc
+		
+		protected void Recalc()
+		{
+			ClearRecalcRequired();
+			
+			RecalcBounds();
+			RecalcHelper();
+		}
+		
+		protected abstract void RecalcBounds();
+		
+		protected abstract void RecalcHelper();
 		
 		#endregion
 	}

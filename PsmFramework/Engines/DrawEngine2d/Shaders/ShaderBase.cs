@@ -6,7 +6,7 @@ using Sce.PlayStation.Core.Graphics;
 
 namespace PsmFramework.Engines.DrawEngine2d.Shaders
 {
-	public abstract class ShaderBase : IDisposable
+	public abstract class ShaderBase : IDisposablePlus
 	{
 		#region Constructor, Dispose
 		
@@ -18,9 +18,15 @@ namespace PsmFramework.Engines.DrawEngine2d.Shaders
 		
 		public void Dispose()
 		{
+			if(IsDisposed)
+				return;
+			
 			Cleanup();
 			CleanupInternal();
+			IsDisposed = true;
 		}
+		
+		public Boolean IsDisposed { get; private set; }
 		
 		#endregion
 		
@@ -42,12 +48,10 @@ namespace PsmFramework.Engines.DrawEngine2d.Shaders
 		
 		protected virtual void Initialize()
 		{
-			//This method should remain empty in the base class.
 		}
 		
 		protected virtual void Cleanup()
 		{
-			//This method should remain empty in the base class.
 		}
 		
 		#endregion
@@ -72,6 +76,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Shaders
 		#endregion
 		
 		#region Path
+		
+		protected const String BasePath = "PsmFramework.Engines.DrawEngine2d.Shaders.";
 		
 		public abstract String Path { get; }
 		

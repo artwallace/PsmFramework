@@ -22,13 +22,24 @@ namespace Demo.SpaceRockets
 		
 		#endregion
 		
+		#region Mode Factory Delegate
+		
+		public static ModeBase DrawEngineTestModeFactory(AppManager mgr)
+		{
+			return new SpaceRocketsMode(mgr);
+		}
+		
+		#endregion
+		
 		#region Mode Logic
 		
 		protected override void Initialize()
 		{
 			//TODO: Remove this after testing!
 			DrawEngine2d.ClearColor = Colors.Blue;
-			//EnableDebugInfo();
+			
+			DebugInfoEnabled = true;
+			DebugInfoForcesRender = false; //TODO: Remove this when swapbuffers bug is fixed.
 			
 			String shipSprite = "/Application/TwinStickShooter/Images/Ship64.png";
 			Texture2dPlus t2d = new Texture2dPlus(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, shipSprite);
@@ -109,15 +120,6 @@ namespace Demo.SpaceRockets
 				DrawEngine2d.WorldCamera.Zoom += 0.1f;
 			else if (Mgr.GamePad0_Cross)
 				DrawEngine2d.WorldCamera.Zoom -= 0.1f;
-		}
-		
-		#endregion
-		
-		#region Mode Factory Delegate
-		
-		public static ModeBase DrawEngineTestModeFactory(AppManager mgr)
-		{
-			return new SpaceRocketsMode(mgr);
 		}
 		
 		#endregion

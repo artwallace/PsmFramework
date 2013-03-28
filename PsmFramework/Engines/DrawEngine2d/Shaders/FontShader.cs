@@ -34,10 +34,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Shaders
 		
 		public override String Path
 		{
-			get
-			{
-				return "PsmFramework.Engines.DrawEngine2d.Shaders.Font.cgx";
-			}
+			get { return BasePath + "Font.cgx"; }
 		}
 		
 		#endregion

@@ -1,6 +1,8 @@
 using System;
 using System.Text;
 using PsmFramework.Engines.DrawEngine2d;
+using PsmFramework.Engines.DrawEngine2d.Drawables;
+using PsmFramework.Engines.DrawEngine2d.Support;
 
 namespace PsmFramework.Modes
 {
@@ -74,7 +76,7 @@ namespace PsmFramework.Modes
 		
 		#endregion
 		
-		#region Debug
+		#region DebugInfo
 		
 		private void InitializeDebugInfo()
 		{
@@ -93,7 +95,56 @@ namespace PsmFramework.Modes
 			DebugInfo = null;
 		}
 		
-		public Boolean DebugInfoEnabled;
+		private Boolean _DebugInfoEnabled;
+		public Boolean DebugInfoEnabled
+		{
+			get { return _DebugInfoEnabled; }
+			set
+			{
+				if(_DebugInfoEnabled == value)
+					return;
+				
+				_DebugInfoEnabled = value;
+				
+				//This is necessary until DebugLabel supports better draw method.
+				ToggleDebugInfo();
+			}
+		}
+		
+		//This is necessary until DebugLabel supports better draw method.
+		private void ToggleDebugInfo()
+		{
+			if(IsDisposed)
+				return;
+			
+			if(_DebugInfoEnabled)
+				CreateDebugInfoLabel();
+			else
+				RemoveDebugInfoLabel();
+		}
+		
+		private void CreateDebugInfoLabel()
+		{
+			//This shouldn't happen but delete it if it's there.
+			if(DebugInfoLabel != null)
+				DebugInfoLabel.Dispose();
+			
+			DebugInfoLabel = new DebugLabel(DrawEngine2d.GetOrCreateScreenDebugLayer());
+			DebugInfoLabel.Position = new Coordinate2(10, 10);
+		}
+		
+		private void RemoveDebugInfoLabel()
+		{
+			//This shouldn't happen but whatever.
+			if(DebugInfoLabel == null)
+				return;
+			
+			DebugInfoLabel.Dispose();
+			DebugInfoLabel = null;
+		}
+		
+		//This is necessary until DebugLabel supports better draw method.
+		private DebugLabel DebugInfoLabel;
 		
 		public Boolean DebugInfoForcesRender;
 		
@@ -118,6 +169,8 @@ namespace PsmFramework.Modes
 			AddDebugInfoLine("OpenGL Draws", DrawEngine2d.DrawArrayCallsCounter);//and +1 for this
 			
 			GetAdditionalDebugInfo();
+			
+			DebugInfoLabel.Text = DebugInfo.ToString();
 		}
 		
 		//TODO: needs a better name.

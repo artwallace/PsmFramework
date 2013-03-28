@@ -17,10 +17,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Shaders
 		
 		public override String Path
 		{
-			get
-			{
-				return "PsmFramework.Engines.DrawEngine2d.Shaders.Sprite.cgx";
-			}
+			get { return BasePath + "Sprite.cgx"; }
 		}
 		
 		#endregion

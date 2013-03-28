@@ -63,13 +63,21 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		#region Render
 		
-		public override void Render()
+		public override void RenderHelper()
 		{
 			//Set up the drawing
 			
 			//TODO: These need to be changed as little as possible
 			DrawEngine2d.GraphicsContext.SetShaderProgram(Shader.ShaderProgram);
 			DrawEngine2d.SetOpenGlTexture(DebugFont.TextureKey);
+			
+			//TODO: Remove this whole thing.
+			//This is completely the wrong way to do this but I need a quick test.
+//			if(RecalcRequired)
+//			{
+//				ClearRecalcRequired();
+//				RenderingRecacheRequired = true;
+//			}
 			
 			if(RenderingRecacheRequired)
 				GenerateCharacterCoordinateCache();
@@ -103,6 +111,22 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		}
 		
 		#endregion
+		
+		#region Recalc
+		
+		protected override void RecalcBounds()
+		{
+			throw new NotImplementedException();
+		}
+		
+		protected override void RecalcHelper()
+		{
+			throw new NotImplementedException();
+		}
+		
+		#endregion
+		
+		
 		
 		#region CharacterCoordinateCache
 		
@@ -194,9 +218,9 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				if (_Text == value)
 					return;
 				
-				MarkAsChanged();
-				
 				_Text = value;
+				
+				SetRecalcRequired();
 			}
 		}
 		
@@ -213,22 +237,14 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				if (_Position == value)
 					return;
 				
-				MarkAsChanged();
-				
 				_Position = value;
+				
+				SetRecalcRequired();
 			}
 		}
 		
 		#endregion
 		
-		#region Bounds
-		
-		protected override void UpdateBounds()
-		{
-			throw new NotImplementedException();
-		}
-		
-		#endregion
 		
 		
 		

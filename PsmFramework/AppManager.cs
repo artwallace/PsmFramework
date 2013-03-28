@@ -35,9 +35,7 @@ namespace PsmFramework
 		
 		private void Initialize(AppOptionsBase options, GraphicsContext gc, CreateModeDelegate defaultTitleScreen, CreateModeDelegate defaultOptionsScreen)
 		{
-			SetRunStateToInitializing();
-			UpdateRunState();
-			
+			InitializeRunState();
 			InitializeOptions(options);
 			InitializeGraphics(gc);
 			InitializeTimers();
@@ -54,6 +52,7 @@ namespace PsmFramework
 			CleanupTimers();
 			CleanupGraphics();
 			CleanupOptions();
+			CleanupRunState();
 		}
 		
 		#endregion
@@ -118,6 +117,16 @@ namespace PsmFramework
 		#endregion
 		
 		#region RunState
+		
+		private void InitializeRunState()
+		{
+			SetRunStateToInitializing();
+			UpdateRunState();
+		}
+		
+		private void CleanupRunState()
+		{
+		}
 		
 		public RunState RunState { get; private set; }
 		private RunState ChangeToRunState;
@@ -193,7 +202,7 @@ namespace PsmFramework
 			GraphicsContext = null;
 		}
 		
-		public GraphicsContext GraphicsContext { get; private set; }
+		internal GraphicsContext GraphicsContext { get; private set; }
 		public Single ScreenWidth { get; private set; }
 		public Single ScreenHeight { get; private set; }
 		public ImageRect ScreenRectangle { get; private set; }
@@ -767,6 +776,8 @@ namespace PsmFramework
 		
 		private void CleanupRandomGenerator()
 		{
+			RandomGenerator.Dispose();
+			RandomGenerator = null;
 		}
 		
 		public RandomGenerator RandomGenerator { get; private set; }

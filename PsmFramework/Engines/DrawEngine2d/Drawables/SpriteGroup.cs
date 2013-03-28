@@ -68,7 +68,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private Stopwatch TestTimer = new Stopwatch();
 		
-		public override void Render()
+		public override void RenderHelper()
 		{
 			//Need to test how caching matrix calcs affects performance.
 			//Could be a waste of time.
@@ -103,6 +103,22 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		}
 		
 		#endregion
+		
+		#region Recalc
+		
+		protected override void RecalcBounds()
+		{
+			throw new NotImplementedException();
+		}
+		
+		protected override void RecalcHelper()
+		{
+			throw new NotImplementedException();
+		}
+		
+		#endregion
+		
+		
 		
 		#region TiledTexture
 		
@@ -196,14 +212,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		#endregion
 		
-		#region Bounds
-		
-		protected override void UpdateBounds()
-		{
-			throw new NotImplementedException();
-		}
-		
-		#endregion
 		
 		
 		//Old crap, need to fix.

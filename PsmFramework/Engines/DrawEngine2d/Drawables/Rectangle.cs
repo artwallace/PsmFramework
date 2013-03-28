@@ -16,15 +16,20 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		#region Render
 		
-		public override void Render()
+		public override void RenderHelper()
 		{
 		}
 		
 		#endregion
 		
-		#region Bounds
+		#region Recalc
 		
-		protected override void UpdateBounds()
+		protected override void RecalcBounds()
+		{
+			throw new NotImplementedException();
+		}
+		
+		protected override void RecalcHelper()
 		{
 			throw new NotImplementedException();
 		}
