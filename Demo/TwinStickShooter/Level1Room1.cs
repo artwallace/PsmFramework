@@ -102,7 +102,7 @@ namespace Demo.TwinStickShooter
 		
 		private Drag2d ShipDrag;
 		
-		private Friction2d ShipFriction;
+		//private Friction2d ShipFriction;
 		
 		private void CreateShip()
 		{

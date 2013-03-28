@@ -33,24 +33,25 @@ namespace PsmFramework.Modes
 		
 		#region Update, Render
 		
-		internal override void UpdateInternalPost()
+		internal override void UpdateInternalPre()
 		{
+			//This is going to get data from the previous frame.
 			if (DebugInfoEnabled)
 				GetDebugInfo();
 		}
 		
 		internal override void RenderInternal()
 		{
-			if (!Mgr.ModeChanged)
-			{
-				StartDrawTimer();
-				DrawEngine2d.Render();
-				CompleteDrawTimer();
-				
-				StartSwapBuffersTimer();
-				DrawEngine2d.RenderSwapBuffers();
-				CompleteSwapBuffersTimer();
-			}
+			if (Mgr.ModeChanged)
+				return;
+			
+			StartDrawTimer();
+			DrawEngine2d.Render();
+			CompleteDrawTimer();
+			
+			StartSwapBuffersTimer();
+			DrawEngine2d.RenderSwapBuffers();
+			CompleteSwapBuffersTimer();
 		}
 		
 		#endregion
@@ -60,6 +61,7 @@ namespace PsmFramework.Modes
 		private void InitializeDrawEngine2d()
 		{
 			DrawEngine2d = new DrawEngine2d(Mgr.GraphicsContext);
+			DrawEngine2d.SetBlendModeToNormal();
 		}
 		
 		private void CleanupDrawEngine2d()

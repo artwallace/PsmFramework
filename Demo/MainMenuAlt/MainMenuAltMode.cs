@@ -1,5 +1,6 @@
 using System;
 using Demo.Fireworks;
+using Demo.MainMenu;
 using Demo.SpaceRockets;
 using Demo.TwinStickShooter;
 using Demo.Zombies;
@@ -8,7 +9,6 @@ using PsmFramework.Engines.DrawEngine2d.Drawables;
 using PsmFramework.Engines.DrawEngine2d.Layers;
 using PsmFramework.Engines.DrawEngine2d.Textures;
 using PsmFramework.Modes;
-using Sce.PlayStation.Core;
 using PsmFramework.Engines.DrawEngine2d.Support;
 
 namespace Demo.MainMenuAlt
@@ -80,6 +80,12 @@ namespace Demo.MainMenuAlt
 			if (Mgr.GamePad0_Circle_Pressed)
 			{
 				Mgr.GoToMode(SpaceRocketsMode.DrawEngineTestModeFactory);
+				return;
+			}
+			
+			if (Mgr.GamePad0_Start_Pressed)
+			{
+				Mgr.GoToMode(MainMenuMode.MainMenuModeFactory);
 				return;
 			}
 		}

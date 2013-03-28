@@ -78,6 +78,12 @@ namespace Demo.MainMenu
 				Mgr.GoToMode(SpaceRocketsMode.DrawEngineTestModeFactory);
 				return;
 			}
+			
+			if (Mgr.GamePad0_Start_Pressed)
+			{
+				Mgr.GoToTitleScreenMode();
+				return;
+			}
 		}
 		
 		#endregion

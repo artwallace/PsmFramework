@@ -41,6 +41,7 @@ namespace PsmFramework.Engines.DrawEngine2d
 		{
 			InitializeGraphicsContext(graphicsContext, coordinateSystemMode);
 			InitializeClearColor();
+			InitializeOpenGl();
 			InitializeWorldCamera();
 			InitializeScreenCamera();
 			InitializeRenderRequiredFlag();
@@ -65,6 +66,7 @@ namespace PsmFramework.Engines.DrawEngine2d
 			CleanupRenderRequiredFlag();
 			CleanupScreenCamera();
 			CleanupWorldCamera();
+			CleanupOpenGl();
 			CleanupClearColor();
 			CleanupGraphicsContext();
 		}
@@ -755,6 +757,75 @@ namespace PsmFramework.Engines.DrawEngine2d
 		}
 		
 		internal FontShader FontShader;
+		
+		#endregion
+		
+		#region OpenGL
+		
+		//TODO: Temp catchall home for this stuff till I get a better sense of what is needed.
+		
+		private void InitializeOpenGl()
+		{
+			//These are copied from GameEngine2d. I only have a vague idea what they do.
+			NoBlendFunc = new BlendFunc(BlendFuncMode.Add, BlendFuncFactor.One, BlendFuncFactor.One);
+			NormalBlendFunc = new BlendFunc(BlendFuncMode.Add, BlendFuncFactor.SrcAlpha, BlendFuncFactor.OneMinusSrcAlpha);
+			AdditiveBlendFunc = new BlendFunc(BlendFuncMode.Add, BlendFuncFactor.One, BlendFuncFactor.One);
+			MultiplicativeBlendFunc = new BlendFunc(BlendFuncMode.Add, BlendFuncFactor.DstColor, BlendFuncFactor.Zero);
+			PremultipliedAlphaBlendFunc = new BlendFunc(BlendFuncMode.Add, BlendFuncFactor.One, BlendFuncFactor.OneMinusSrcAlpha);
+		}
+		
+		private void CleanupOpenGl()
+		{
+			NoBlendFunc = default(BlendFunc);
+			NormalBlendFunc = default(BlendFunc);
+			AdditiveBlendFunc = default(BlendFunc);
+			MultiplicativeBlendFunc = default(BlendFunc);
+			PremultipliedAlphaBlendFunc = default(BlendFunc);
+		}
+		
+		private BlendFunc NoBlendFunc;
+		private BlendFunc NormalBlendFunc;
+		private BlendFunc AdditiveBlendFunc;
+		private BlendFunc MultiplicativeBlendFunc;
+		private BlendFunc PremultipliedAlphaBlendFunc;
+		
+		public void SetBlendModeToNone()
+		{
+			SetBlendMode(NoBlendFunc);
+		}
+		
+		public void SetBlendModeToNormal()
+		{
+			SetBlendMode(NormalBlendFunc);
+		}
+		
+		public void SetBlendModeToAdditive()
+		{
+			SetBlendMode(AdditiveBlendFunc);
+		}
+		
+		public void SetBlendModeToMultiplicative()
+		{
+			SetBlendMode(MultiplicativeBlendFunc);
+		}
+		
+		public void SetBlendModeToPremultipliedAlpha()
+		{
+			SetBlendMode(PremultipliedAlphaBlendFunc);
+		}
+		
+		public void DisableBlendMode()
+		{
+			GraphicsContext.Disable(EnableMode.Blend);
+		}
+		
+		private void SetBlendMode(BlendFunc blendFunc)
+		{
+			//Checking just as slow as setting?
+			//if(!GraphicsContext.IsEnabled(EnableMode.Blend))
+			GraphicsContext.Enable(EnableMode.Blend);
+			GraphicsContext.SetBlendFunc(blendFunc);
+		}
 		
 		#endregion
 	}
