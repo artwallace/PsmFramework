@@ -125,6 +125,9 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		public void Render()
 		{
+			if(RecalcRequired)
+				Recalc();
+			
 			if(!Visible)
 				return;
 			
@@ -158,8 +161,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				
 				_Visible = value;
 				
-				if(_Visible)//TODO: It may be better to recalc always. This could be dangerous.
-					SetRecalcRequired();
+				//if(_Visible)//TODO: It may be better to recalc always. This could be dangerous.
+				SetRecalcRequired();
 			}
 		}
 		

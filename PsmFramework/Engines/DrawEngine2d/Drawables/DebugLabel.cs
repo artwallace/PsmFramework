@@ -65,28 +65,18 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		public override void RenderHelper()
 		{
-			//Set up the drawing
-			
 			//TODO: These need to be changed as little as possible
 			DrawEngine2d.GraphicsContext.SetShaderProgram(Shader.ShaderProgram);
 			DrawEngine2d.SetOpenGlTexture(DebugFont.TextureKey);
 			
-			//TODO: Remove this whole thing.
-			//This is completely the wrong way to do this but I need a quick test.
-//			if(RecalcRequired)
-//			{
-//				ClearRecalcRequired();
-//				RenderingRecacheRequired = true;
-//			}
-			
-			if(RenderingRecacheRequired)
-				GenerateCharacterCoordinateCache();
+			if(RecalcRenderCacheRequired)
+				RecalcRenderCache();
 			
 			TiledTexture tt = DrawEngine2d.GetTiledTexture(DebugFont.TextureKey);
 			
-			foreach(RenderingCacheData cacheData in CachedRendering)
+			foreach(RenderCacheData cacheData in RenderCache)
 			{
-				TiledTextureIndex index = DrawEngine2d.DebugFont.GetCharTileIndex(cacheData.CharCode);
+				TiledTextureIndex index = DrawEngine2d.DebugFont.GetCharTileIndex(cacheData.Character);
 				Single[] textureCoordinates = tt.GetTextureCoordinates(index);
 				
 				VertexBuffer.SetVertices(1, textureCoordinates);
@@ -103,8 +93,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				Layer.DrawEngine2d.IncrementDrawArrayCallsCounter();
 				Layer.DrawEngine2d.GraphicsContext.DrawArrays(DrawMode.TriangleStrip, 0, IndexCount);
 			}
-			
-			//Clean up the drawing
 		}
 		
 		private void RenderChar()
@@ -117,38 +105,36 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		protected override void RecalcBounds()
 		{
-			throw new NotImplementedException();
+			//TODO: throw new NotImplementedException();
 		}
 		
 		protected override void RecalcHelper()
 		{
-			throw new NotImplementedException();
+			SetRenderRecacheRequired();
 		}
 		
 		#endregion
-		
-		
 		
 		#region CharacterCoordinateCache
 		
 		private void InitializeCharacterCoordinateCache()
 		{
-			RenderingRecacheRequired = true;
+			SetRenderRecacheRequired();
 		}
 		
 		private void CleanupCharacterCoordinateCache()
 		{
-			RenderingRecacheRequired = false;
-			CachedRendering = null;
+			ClearRenderRecacheRequired();
+			RenderCache = null;
 		}
 		
-		private void GenerateCharacterCoordinateCache()
+		private void RecalcRenderCache()
 		{
-			RenderingRecacheRequired = false;
+			ClearRenderRecacheRequired();
 			
 			if(String.IsNullOrWhiteSpace(Text))
 			{
-				CachedRendering = new RenderingCacheData[0];
+				RenderCache = new RenderCacheData[0];
 				return;
 			}
 			
@@ -162,7 +148,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 					charCount++;
 			}
 			
-			CachedRendering = new RenderingCacheData[charCount];
+			RenderCache = new RenderCacheData[charCount];
 			
 			Int32 cacheIndex = 0;
 			Int32 lineNumber = 0;
@@ -182,11 +168,11 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				//TODO: Add support for opposite Coordinate Mode here.
 				
 				if(DrawEngine2d.DebugFont.ContainsCharacterGlyph(c))
-					CachedRendering[cacheIndex].CharCode = c;
+					RenderCache[cacheIndex].Character = c;
 				else
-					CachedRendering[cacheIndex].CharCode = FallbackChar;
-				CachedRendering[cacheIndex].Position.X = Position.X + (DebugFont.FontWidth * charOnThisLineNumber);
-				CachedRendering[cacheIndex].Position.Y = Position.Y + (DebugFont.FontHeight * lineNumber);
+					RenderCache[cacheIndex].Character = FallbackChar;
+				RenderCache[cacheIndex].Position.X = Position.X + (DebugFont.FontWidth * charOnThisLineNumber);
+				RenderCache[cacheIndex].Position.Y = Position.Y + (DebugFont.FontHeight * lineNumber);
 				
 				//Final things to do.
 				cacheIndex++;
@@ -194,14 +180,24 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			}
 		}
 		
-		private Boolean RenderingRecacheRequired;
+		private Boolean RecalcRenderCacheRequired;
 		
-		private RenderingCacheData[] CachedRendering;
+		private RenderCacheData[] RenderCache;
 		
-		private struct RenderingCacheData
+		private struct RenderCacheData
 		{
 			public Coordinate2 Position;
-			public Char CharCode;
+			public Char Character;
+		}
+		
+		private void SetRenderRecacheRequired()
+		{
+			RecalcRenderCacheRequired = true;
+		}
+		
+		private void ClearRenderRecacheRequired()
+		{
+			RecalcRenderCacheRequired = false;
 		}
 		
 		private const Char FallbackChar = '?';
@@ -446,12 +442,11 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void InitializeShaderProgram()
 		{
-			Shader = new SpriteShader(DrawEngine2d);
+			Shader = DrawEngine2d.SpriteShader;
 		}
 		
 		private void CleanupShaderProgram()
 		{
-			Shader.Dispose();
 			Shader = null;
 		}
 		

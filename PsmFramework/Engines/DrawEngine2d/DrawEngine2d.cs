@@ -40,6 +40,7 @@ namespace PsmFramework.Engines.DrawEngine2d
 		private void Initialize(GraphicsContext graphicsContext, CoordinateSystemMode coordinateSystemMode)
 		{
 			InitializeGraphicsContext(graphicsContext, coordinateSystemMode);
+			InitializeRender();
 			InitializeClearColor();
 			InitializeOpenGlBlendMode();
 			InitializeWorldCamera();
@@ -68,6 +69,7 @@ namespace PsmFramework.Engines.DrawEngine2d
 			CleanupWorldCamera();
 			CleanupOpenGlBlendMode();
 			CleanupClearColor();
+			CleanupRender();
 			CleanupGraphicsContext();
 		}
 		
@@ -75,13 +77,13 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		#region Render
 		
-		//TODO: Remove this stupid workaround.
-		//This workaround is required because the SwapBuffers command
-		// is responsible for the fps limiting delay. So we have to ensure that
-		// both buffers are filled so we can swap them (to get the fps delay)
-		// even when there is nothing new to render. Therefore both buffers
-		// contain the exact same image.
-		private Boolean SecondBufferFilled;
+		private void InitializeRender()
+		{
+		}
+		
+		private void CleanupRender()
+		{
+		}
 		
 		public void Render()
 		{
@@ -89,12 +91,12 @@ namespace PsmFramework.Engines.DrawEngine2d
 			
 			if(RenderRequired)
 			{
-				SecondBufferFilled = false;
+				ResetWorkaroundBuffersFilled();
 				RenderWork();
 			}
-			else if (!SecondBufferFilled)//TODO: Remove this stupid workaround.
+			else if (!AreWorkaroundBuffersFilled)//TODO: Remove this stupid workaround.
 			{
-				SecondBufferFilled = true;
+				IncrementWorkaroundBuffersFilled();
 				RenderWork();
 			}
 		}
@@ -110,12 +112,41 @@ namespace PsmFramework.Engines.DrawEngine2d
 			
 			foreach(LayerBase layer in Layers.Values)
 				layer.Render();
+			
 			Console.WriteLine("de2d: RenderWork");
 		}
 		
 		public void RenderSwapBuffers()
 		{
 			GraphicsContext.SwapBuffers();
+		}
+		
+		//TODO: Remove this stupid workaround.
+		//This workaround is required because the SwapBuffers command
+		// is responsible for the fps limiting delay. So we have to ensure that
+		// both buffers are filled so we can swap them (to get the fps delay)
+		// even when there is nothing new to render. Therefore both buffers
+		// contain the exact same image.
+		private Int32 WorkaroundBuffersFilled;
+		
+		private const Int32 WorkaroundBuffersNeeded = 2;
+		
+		private void IncrementWorkaroundBuffersFilled()
+		{
+			WorkaroundBuffersFilled++;
+		}
+		
+		private void ResetWorkaroundBuffersFilled()
+		{
+			WorkaroundBuffersFilled = 0;
+		}
+		
+		private Boolean AreWorkaroundBuffersFilled
+		{
+			get
+			{
+				return WorkaroundBuffersFilled >= WorkaroundBuffersNeeded;
+			}
 		}
 		
 		#endregion
@@ -342,7 +373,6 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		private void InitializeRenderRequiredFlag()
 		{
-			//Ensure first pass is rendered.
 			SetRenderRequired();
 		}
 		
@@ -752,15 +782,20 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		private void InitializeShaders()
 		{
+			SpriteShader = new SpriteShader(this);
 			FontShader = new FontShader(this);
 		}
 		
 		private void CleanupShaders()
 		{
+			SpriteShader.Dispose();
+			SpriteShader = null;
+			
 			FontShader.Dispose();
 			FontShader = null;
 		}
 		
+		internal SpriteShader SpriteShader;
 		internal FontShader FontShader;
 		
 		#endregion

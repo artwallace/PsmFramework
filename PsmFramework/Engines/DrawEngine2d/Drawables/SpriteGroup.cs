@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using PsmFramework.Engines.DrawEngine2d.Layers;
 using PsmFramework.Engines.DrawEngine2d.Shaders;
 using PsmFramework.Engines.DrawEngine2d.Support;
@@ -66,16 +65,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		#region Render
 		
-		private Stopwatch TestTimer = new Stopwatch();
-		
 		public override void RenderHelper()
 		{
-			//Need to test how caching matrix calcs affects performance.
-			//Could be a waste of time.
-			//Could be better to recalc matrix in sprite when
-			// position, angle and scale are changed and store it there.
-			TestTimer.Start();
-			
 			//Set up the drawing
 			
 			//TODO: These need to be changed as little as possible, as seen in GOSLlib.
@@ -99,8 +90,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			}
 			
 			//Clean up the drawing
-			
-			TestTimer.Stop();
 		}
 		
 		#endregion
@@ -109,12 +98,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		protected override void RecalcBounds()
 		{
-			throw new NotImplementedException();
+			//TODO: throw new NotImplementedException();
 		}
 		
 		protected override void RecalcHelper()
 		{
-			throw new NotImplementedException();
+			//TODO: throw new NotImplementedException();
 		}
 		
 		#endregion

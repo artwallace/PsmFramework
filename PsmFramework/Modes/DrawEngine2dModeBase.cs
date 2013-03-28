@@ -63,6 +63,7 @@ namespace PsmFramework.Modes
 		private void InitializeDrawEngine2d()
 		{
 			DrawEngine2d = new DrawEngine2d(Mgr.GraphicsContext);
+			
 			DrawEngine2d.SetBlendModeToNormal();
 		}
 		
