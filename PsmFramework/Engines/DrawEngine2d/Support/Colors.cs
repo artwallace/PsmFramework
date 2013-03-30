@@ -1,9 +1,3 @@
-/* SCE CONFIDENTIAL
- * PlayStation(R)Suite SDK 0.98.2
- * Copyright (C) 2012 Sony Computer Entertainment Inc.
- * All Rights Reserved.
- */
-
 using System;
 using Sce.PlayStation.Core;
 

@@ -1,24 +1,21 @@
 using System;
-using System.Collections.Generic;
 using PsmFramework.Engines.DrawEngine2d.Layers;
 using PsmFramework.Engines.DrawEngine2d.Shaders;
 using PsmFramework.Engines.DrawEngine2d.Support;
 using PsmFramework.Engines.DrawEngine2d.Textures;
 using Sce.PlayStation.Core;
 using Sce.PlayStation.Core.Graphics;
-using Sce.PlayStation.Core.Imaging;
 
 namespace PsmFramework.Engines.DrawEngine2d.Drawables
 {
-	//Slow, one-off image drawing class with zoom and pan features.
-	public class Image : DrawableBase
+	public class Sprite : DrawableBase
 	{
 		#region Constructor, Dispose
 		
-		public Image(LayerBase layer, String path = null)
+		public Sprite(LayerBase layer, TiledTexture tiledTexture, TiledTextureIndex index)
 			: base(layer)
 		{
-			SetSourceImage(path);
+			SetTiledTexture(tiledTexture, index);
 		}
 		
 		#endregion
@@ -28,8 +25,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		protected override void Initialize()
 		{
 			InitializeShaderProgram();
-			InitializeTexture();
-			InitializeSourceImage();
+			InitializeTiledTexture();
 			
 			InitializePosition();
 			InitializeDimensions();
@@ -42,8 +38,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			CleanupDimensions();
 			CleanupPosition();
 			
-			CleanupSourceImage();
-			CleanupTexture();
+			CleanupTiledTexture();
 			CleanupShaderProgram();
 		}
 		
@@ -65,60 +60,69 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		#endregion
 		
-		#region Texture
+		#region TiledTexture
 		
-		private void InitializeTexture()
+		private void InitializeTiledTexture()
 		{
-			Texture = null;
+			TiledTexture = null;
+			TiledTextureIndex = default(TiledTextureIndex);
 		}
 		
-		private void CleanupTexture()
+		private void CleanupTiledTexture()
 		{
-			ClearTexture();//TODO: should we move the code to this method?
+			UnregisterAsUserOfTiledTexture();
+			TiledTexture = null;
+			TiledTextureIndex = default(TiledTextureIndex);
 		}
 		
-		private Texture2dPlus Texture;
+		private TiledTexture TiledTexture;
 		
-		private void SetTexture()
+		private TiledTextureIndex _TiledTextureIndex;
+		public TiledTextureIndex TiledTextureIndex
 		{
+			get { return _TiledTextureIndex; }
+			set
+			{
+				if (_TiledTextureIndex == value)
+					return;
+				
+				_TiledTextureIndex = value;
+				
+				SetRecalcRequired();
+			}
 		}
 		
-		private void ClearTexture()
+		private void SetTiledTexture(TiledTexture tiledTexture, TiledTextureIndex index)
 		{
-		}
-		
-		#endregion
-		
-		#region SourceImage
-		
-		private void InitializeSourceImage()
-		{
-			SetSourceImage(null);
-		}
-		
-		private void CleanupSourceImage()
-		{
-			ClearSourceImage();
-		}
-		
-		public void SetSourceImage(String path)
-		{
-			Path = path;
-			//TODO: Do something with the texture here.
-			SetTexture();
+			if(tiledTexture == null)
+				throw new ArgumentNullException();
 			
-			Sce.PlayStation.Core.Imaging.Image i = new Sce.PlayStation.Core.Imaging.Image(path);
-			//i.DrawImage();
+			if (TiledTexture != null)
+			{
+				UnregisterAsUserOfTiledTexture();
+				TiledTexture = null;
+			}
+			
+			TiledTexture = tiledTexture;
+			TiledTextureIndex = index;
+			
+			RegisterAsUserOfTiledTexture();
 		}
 		
-		public void ClearSourceImage()
+		private void RegisterAsUserOfTiledTexture()
 		{
-			Path = null;
-			//TODO: Do something with the texture here.
-			ClearTexture();
+			DrawEngine2d.AddTiledTextureUser(TiledTexture.Key, this);
 		}
 		
-		public String Path { get; private set; }
+		private void UnregisterAsUserOfTiledTexture()
+		{
+			DrawEngine2d.RemoveTiledTextureUser(TiledTexture.Key, this);
+		}
+		
+//		public Single[] GetTiledTextureCoordinates(TiledTextureIndex index, out Int32 width, out Int32 height)
+//		{
+//			return TiledTexture.GetTextureCoordinates(index, out width, out height);
+//		}
 		
 		#endregion
 		
@@ -149,21 +153,10 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			}
 		}
 		
-		public void SetPositionFromCenter()
+		public void SetPosition(Coordinate2 position, RelativePosition relativeTo = RelativePosition.Center)
 		{
+			throw new NotImplementedException();
 		}
-		
-		public void SetPositionFromUpperLeft()
-		{
-		}
-		
-		public void SetPositionFromLowerLeft()
-		{
-		}
-		
-//		private void SetPosition()
-//		{
-//		}
 		
 		#endregion
 		
@@ -171,14 +164,18 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void InitializeDimensions()
 		{
+			Width = 0.0f;
+			Height = 0.0f;
 		}
 		
 		private void CleanupDimensions()
 		{
+			Width = 0;
+			Height = 0;
 		}
 		
-		private Coordinate2 _Width;
-		public Coordinate2 Width
+		private Single _Width;
+		public Single Width
 		{
 			get { return _Width; }
 			set
@@ -192,8 +189,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			}
 		}
 		
-		private Coordinate2 _Height;
-		public Coordinate2 Height
+		private Single _Height;
+		public Single Height
 		{
 			get { return _Height; }
 			set
@@ -205,6 +202,21 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				
 				SetRecalcRequired();
 			}
+		}
+		
+		private void SetDimensionsFromTile()
+		{
+			throw new NotImplementedException();
+		}
+		
+		private void SetWidth()
+		{
+			throw new NotImplementedException();
+		}
+		
+		private void SetHeight()
+		{
+			throw new NotImplementedException();
 		}
 		
 		#endregion
@@ -263,6 +275,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		public override void RenderHelper()
 		{
+			throw new NotImplementedException();
 		}
 		
 		#endregion
@@ -271,12 +284,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		protected override void RecalcBounds()
 		{
-			//TODO: throw new NotImplementedException();
+			throw new NotImplementedException();
 		}
 		
 		protected override void RecalcHelper()
 		{
-			//TODO: throw new NotImplementedException();
+			throw new NotImplementedException();
 		}
 		
 		#endregion

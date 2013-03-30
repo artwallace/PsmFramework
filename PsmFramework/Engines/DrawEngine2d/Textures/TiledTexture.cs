@@ -8,18 +8,21 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 	{
 		#region Constructor, Dispose
 		
-		public TiledTexture(DrawEngine2d drawEngine2d, TextureCachePolicy cachePolicy, String path)
+		public TiledTexture(DrawEngine2d drawEngine2d, String path, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
 		{
 			Initialize(drawEngine2d, cachePolicy, path);
 		}
 		
-		public TiledTexture(DrawEngine2d drawEngine2d, TextureCachePolicy cachePolicy, String key, Texture2dPlus texture)
+		public TiledTexture(DrawEngine2d drawEngine2d, String key, Texture2dPlus texture, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
 		{
 			Initialize(drawEngine2d, cachePolicy, key, texture);
 		}
 		
 		public void Dispose()
 		{
+			if(IsDisposed)
+				return;
+			
 			Cleanup();
 			IsDisposed = true;
 		}
@@ -152,7 +155,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		{
 			switch(index.Type)
 			{
-				case TiledTextureIndexType.Column:
+				case IndexType.Column:
 					return ColumnIndex[index.Column].CoordinateArray;
 					
 				default:
@@ -164,7 +167,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		{
 			switch(index.Type)
 			{
-				case TiledTextureIndexType.Column:
+				case IndexType.Column:
 					width = ColumnIndex[index.Column].Width;
 					height = ColumnIndex[index.Column].Height;
 					return GetTextureCoordinates(index);

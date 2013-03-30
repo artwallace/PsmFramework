@@ -308,7 +308,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 			FontTexture.SetPixels(0, TexturePixels, PixelFormat.Luminance);
 			FontTexture.SetFilter(TextureFilterMode.Nearest, TextureFilterMode.Nearest, TextureFilterMode.Nearest);
 			
-			TiledFontTexture = new TiledTexture(DrawEngine2d, TextureCachePolicy.KeepAlways, TextureKey, FontTexture);
+			TiledFontTexture = new TiledTexture(DrawEngine2d, TextureKey, FontTexture, TextureCachePolicy.KeepAlways);
 			TiledFontTexture.CreateColumnIndex(MaxTextureCharCapacity);
 			
 			FontTexture = null;

@@ -2,11 +2,12 @@ using System;
 
 namespace PsmFramework.Engines.DrawEngine2d.Textures
 {
-	public class TiledTextureBase
+	public enum IndexType
 	{
-		public TiledTextureBase()
-		{
-		}
+		Column,
+		Grid,
+		Name,
+		NamedSequences
 	}
 }
 

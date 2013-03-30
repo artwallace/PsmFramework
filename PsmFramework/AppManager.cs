@@ -275,7 +275,7 @@ namespace PsmFramework
 			PreviousMode.Dispose();
 			PreviousMode = null;
 			
-			GC.Collect();
+			FreeMemory();
 		}
 		
 		public void GoToTitleScreenMode()
@@ -444,6 +444,11 @@ namespace PsmFramework
 				FramesPerSecond = CurrentFramesPerSecond;
 				CurrentFramesPerSecond = 1;
 			}
+		}
+		
+		public void FreeMemory()
+		{
+			GC.Collect();
 		}
 		
 		#endregion

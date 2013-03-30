@@ -2,7 +2,7 @@ using System;
 
 namespace PsmFramework.Engines.DrawEngine2d.Textures
 {
-	public struct TiledTextureIndex
+	public struct TiledTextureIndex : IEquatable<TiledTextureIndex>
 	{
 		#region Constructor
 		
@@ -11,11 +11,14 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 			if(column < 0)
 				throw new ArgumentOutOfRangeException();
 			
-			Type = TiledTextureIndexType.Column;
+			Type = IndexType.Column;
 			
 			_Column = column;
 			_Row = 0;
 			_Name = null;
+			
+			_HashCodeDirty = true;
+			_HashCode = 0;
 		}
 		
 		public TiledTextureIndex(Int32 column, Int32 row)
@@ -26,11 +29,14 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 			if(row < 0)
 				throw new ArgumentOutOfRangeException();
 			
-			Type = TiledTextureIndexType.Grid;
+			Type = IndexType.Grid;
 			
 			_Column = column;
 			_Row = row;
 			_Name = null;
+			
+			_HashCodeDirty = true;
+			_HashCode = 0;
 		}
 		
 		public TiledTextureIndex(String name)
@@ -38,18 +44,21 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 			if(String.IsNullOrWhiteSpace(name))
 				throw new ArgumentOutOfRangeException();
 			
-			Type = TiledTextureIndexType.Named;
+			Type = IndexType.Name;
 			
 			_Column = 0;
 			_Row = 0;
 			_Name = name;
+			
+			_HashCodeDirty = true;
+			_HashCode = 0;
 		}
 		
 		#endregion
 		
 		#region Type
 		
-		public readonly TiledTextureIndexType Type;
+		public readonly IndexType Type;
 		
 		#endregion
 		
@@ -61,7 +70,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 			get { return _Column; }
 			set
 			{
-				if(Type != TiledTextureIndexType.Column && Type != TiledTextureIndexType.Grid)
+				if(Type != IndexType.Column && Type != IndexType.Grid)
 					throw new InvalidOperationException();
 				
 				if(_Column == value)
@@ -81,7 +90,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 			get { return _Row; }
 			set
 			{
-				if(Type != TiledTextureIndexType.Grid)
+				if(Type != IndexType.Grid)
 					throw new InvalidOperationException();
 				
 				if(_Row == value)
@@ -101,7 +110,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 			get { return _Name; }
 			set
 			{
-				if(Type != TiledTextureIndexType.Named)
+				if(Type != IndexType.Name)
 					throw new InvalidOperationException();
 				
 				if(_Name == value)
@@ -109,6 +118,61 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 				
 				_Name = value;
 			}
+		}
+		
+		#endregion
+		
+		#region IEquatable, etc.
+		
+		public override Boolean Equals(Object o)
+		{
+			if (o is TiledTextureIndex)
+				return this.Equals((TiledTextureIndex)o);
+			
+			return false;
+		}
+		
+		public Boolean Equals(TiledTextureIndex o)
+		{
+			if(o == null)
+				return false;
+			
+			return
+				(Type == o.Type) &&
+				(_Column == o._Column) &&
+				(_Row == o._Row) &&
+				(_Name == o._Name)
+				;
+		}
+		
+		private Int32 _HashCode;
+		public override Int32 GetHashCode()
+		{
+			if(_HashCodeDirty)
+				UpdateHashCode();
+			return _HashCode;
+		}
+		private Boolean _HashCodeDirty;
+		private void UpdateHashCode()
+		{
+			_HashCode = (Int32)Type ^ _Column ^ _Row ^ _Name.GetHashCode();
+			_HashCodeDirty = false;
+		}
+		
+		public static Boolean operator ==(TiledTextureIndex o1, TiledTextureIndex o2)
+		{
+			if (Object.ReferenceEquals(o1, o2))
+				return true;
+			
+			if (((Object)o1 == null) || ((Object)o2 == null))
+				return false;
+			
+			return o1.Equals(o2);
+		}
+		
+		public static Boolean operator !=(TiledTextureIndex o1, TiledTextureIndex o2)
+		{
+			return !(o1 == o2);
 		}
 		
 		#endregion

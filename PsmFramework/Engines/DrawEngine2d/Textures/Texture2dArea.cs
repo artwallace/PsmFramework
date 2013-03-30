@@ -84,8 +84,9 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		
 		#region CoordinateArray
 		
-		//TODO: This array would allow the coordinates to be changed
-		// without updating the other stored coordinate properties.
+		//TODO: This is semi-dangerous because this array would allow 
+		// the coordinates to be changed without updating the other 
+		// stored coordinate properties.
 		private Single[] _CoordinateArray;
 		public Single[] CoordinateArray { get { return _CoordinateArray; } }
 		

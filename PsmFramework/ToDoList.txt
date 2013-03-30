@@ -1,4 +1,5 @@
 Rendering
+* Implement Image as a trial run of drawable using shared shader.
 * Consider adding a 2nd rendering pass. The first pass will only create ShaderObjects and the 2nd pass will consolidate 
   all similar, contiguous ShaderObjects into VBO arrays and send them in bulk to GPU. this would allow removing 
   of SpriteGroups, etc to make Update more flexible and render more efficient.

@@ -59,12 +59,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Layers
 		
 		public void Render()
 		{
-			//TODO: REMOVE THIS! ONLY FOR DEBUGGING.
-			if(this is ScreenDebugLayer)
-			{
-				String s = "test";
-			}
-			
 			foreach(DrawableBase item in Items)
 				item.Render();
 		}

@@ -104,7 +104,7 @@ namespace Demo.MainMenuAlt
 			
 			//Load the logo png into a texture and create a single tile.
 			Texture2dPlus LogoTexture = new Texture2dPlus(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, Assets.Logo);
-			TiledTexture LogoTiledTexture = new TiledTexture(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, Assets.Logo, LogoTexture);
+			TiledTexture LogoTiledTexture = new TiledTexture(DrawEngine2d, Assets.Logo, LogoTexture);
 			LogoTiledTexture.CreateColumnIndex(1);
 			
 			//Create the sprite and add it to the layer.

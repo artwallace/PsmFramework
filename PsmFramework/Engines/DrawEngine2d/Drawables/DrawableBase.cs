@@ -207,6 +207,9 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		protected void Recalc()
 		{
+			if (IsDisposed)
+				return;
+			
 			ClearRecalcRequired();
 			
 			RecalcBounds();

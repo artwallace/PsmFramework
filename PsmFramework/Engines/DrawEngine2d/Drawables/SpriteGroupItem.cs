@@ -146,6 +146,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				
 				_Position = value;
 				
+				//TODO: should be changed to SpriteGroup.SetRecalcRequired()
+				//but this is a waste since all that will change in the future.
 				SpriteGroup.Layer.DrawEngine2d.SetRenderRequired();
 			}
 		}

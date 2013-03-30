@@ -39,11 +39,11 @@ namespace Demo.SpaceRockets
 			DrawEngine2d.ClearColor = Colors.Blue;
 			
 			DebugInfoEnabled = true;
-			//DebugInfoForcesRender = false; //TODO: Remove this when swapbuffers bug is fixed.
+			//DebugInfoForcesRender = false;
 			
 			String shipSprite = "/Application/TwinStickShooter/Images/Ship64.png";
 			Texture2dPlus t2d = new Texture2dPlus(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, shipSprite);
-			TiledTexture tt = new TiledTexture(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, shipSprite, t2d);
+			TiledTexture tt = new TiledTexture(DrawEngine2d, shipSprite, t2d);
 			tt.CreateColumnIndex(1);
 			
 			LayerBase l2 = DrawEngine2d.GetOrCreateWorldLayer(1);

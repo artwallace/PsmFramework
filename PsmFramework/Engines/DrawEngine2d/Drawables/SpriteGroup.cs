@@ -125,6 +125,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		private void CleanupTiledTexture()
 		{
 			UnregisterAsUserOfTiledTexture();
+			TiledTexture = null;
 		}
 		
 		private TiledTexture TiledTexture;
