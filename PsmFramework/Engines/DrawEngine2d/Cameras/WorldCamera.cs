@@ -95,17 +95,16 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		public void SetCenter(Coordinate2 center)
 		{
+			if (_Center == center)
+				return;
+			
 			_Center = center;
 			SetRecalcRequired();
 		}
 		
 		public void SetCenter(Single x, Single y)
 		{
-			if (_Center.X == x && _Center.Y == y)
-				return;
-			
-			_Center = new Coordinate2(x, y);
-			SetRecalcRequired();
+			SetCenter(new Coordinate2(x, y));
 		}
 		
 		public void SetCenterAtOrigin()
@@ -120,9 +119,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		public void SetCenterToPointWithinBounds(Coordinate2 point, RectangularArea2 bounds)
 		{
-			//_Center = 
-			SetRecalcRequired();
-			
+			//TODO
 			throw new NotImplementedException();
 		}
 		
