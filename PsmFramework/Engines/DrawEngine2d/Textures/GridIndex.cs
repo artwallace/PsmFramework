@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using PsmFramework.Engines.DrawEngine2d.Support;
 
 namespace PsmFramework.Engines.DrawEngine2d.Textures
 {
@@ -10,7 +11,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		public GridIndex(TiledTexture tiledTexture, Int32 columns = DefaultColumns, Int32 rows = DefaultRows, String name = DefaultName)
 			: base(name, tiledTexture)
 		{
-			BuildTileList(columns, rows);
+			BuildKeyList(columns, rows);
 		}
 		
 		#endregion
@@ -19,38 +20,38 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		
 		protected override void Initialize()
 		{
-			InitializeTiles();
+			InitializeKeys();
 		}
 		
 		protected override void Cleanup()
 		{
-			CleanupTiles();
+			CleanupKeys();
 		}
 		
 		#endregion
 		
-		#region Type
+		#region Keys
 		
-		public override IndexType Type { get { return IndexType.Column; } }
-		
-		#endregion
-		
-		#region Tiles
-		
-		private void InitializeTiles()
+		private void InitializeKeys()
 		{
-			Tiles = new Dictionary<GridLocation, Texture2dArea>();
+			Keys = new Dictionary<GridLocation, GridKey>();
 		}
 		
-		private void CleanupTiles()
+		private void CleanupKeys()
 		{
-			Tiles.Clear();
-			Tiles = null;
+			//TODO: Not sure if this is a good idea. Leaves drawables with disposed keys, right or wrong.
+			foreach(GridKey key in Keys.Values)
+				key.Dispose();
+			Keys.Clear();
+			Keys = null;
 		}
 		
-		private Dictionary<GridLocation, Texture2dArea> Tiles;
+		public const Int32 DefaultColumns = 1;
+		public const Int32 DefaultRows = 1;
 		
-		private void BuildTileList(Int32 columns, Int32 rows)
+		private Dictionary<GridLocation, GridKey> Keys;
+		
+		private void BuildKeyList(Int32 columns, Int32 rows)
 		{
 			//At least 1
 			if(columns < 1 || rows < 1)
@@ -81,36 +82,15 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 					
 					GridLocation loc = new GridLocation(c, r);
 					
-					Tiles.Add(loc, area);
+					GridKey key = new GridKey(this, c, r, area);
+					Keys.Add(loc, key);
 				}
 			}
 		}
 		
-		public Texture2dArea GetTextureCoordinates(Int32 column, Int32 row)
+		public GridKey GetKey(Int32 column, Int32 row)
 		{
-			GridLocation loc = new GridLocation(column, row);
-			
-			return Tiles[loc];
-		}
-		
-		public const Int32 DefaultColumns = 1;
-		
-		public const Int32 DefaultRows = 1;
-		
-		#endregion
-		
-		#region GridLocation
-		
-		private struct GridLocation
-		{
-			public GridLocation(Int32 column, Int32 row)
-			{
-				Column = column;
-				Row = row;
-			}
-			
-			public readonly Int32 Column;
-			public readonly Int32 Row;
+			throw new NotImplementedException();
 		}
 		
 		#endregion

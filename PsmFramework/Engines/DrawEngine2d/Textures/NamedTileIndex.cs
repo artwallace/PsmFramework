@@ -10,9 +10,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		public NamedTileIndex(TiledTexture tiledTexture, String name = DefaultName)
 			: base(name, tiledTexture)
 		{
-			throw new NotImplementedException();
-			
-			BuildTileList();
+			BuildKeyList();
 		}
 		
 		#endregion
@@ -21,44 +19,41 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		
 		protected override void Initialize()
 		{
-			InitializeTiles();
+			InitializeKeys();
 		}
 		
 		protected override void Cleanup()
 		{
-			CleanupTiles();
+			CleanupKeys();
 		}
 		
 		#endregion
 		
-		#region Type
+		#region Keys
 		
-		public override IndexType Type { get { return IndexType.NamedTiles; } }
-		
-		#endregion
-		
-		#region Tiles
-		
-		private void InitializeTiles()
+		private void InitializeKeys()
 		{
-			Tiles = new Dictionary<String, Texture2dArea>();
+			Keys = new Dictionary<String, NamedTileKey>();
 		}
 		
-		private void CleanupTiles()
+		private void CleanupKeys()
 		{
-			Tiles.Clear();
-			Tiles = null;
+			foreach(NamedTileKey key in Keys.Values)
+				key.Dispose();
+			Keys.Clear();
+			Keys = null;
 		}
 		
-		private Dictionary<String, Texture2dArea> Tiles;
+		private Dictionary<String, NamedTileKey> Keys;
 		
-		private void BuildTileList()
+		private void BuildKeyList()
 		{
+			throw new NotImplementedException();
 		}
 		
-		public Texture2dArea GetTextureCoordinates(string name)
+		public NamedTileKey GetKey(String name)
 		{
-			return Tiles[name];
+			throw new NotImplementedException();
 		}
 		
 		#endregion

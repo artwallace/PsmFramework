@@ -106,7 +106,7 @@ namespace Demo.MainMenuAlt
 			Texture2dPlus LogoTexture = new Texture2dPlus(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, Assets.Logo);
 			TiledTexture LogoTiledTexture = new TiledTexture(DrawEngine2d, Assets.Logo, LogoTexture);
 			ColumnIndex ci = LogoTiledTexture.CreateColumnIndex(1);
-			IndexKey key = new IndexKey(ci, 0);
+			ColumnKey key = ci.GetKey(0);
 			
 			//Create the sprite and add it to the layer.
 			SpriteGroup LogoSpriteGroup = new SpriteGroup(ScreenLayer, LogoTiledTexture);

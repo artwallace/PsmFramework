@@ -11,7 +11,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		#region Constructor, Dispose
 		
-		public SpriteGroupItem(SpriteGroup spriteGroup, IndexKey key)
+		public SpriteGroupItem(SpriteGroup spriteGroup, KeyBase key)
 		{
 			Initialize(spriteGroup, key);
 		}
@@ -25,7 +25,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		#region Initialize, Cleanup
 		
-		private void Initialize(SpriteGroup spriteGroup, IndexKey key)
+		private void Initialize(SpriteGroup spriteGroup, KeyBase key)
 		{
 			InitializeSpriteGroup(spriteGroup);
 			InitializeTextureIndexKey(key);
@@ -81,25 +81,25 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		#region TextureIndexKey
 		
-		private void InitializeTextureIndexKey(IndexKey key)
+		private void InitializeTextureIndexKey(KeyBase key)
 		{
-			TextureIndexKey = key;
+			Key = key;
 		}
 		
 		private void CleanupTextureIndexKey()
 		{
 		}
 		
-		private IndexKey _TextureIndexKey;
-		public IndexKey TextureIndexKey
+		private KeyBase _Key;
+		public KeyBase Key
 		{
-			get { return _TextureIndexKey; }
+			get { return _Key; }
 			set
 			{
-				if(_TextureIndexKey == value)
+				if(_Key == value)
 					return;
 				
-				_TextureIndexKey = value;
+				_Key = value;
 				
 				UpdateCachedTextureCoordinates();
 				
@@ -115,7 +115,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void UpdateCachedTextureCoordinates()
 		{
-			Texture2dArea area = TextureIndexKey.GetTileDimensions();
+			Texture2dArea area = Key.Tile;
 			
 			CachedTextureCoordinates = area.CoordinateArray;
 			TileWidth = area.Width;

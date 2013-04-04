@@ -245,7 +245,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 			if (ci == null)
 				throw new InvalidOperationException();
 			
-			return ci.GetTextureCoordinates(column).CoordinateArray;
+			return ci.GetKey(column).TextureCoordinates;
 		}
 		
 		public Single[] GetTextureCoordinates(Int32 column, Int32 row)
@@ -259,7 +259,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 			if (gi == null)
 				throw new InvalidOperationException();
 			
-			return gi.GetTextureCoordinates(column, row).CoordinateArray;
+			return gi.GetKey(column, row).TextureCoordinates;
 		}
 		
 		public Single[] GetTextureCoordinates(String tileName)
@@ -273,7 +273,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 			if (nti == null)
 				throw new InvalidOperationException();
 			
-			return nti.GetTextureCoordinates(tileName).CoordinateArray;
+			return nti.GetKey(tileName).TextureCoordinates;
 		}
 		
 //		public void GetTileDimensions(IndexKey key)

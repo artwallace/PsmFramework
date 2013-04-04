@@ -10,7 +10,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		public ColumnIndex(TiledTexture tiledTexture, Int32 columns = DefaultColumns, String name = DefaultName)
 			: base(name, tiledTexture)
 		{
-			BuildTileList(columns);
+			BuildKeyList(columns);
 		}
 		
 		#endregion
@@ -19,38 +19,37 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		
 		protected override void Initialize()
 		{
-			InitializeTiles();
+			InitializeKeys();
 		}
 		
 		protected override void Cleanup()
 		{
-			CleanupTiles();
+			CleanupKeys();
 		}
 		
 		#endregion
 		
-		#region Type
+		#region Keys
 		
-		public override IndexType Type { get { return IndexType.Column; } }
-		
-		#endregion
-		
-		#region Tiles
-		
-		private void InitializeTiles()
+		private void InitializeKeys()
 		{
-			Tiles = new Dictionary<Int32, Texture2dArea>();
+			Keys = new Dictionary<Int32, ColumnKey>();
 		}
 		
-		private void CleanupTiles()
+		private void CleanupKeys()
 		{
-			Tiles.Clear();
-			Tiles = null;
+			//TODO: Not sure if this is a good idea. Leaves drawables with disposed keys, right or wrong.
+			foreach(ColumnKey key in Keys.Values)
+				key.Dispose();
+			Keys.Clear();
+			Keys = null;
 		}
 		
-		private Dictionary<Int32, Texture2dArea> Tiles;
+		public const Int32 DefaultColumns = 1;
 		
-		private void BuildTileList(Int32 columns)
+		private Dictionary<Int32, ColumnKey> Keys;
+		
+		private void BuildKeyList(Int32 columns)
 		{
 			if(columns < 1 || columns > TiledTexture.Texture.Width)
 				throw new ArgumentOutOfRangeException();
@@ -70,16 +69,15 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 				
 				Texture2dArea area = new Texture2dArea(left, top, right, bottom, TiledTexture.Texture.Width, TiledTexture.Texture.Height);
 				
-				Tiles.Add(c, area);
+				ColumnKey key = new ColumnKey(this, c, area);
+				Keys.Add(c, key);
 			}
 		}
 		
-		public Texture2dArea GetTextureCoordinates(Int32 column)
+		public ColumnKey GetKey(Int32 column)
 		{
-			return Tiles[column];
+			return Keys[column];
 		}
-		
-		public const Int32 DefaultColumns = 1;
 		
 		#endregion
 	}

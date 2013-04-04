@@ -332,7 +332,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		public Single[] GetCharTextureCoordinates(Char c)
 		{
 			Int32 index = GetGlyphIndex(c);
-			return TextureColumnIndex.GetTextureCoordinates(index).CoordinateArray;
+			return TextureColumnIndex.GetKey(index).TextureCoordinates;
 		}
 		
 		#endregion

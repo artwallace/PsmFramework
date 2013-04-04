@@ -71,13 +71,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		
 		#endregion
 		
-		#region Type
-		
-		//This is a convenience that maybe saves casting time.
-		public abstract IndexType Type { get; }
-		
-		#endregion
-		
 		#region TiledTexture
 		
 		private void InitializeTiledTexture(TiledTexture tiledTexture)
@@ -108,9 +101,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		}
 		
 		#endregion
-		
-//		#region Tiles
-//		#endregion
 	}
 }
 

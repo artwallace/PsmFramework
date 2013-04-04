@@ -12,7 +12,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 	{
 		#region Constructor, Dispose
 		
-		public Sprite(LayerBase layer, IndexKey key)
+		public Sprite(LayerBase layer, KeyBase key)
 			: base(layer)
 		{
 			SetTiledTexture(key);
@@ -70,11 +70,11 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		{
 			UnregisterAsUserOfTiledTexture();
 			
-			Key = default(IndexKey);
+			Key = default(KeyBase);
 		}
 		
-		private IndexKey _Key;
-		public IndexKey Key
+		private KeyBase _Key;
+		public KeyBase Key
 		{
 			get { return _Key; }
 			set
@@ -88,12 +88,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			}
 		}
 		
-		private void SetTiledTexture(IndexKey key)
+		private void SetTiledTexture(KeyBase key)
 		{
-			if(key.Index == null)
+			if(key == null)
 				throw new ArgumentNullException();
 			
-			if (Key.Index != null)
+			if (Key != null)
 				UnregisterAsUserOfTiledTexture();
 			
 			Key = key;
@@ -103,21 +103,24 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void RegisterAsUserOfTiledTexture()
 		{
-			if (Key.Index == null)
+			if (Key == null)
 				throw new InvalidOperationException();
 			
-			if (Key.Index.TiledTexture == null)
+			if (Key.IsDisposed)
 				throw new InvalidOperationException();
 			
-			DrawEngine2d.AddTiledTextureUser(Key.Index.TiledTexture.Key, this);
+			if (Key.TiledTexture == null)
+				throw new InvalidOperationException();
+			
+			DrawEngine2d.AddTiledTextureUser(Key.TiledTexture.Key, this);
 		}
 		
 		private void UnregisterAsUserOfTiledTexture()
 		{
-			if (Key.Index.TiledTexture == null)
+			if (Key.TiledTexture == null)
 				return;
 			
-			DrawEngine2d.RemoveTiledTextureUser(Key.Index.TiledTexture.Key, this);
+			DrawEngine2d.RemoveTiledTextureUser(Key.TiledTexture.Key, this);
 		}
 		
 //		public Single[] GetTiledTextureCoordinates(TiledTextureIndex index, out Int32 width, out Int32 height)

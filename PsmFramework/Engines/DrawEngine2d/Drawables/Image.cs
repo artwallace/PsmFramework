@@ -69,7 +69,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void InitializeTexture()
 		{
-			Texture = null;
+			//Texture = null;
 		}
 		
 		private void CleanupTexture()
@@ -77,7 +77,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			ClearTexture();//TODO: should we move the code to this method?
 		}
 		
-		private Texture2dPlus Texture;
+		//private Texture2dPlus Texture;
 		
 		private void SetTexture()
 		{

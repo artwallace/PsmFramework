@@ -45,7 +45,7 @@ namespace Demo.SpaceRockets
 			Texture2dPlus t2d = new Texture2dPlus(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, shipSprite);
 			TiledTexture tt = new TiledTexture(DrawEngine2d, shipSprite, t2d);
 			ColumnIndex ci = tt.CreateColumnIndex(1);
-			IndexKey key = new IndexKey(ci, 0);
+			ColumnKey key = ci.GetKey(0);
 			
 			LayerBase l2 = DrawEngine2d.GetOrCreateWorldLayer(1);
 			
