@@ -8,7 +8,7 @@ using Sce.PlayStation.HighLevel.GameEngine2D.Base;
 namespace PsmFramework
 {
 	//TODO: Remove this class once GameEngine2d is removed.
-	public class TextureManager : IDisposable
+	public sealed class TextureManager : IDisposable
 	{
 		public AppManager Mgr { get; private set; }
 		

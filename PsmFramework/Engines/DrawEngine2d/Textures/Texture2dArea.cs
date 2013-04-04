@@ -9,76 +9,65 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		
 		public Texture2dArea(Int32 left, Int32 top, Int32 right, Int32 bottom, Int32 textureWidth, Int32 textureHeight)
 		{
-			_Left = left;
-			_Top = top;
-			_Right = right;
-			_Bottom = bottom;
+			Left = left;
+			Top = top;
+			Right = right;
+			Bottom = bottom;
 			
-			_TopLeft = new Coordinate2i(left, top);
-			_BottomLeft = new Coordinate2i(left, bottom);
-			_TopRight = new Coordinate2i(right, top);
-			_BottomRight = new Coordinate2i(right, bottom);
+			TopLeft = new Coordinate2i(left, top);
+			BottomLeft = new Coordinate2i(left, bottom);
+			TopRight = new Coordinate2i(right, top);
+			BottomRight = new Coordinate2i(right, bottom);
 			
-			_Width = right - left;
-			_Height = bottom - top;
+			Width = right - left;
+			Height = bottom - top;
 			
-			_CoordinateArray = new Single[8];
+			CoordinateArray = new Single[8];
 			//TopLeft
-			_CoordinateArray[0] = (Single)left / textureWidth;
-			_CoordinateArray[1] = (Single)top / textureHeight;
+			CoordinateArray[0] = (Single)left / textureWidth;
+			CoordinateArray[1] = (Single)top / textureHeight;
 			//BottomLeft
-			_CoordinateArray[2] = (Single)left / textureWidth;
-			_CoordinateArray[3] = (Single)bottom / textureHeight;
+			CoordinateArray[2] = (Single)left / textureWidth;
+			CoordinateArray[3] = (Single)bottom / textureHeight;
 			//TopRight
-			_CoordinateArray[4] = (Single)right / textureWidth;
-			_CoordinateArray[5] = (Single)top / textureHeight;
+			CoordinateArray[4] = (Single)right / textureWidth;
+			CoordinateArray[5] = (Single)top / textureHeight;
 			//BottomRight
-			_CoordinateArray[6] = (Single)right / textureWidth;
-			_CoordinateArray[7] = (Single)bottom / textureHeight;
-			
+			CoordinateArray[6] = (Single)right / textureWidth;
+			CoordinateArray[7] = (Single)bottom / textureHeight;
 		}
 		
 		#endregion
 		
 		#region Boundaries
 		
-		private Int32 _Left;
-		public Int32 Left { get { return _Left; } }
+		public readonly Int32 Left;
 		
-		private Int32 _Top;
-		public Int32 Top { get { return _Top; } }
+		public readonly Int32 Top;
 		
-		private Int32 _Right;
-		public Int32 Right { get { return _Right; } }
+		public readonly Int32 Right;
 		
-		private Int32 _Bottom;
-		public Int32 Bottom { get { return _Bottom; } }
+		public readonly Int32 Bottom;
 		
 		#endregion
 		
 		#region Dimensions
 		
-		private Int32 _Width;
-		public Int32 Width { get { return _Width; } }
+		public readonly Int32 Width;
 		
-		private Int32 _Height;
-		public Int32 Height { get { return _Height; } }
+		public readonly Int32 Height;
 		
 		#endregion
 		
 		#region Coordinates
 		
-		private Coordinate2i _TopLeft;
-		public Coordinate2i TopLeft { get { return _TopLeft; } }
+		public readonly Coordinate2i TopLeft;
 		
-		private Coordinate2i _BottomLeft;
-		public Coordinate2i BottomLeft { get { return _BottomLeft; } }
+		public readonly Coordinate2i BottomLeft;
 		
-		private Coordinate2i _TopRight;
-		public Coordinate2i TopRight { get { return _TopRight; } }
+		public readonly Coordinate2i TopRight;
 		
-		private Coordinate2i _BottomRight;
-		public Coordinate2i BottomRight { get { return _BottomRight; } }
+		public readonly Coordinate2i BottomRight;
 		
 		#endregion
 		
@@ -87,8 +76,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		//TODO: This is semi-dangerous because this array would allow 
 		// the coordinates to be changed without updating the other 
 		// stored coordinate properties.
-		private Single[] _CoordinateArray;
-		public Single[] CoordinateArray { get { return _CoordinateArray; } }
+		public readonly Single[] CoordinateArray;
 		
 		#endregion
 	}

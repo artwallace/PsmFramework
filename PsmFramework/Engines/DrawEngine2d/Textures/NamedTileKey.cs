@@ -2,7 +2,7 @@ using System;
 
 namespace PsmFramework.Engines.DrawEngine2d.Textures
 {
-	public class NamedTileKey : KeyBase
+	public sealed class NamedTileKey : KeyBase
 	{
 		#region Constructor, Dispose
 		

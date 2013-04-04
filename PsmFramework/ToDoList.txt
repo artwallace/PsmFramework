@@ -12,7 +12,6 @@ Shaders
 Drawables
 * Fix DrawableBase.Changed. It's completely borked.
 * fix drawablebase bounds
-* Check why de2d shows DebugLabel with different spacing than ge2d.
 * Add foreground and background color support to DebugLabel.
 
 Cameras

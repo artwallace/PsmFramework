@@ -5,7 +5,7 @@ using Sce.PlayStation.HighLevel.GameEngine2D.Base;
 namespace PsmFramework
 {
 	//TODO: Remove this class once GameEngine2d is removed.
-	public class TextureUsers : IDisposable
+	public sealed class TextureUsers : IDisposable
 	{
 		#region Constructor, Dispose
 		

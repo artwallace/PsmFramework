@@ -5,7 +5,7 @@ using Sce.PlayStation.Core.Graphics;
 
 namespace PsmFramework.Engines.DrawEngine2d.Shaders
 {
-	public class FontShader : ShaderBase
+	public sealed class FontShader : ShaderBase
 	{
 		#region Constructor
 		

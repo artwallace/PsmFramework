@@ -2,7 +2,7 @@ using System;
 
 namespace PsmFramework.Engines.DrawEngine2d.Textures
 {
-	public class GridKey : KeyBase
+	public sealed class GridKey : KeyBase
 	{
 		#region Constructor, Dispose
 		

@@ -4,7 +4,7 @@ using PsmFramework.Engines.DrawEngine2d.Support;
 
 namespace PsmFramework.Engines.DrawEngine2d.Textures
 {
-	public class GridIndex : IndexBase
+	public sealed class GridIndex : IndexBase
 	{
 		#region Constructor, Dispose
 		

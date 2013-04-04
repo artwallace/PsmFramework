@@ -2,7 +2,7 @@ using System;
 
 namespace PsmFramework.Engines.DrawEngine2d.Shaders
 {
-	public class SpriteShader : ShaderBase
+	public sealed class SpriteShader : ShaderBase
 	{
 		#region Constructor
 		

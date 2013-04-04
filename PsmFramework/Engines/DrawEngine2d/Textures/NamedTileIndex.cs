@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PsmFramework.Engines.DrawEngine2d.Textures
 {
-	public class NamedTileIndex : IndexBase
+	public sealed class NamedTileIndex : IndexBase
 	{
 		#region Constructor, Dispose
 		

@@ -18,39 +18,34 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 			if (a < 0f || a > 1f)
 				throw new ArgumentOutOfRangeException();
 			
-			_R = r;
-			_G = g;
-			_B = b;
-			_A = a;
+			R = r;
+			G = g;
+			B = b;
+			A = a;
 			
 			_HashCodeDirty = true;
 			_HashCode = 0;
 			
-			_AsVector4 = new Vector4(_R, _G, _B, _A);
+			AsVector4 = new Vector4(R, G, B, A);
 		}
 		
 		#endregion
 		
 		#region RGBA
 		
-		private Single _R;
-		public Single R { get { return _R; } }
+		public readonly Single R;
 		
-		private Single _G;
-		public Single G { get { return _G; } }
+		public readonly Single G;
 		
-		private Single _B;
-		public Single B { get { return _B; } }
+		public readonly Single B;
 		
-		private Single _A;
-		public Single A { get { return _A; } }
+		public readonly Single A;
 		
 		#endregion
 		
 		#region AsVector4
 		
-		private Vector4 _AsVector4;
-		public Vector4 AsVector4 { get { return _AsVector4; } }
+		public readonly Vector4 AsVector4;
 		
 		#endregion
 		

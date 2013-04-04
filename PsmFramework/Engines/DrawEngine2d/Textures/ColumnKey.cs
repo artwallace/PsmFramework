@@ -2,7 +2,7 @@ using System;
 
 namespace PsmFramework.Engines.DrawEngine2d.Textures
 {
-	public class ColumnKey : KeyBase
+	public sealed class ColumnKey : KeyBase
 	{
 		#region Constructor, Dispose
 		

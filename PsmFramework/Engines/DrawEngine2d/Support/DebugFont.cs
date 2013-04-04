@@ -5,7 +5,7 @@ using Sce.PlayStation.Core.Graphics;
 
 namespace PsmFramework.Engines.DrawEngine2d.Support
 {
-	internal class DebugFont : IDisposablePlus
+	internal sealed class DebugFont : IDisposablePlus
 	{
 		#region Constructor, Dispose
 		

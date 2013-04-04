@@ -14,7 +14,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 	/// and does not support rotation.
 	/// DebugLabel is always drawn on top of every other Drawable in a special Render pass.
 	/// </summary>
-	public class DebugLabel : DrawableBase
+	public sealed class DebugLabel : DrawableBase
 	{
 		#region Constructor, Dispose
 		

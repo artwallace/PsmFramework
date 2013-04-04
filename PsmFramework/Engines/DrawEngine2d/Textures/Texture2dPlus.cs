@@ -3,7 +3,7 @@ using Sce.PlayStation.Core.Graphics;
 
 namespace PsmFramework.Engines.DrawEngine2d.Textures
 {
-	public class Texture2dPlus : Texture2D
+	public sealed class Texture2dPlus : Texture2D
 	{
 		#region Constructor, Dispose
 		

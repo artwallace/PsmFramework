@@ -8,7 +8,7 @@ using Sce.PlayStation.Core.Graphics;
 
 namespace PsmFramework.Engines.DrawEngine2d.Drawables
 {
-	public class Sprite : DrawableBase
+	public sealed class Sprite : DrawableBase
 	{
 		#region Constructor, Dispose
 		

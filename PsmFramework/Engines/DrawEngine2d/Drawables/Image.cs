@@ -11,7 +11,7 @@ using Sce.PlayStation.Core.Imaging;
 namespace PsmFramework.Engines.DrawEngine2d.Drawables
 {
 	//Slow, one-off image drawing class with zoom and pan features.
-	public class Image : DrawableBase
+	public sealed class Image : DrawableBase
 	{
 		#region Constructor, Dispose
 		
