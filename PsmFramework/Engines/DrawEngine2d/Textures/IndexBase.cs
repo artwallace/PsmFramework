@@ -18,6 +18,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 				return;
 			
 			Cleanup();
+			CleanupInternal();
 			IsDisposed = true;
 		}
 		

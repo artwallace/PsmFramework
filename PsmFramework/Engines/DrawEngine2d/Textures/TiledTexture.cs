@@ -149,10 +149,15 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		
 		private void CleanupIndexes()
 		{
-			foreach(IndexBase index in Indexes.Values)
+			//TODO: should be more elegant.
+			List<IndexBase> indexes = new List<IndexBase>(Indexes.Values);
+			foreach(IndexBase index in indexes)
 				index.Dispose();
 			Indexes.Clear();
 			Indexes = null;
+			
+			indexes.Clear();
+			indexes = null;
 		}
 		
 		private Dictionary<String, IndexBase> Indexes;
