@@ -96,7 +96,6 @@
     <Compile Include="Engines\DrawEngine2d\Textures\Texture2dPlus.cs" />
     <Compile Include="Engines\DrawEngine2d\Textures\TextureCachePolicy.cs" />
     <Compile Include="Engines\DrawEngine2d\Textures\TiledTexture.cs" />
-    <Compile Include="Engines\DrawEngine2d\Textures\TiledTextureIndex.cs" />
     <Compile Include="Engines\GameEngine2d\Action.cs" />
     <Compile Include="Engines\GameEngine2d\ActionManager.cs" />
     <Compile Include="Engines\GameEngine2d\DebugFlags.cs" />
@@ -223,8 +222,9 @@
     <Compile Include="Engines\DrawEngine2d\Textures\IndexBase.cs" />
     <Compile Include="Engines\DrawEngine2d\Textures\ColumnIndex.cs" />
     <Compile Include="Engines\DrawEngine2d\Textures\GridIndex.cs" />
-    <Compile Include="Engines\DrawEngine2d\Textures\NameIndex.cs" />
     <Compile Include="Engines\DrawEngine2d\Textures\IndexType.cs" />
+    <Compile Include="Engines\DrawEngine2d\Textures\NamedTileIndex.cs" />
+    <Compile Include="Engines\DrawEngine2d\Textures\IndexKey.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedShaderProgram Include="Engines\DrawEngine2d\Shaders\Font.fcg" />

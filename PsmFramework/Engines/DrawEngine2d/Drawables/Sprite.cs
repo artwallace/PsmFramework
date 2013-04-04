@@ -12,10 +12,10 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 	{
 		#region Constructor, Dispose
 		
-		public Sprite(LayerBase layer, TiledTexture tiledTexture, TiledTextureIndex index)
+		public Sprite(LayerBase layer, IndexKey key)
 			: base(layer)
 		{
-			SetTiledTexture(tiledTexture, index);
+			SetTiledTexture(key);
 		}
 		
 		#endregion
@@ -25,7 +25,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		protected override void Initialize()
 		{
 			InitializeShaderProgram();
-			InitializeTiledTexture();
+			InitializeTiledTextureIndex();
 			
 			InitializePosition();
 			InitializeDimensions();
@@ -38,7 +38,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			CleanupDimensions();
 			CleanupPosition();
 			
-			CleanupTiledTexture();
+			CleanupTiledTextureIndex();
 			CleanupShaderProgram();
 		}
 		
@@ -60,63 +60,64 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		#endregion
 		
-		#region TiledTexture
+		#region TiledTextureIndex
 		
-		private void InitializeTiledTexture()
+		private void InitializeTiledTextureIndex()
 		{
-			TiledTexture = null;
-			TiledTextureIndex = default(TiledTextureIndex);
 		}
 		
-		private void CleanupTiledTexture()
+		private void CleanupTiledTextureIndex()
 		{
 			UnregisterAsUserOfTiledTexture();
-			TiledTexture = null;
-			TiledTextureIndex = default(TiledTextureIndex);
+			
+			Key = default(IndexKey);
 		}
 		
-		private TiledTexture TiledTexture;
-		
-		private TiledTextureIndex _TiledTextureIndex;
-		public TiledTextureIndex TiledTextureIndex
+		private IndexKey _Key;
+		public IndexKey Key
 		{
-			get { return _TiledTextureIndex; }
+			get { return _Key; }
 			set
 			{
-				if (_TiledTextureIndex == value)
+				if (_Key == value)
 					return;
 				
-				_TiledTextureIndex = value;
+				_Key = value;
 				
 				SetRecalcRequired();
 			}
 		}
 		
-		private void SetTiledTexture(TiledTexture tiledTexture, TiledTextureIndex index)
+		private void SetTiledTexture(IndexKey key)
 		{
-			if(tiledTexture == null)
+			if(key.Index == null)
 				throw new ArgumentNullException();
 			
-			if (TiledTexture != null)
-			{
+			if (Key.Index != null)
 				UnregisterAsUserOfTiledTexture();
-				TiledTexture = null;
-			}
 			
-			TiledTexture = tiledTexture;
-			TiledTextureIndex = index;
+			Key = key;
 			
 			RegisterAsUserOfTiledTexture();
 		}
 		
 		private void RegisterAsUserOfTiledTexture()
 		{
-			DrawEngine2d.AddTiledTextureUser(TiledTexture.Key, this);
+			if (Key.Index == null)
+				throw new InvalidOperationException();
+			
+			if (Key.Index.TiledTexture == null)
+				throw new InvalidOperationException();
+			
+			DrawEngine2d.AddTiledTextureUser(Key.Index.TiledTexture.Key, this);
 		}
 		
 		private void UnregisterAsUserOfTiledTexture()
 		{
-			DrawEngine2d.RemoveTiledTextureUser(TiledTexture.Key, this);
+			if (Key.Index.TiledTexture == null)
+				return;
+			
+			DrawEngine2d.RemoveTiledTextureUser(Key.Index.TiledTexture.Key, this);
 		}
 		
 //		public Single[] GetTiledTextureCoordinates(TiledTextureIndex index, out Int32 width, out Int32 height)
@@ -209,12 +210,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			throw new NotImplementedException();
 		}
 		
-		private void SetWidth()
+		private void SetDimensionsFromWidth()
 		{
 			throw new NotImplementedException();
 		}
 		
-		private void SetHeight()
+		private void SetDimensionsFromHeight()
 		{
 			throw new NotImplementedException();
 		}

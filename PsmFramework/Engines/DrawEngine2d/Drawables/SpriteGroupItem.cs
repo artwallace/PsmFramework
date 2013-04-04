@@ -11,9 +11,9 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		#region Constructor, Dispose
 		
-		public SpriteGroupItem(SpriteGroup spriteGroup, TiledTextureIndex textureIndex)
+		public SpriteGroupItem(SpriteGroup spriteGroup, IndexKey key)
 		{
-			Initialize(spriteGroup, textureIndex);
+			Initialize(spriteGroup, key);
 		}
 		
 		public void Dispose()
@@ -25,10 +25,10 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		#region Initialize, Cleanup
 		
-		private void Initialize(SpriteGroup spriteGroup, TiledTextureIndex textureIndex)
+		private void Initialize(SpriteGroup spriteGroup, IndexKey key)
 		{
 			InitializeSpriteGroup(spriteGroup);
-			InitializeTextureIndex(textureIndex);
+			InitializeTextureIndexKey(key);
 			InitializePosition();
 			InitializeScale();
 			InitializeRotation();
@@ -39,7 +39,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			CleanupRotation();
 			CleanupScale();
 			CleanupPosition();
-			CleanupTextureIndex();
+			CleanupTextureIndexKey();
 			CleanupSpriteGroup();
 		}
 		
@@ -79,27 +79,27 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		#endregion
 		
-		#region TextureIndex
+		#region TextureIndexKey
 		
-		private void InitializeTextureIndex(TiledTextureIndex textureIndex)
+		private void InitializeTextureIndexKey(IndexKey key)
 		{
-			TextureIndex = textureIndex;
+			TextureIndexKey = key;
 		}
 		
-		private void CleanupTextureIndex()
+		private void CleanupTextureIndexKey()
 		{
 		}
 		
-		private TiledTextureIndex _TextureIndex;
-		public TiledTextureIndex TextureIndex
+		private IndexKey _TextureIndexKey;
+		public IndexKey TextureIndexKey
 		{
-			get { return _TextureIndex; }
+			get { return _TextureIndexKey; }
 			set
 			{
-				//if(_TextureIndex == value)
-					//return;
+				if(_TextureIndexKey == value)
+					return;
 				
-				_TextureIndex = value;
+				_TextureIndexKey = value;
 				
 				UpdateCachedTextureCoordinates();
 				
@@ -115,11 +115,11 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void UpdateCachedTextureCoordinates()
 		{
-			Int32 width, height;
+			Texture2dArea area = TextureIndexKey.GetTileDimensions();
 			
-			CachedTextureCoordinates = SpriteGroup.GetTiledTextureCoordinates(_TextureIndex, out width, out height);
-			TileWidth = width;
-			TileHeight = height;
+			CachedTextureCoordinates = area.CoordinateArray;
+			TileWidth = area.Width;
+			TileHeight = area.Height;
 		}
 		
 		#endregion

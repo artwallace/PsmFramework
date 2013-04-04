@@ -44,14 +44,15 @@ namespace Demo.SpaceRockets
 			String shipSprite = "/Application/TwinStickShooter/Images/Ship64.png";
 			Texture2dPlus t2d = new Texture2dPlus(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, shipSprite);
 			TiledTexture tt = new TiledTexture(DrawEngine2d, shipSprite, t2d);
-			tt.CreateColumnIndex(1);
+			ColumnIndex ci = tt.CreateColumnIndex(1);
+			IndexKey key = new IndexKey(ci, 0);
 			
 			LayerBase l2 = DrawEngine2d.GetOrCreateWorldLayer(1);
 			
 			SpriteGroup sssg = new SpriteGroup(l2, tt);
-			_Ship1 = new SpriteGroupItem(sssg, new TiledTextureIndex(0));
+			_Ship1 = new SpriteGroupItem(sssg, key);
 			_Ship1.SetPositionFromCenter(new Coordinate2(0f, 0f));
-			SpriteGroupItem sss2 = new SpriteGroupItem(sssg, new TiledTextureIndex(0));
+			SpriteGroupItem sss2 = new SpriteGroupItem(sssg, key);
 			sss2.SetPositionFromCenter(new Coordinate2(96f, 32f));
 			//sss2.Rotation = 45.0f;
 			

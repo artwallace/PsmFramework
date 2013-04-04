@@ -7,8 +7,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 	{
 		#region Constructor, Dispose
 		
-		public GridIndex(TiledTexture tiledTexture, String name = DefaultName, Int32 columns = 1, Int32 rows = 1)
-			: base(tiledTexture, name)
+		public GridIndex(TiledTexture tiledTexture, Int32 columns = DefaultColumns, Int32 rows = DefaultRows, String name = DefaultName)
+			: base(name, tiledTexture)
 		{
 			BuildTileList(columns, rows);
 		}
@@ -92,6 +92,10 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 			
 			return Tiles[loc];
 		}
+		
+		public const Int32 DefaultColumns = 1;
+		
+		public const Int32 DefaultRows = 1;
 		
 		#endregion
 		

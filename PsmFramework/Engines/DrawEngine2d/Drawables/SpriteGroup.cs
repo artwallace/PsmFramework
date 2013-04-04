@@ -140,10 +140,11 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			DrawEngine2d.RemoveTiledTextureUser(TiledTexture.Key, this);
 		}
 		
-		public Single[] GetTiledTextureCoordinates(TiledTextureIndex index, out Int32 width, out Int32 height)
-		{
-			return TiledTexture.GetTextureCoordinates(index, out width, out height);
-		}
+//		public Single[] GetTiledTextureCoordinates(IndexKey key, out Int32 width, out Int32 height)
+//		{
+//			
+//			return TiledTexture.GetTextureCoordinates(key);
+//		}
 		
 //		public Int32 TileWidth
 //		{

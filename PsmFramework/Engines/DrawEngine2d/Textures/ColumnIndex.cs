@@ -7,8 +7,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 	{
 		#region Constructor, Dispose
 		
-		public ColumnIndex(TiledTexture tiledTexture, String name = DefaultName, Int32 columns = 1)
-			: base(tiledTexture, name)
+		public ColumnIndex(TiledTexture tiledTexture, Int32 columns = DefaultColumns, String name = DefaultName)
+			: base(name, tiledTexture)
 		{
 			BuildTileList(columns);
 		}
@@ -78,6 +78,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		{
 			return Tiles[column];
 		}
+		
+		public const Int32 DefaultColumns = 1;
 		
 		#endregion
 	}

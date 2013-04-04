@@ -84,7 +84,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		private Int32 TextureHeight = FontHeight;
 		
 		//ASCII code range from zero that contain non-printable chars.
-		private const Int32 NonPrintableChars = 32;
+		//private const Int32 NonPrintableChars = 32;
 		
 		private const Byte PixelDark = (Byte)0x00;
 		private const Byte PixelLit = (Byte)0xff;
@@ -98,11 +98,19 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 			UpperCharData = new Dictionary<Char, UInt32>();
 			LowerCharData = new Dictionary<Char, UInt32>();
 			
+			CharGlyphMap = new Dictionary<Char, Int32>();
+			CharGlyphIndex = 0;
+			
 			PopulateCharacterData();
 		}
 		
 		private void CleanupCharacterData()
 		{
+			CharGlyphMap.Clear();
+			CharGlyphMap = null;
+			
+			CharGlyphIndex = 0;
+			
 			UpperCharData.Clear();
 			LowerCharData.Clear();
 			
@@ -115,6 +123,9 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		// into a single value and kept as a single dict.
 		private Dictionary<Char, UInt32> UpperCharData;
 		private Dictionary<Char, UInt32> LowerCharData;
+		
+		private Dictionary<Char, Int32> CharGlyphMap;
+		private Int32 CharGlyphIndex;
 		
 		private void PopulateCharacterData()
 		{
@@ -224,18 +235,21 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		
 		private void AddCharacterData(Char c, UInt32 upperData, UInt32 lowerData)
 		{
+			CharGlyphMap[c] = CharGlyphIndex;
+			CharGlyphIndex++;//for clarity
+			
 			UpperCharData[c] = upperData;
 			LowerCharData[c] = lowerData;
 		}
 		
 		private Int32 GetGlyphIndex(Char c)
 		{
-			return (Int32)c - NonPrintableChars;
+			return CharGlyphMap[c];
 		}
 		
 		public Boolean ContainsCharacterGlyph(Char c)
 		{
-			return UpperCharData.ContainsKey(c);
+			return CharGlyphMap.ContainsKey(c);
 		}
 		
 		#endregion
@@ -254,7 +268,9 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		
 		private void CleanupTexture()
 		{
-			//TODO: It's probably better to let the TiledTextureManager do this.
+			TextureColumnIndex.Dispose();
+			TextureColumnIndex = null;
+			
 			TiledFontTexture.Dispose();
 			TiledFontTexture = null;
 		}
@@ -265,12 +281,11 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		
 		private TiledTexture TiledFontTexture;
 		
+		private ColumnIndex TextureColumnIndex;
+		
 		private void PopulatePixelData()
 		{
-			//This loop references only one of the two glyph dicts but
-			// that is just a convenience. The data from both will be 
-			// used during the loop.
-			foreach(Char c in UpperCharData.Keys)
+			foreach(Char c in CharGlyphMap.Keys)
 				DecodePixelData(c);
 		}
 		
@@ -309,16 +324,15 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 			FontTexture.SetFilter(TextureFilterMode.Nearest, TextureFilterMode.Nearest, TextureFilterMode.Nearest);
 			
 			TiledFontTexture = new TiledTexture(DrawEngine2d, TextureKey, FontTexture, TextureCachePolicy.KeepAlways);
-			TiledFontTexture.CreateColumnIndex(MaxTextureCharCapacity);
+			TextureColumnIndex = TiledFontTexture.CreateColumnIndex(MaxTextureCharCapacity);
 			
 			FontTexture = null;
 		}
 		
-		//TODO: Should this be cached?
-		public TiledTextureIndex GetCharTileIndex(Char c)
+		public Single[] GetCharTextureCoordinates(Char c)
 		{
 			Int32 index = GetGlyphIndex(c);
-			return new TiledTextureIndex(index);
+			return TextureColumnIndex.GetTextureCoordinates(index).CoordinateArray;
 		}
 		
 		#endregion

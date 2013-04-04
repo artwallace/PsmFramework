@@ -76,8 +76,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			
 			foreach(RenderCacheData cacheData in RenderCache)
 			{
-				TiledTextureIndex index = DrawEngine2d.DebugFont.GetCharTileIndex(cacheData.Character);
-				Single[] textureCoordinates = tt.GetTextureCoordinates(index);
+				Single[] textureCoordinates = DrawEngine2d.DebugFont.GetCharTextureCoordinates(cacheData.Character);
 				
 				VertexBuffer.SetVertices(1, textureCoordinates);
 				DrawEngine2d.GraphicsContext.SetVertexBuffer(0, VertexBuffer);

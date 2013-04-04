@@ -339,7 +339,7 @@ namespace PsmFramework
 		private Single CalculateDevicePpi()
 		{
 			if(DevicePpiX < 1 || DevicePpiY < 1)
-				throw new InvalidProgramException();
+				throw new InvalidOperationException();
 			
 			if(DevicePpiX == DevicePpiY)
 				return DevicePpiX;

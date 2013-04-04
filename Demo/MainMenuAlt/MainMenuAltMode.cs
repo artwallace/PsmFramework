@@ -105,11 +105,12 @@ namespace Demo.MainMenuAlt
 			//Load the logo png into a texture and create a single tile.
 			Texture2dPlus LogoTexture = new Texture2dPlus(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, Assets.Logo);
 			TiledTexture LogoTiledTexture = new TiledTexture(DrawEngine2d, Assets.Logo, LogoTexture);
-			LogoTiledTexture.CreateColumnIndex(1);
+			ColumnIndex ci = LogoTiledTexture.CreateColumnIndex(1);
+			IndexKey key = new IndexKey(ci, 0);
 			
 			//Create the sprite and add it to the layer.
 			SpriteGroup LogoSpriteGroup = new SpriteGroup(ScreenLayer, LogoTiledTexture);
-			SpriteGroupItem Logo = new SpriteGroupItem(LogoSpriteGroup, new TiledTextureIndex(0));
+			SpriteGroupItem Logo = new SpriteGroupItem(LogoSpriteGroup, key);
 			Logo.SetPositionFromCenter(ScreenLayer.Camera.Center);
 		}
 		

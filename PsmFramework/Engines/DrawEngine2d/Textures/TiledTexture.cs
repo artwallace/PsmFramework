@@ -37,28 +37,19 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		{
 			InitializeDrawEngine2d(drawEngine2d, cachePolicy, path);
 			InitializeTexture2d(path);
-			
-			InitializeColumnIndex();
-			InitializeGridIndex();
-			InitializeNamedIndex();
+			InitializeIndexes();
 		}
 		
 		private void Initialize(DrawEngine2d drawEngine2d, TextureCachePolicy cachePolicy, String key, Texture2dPlus texture)
 		{
 			InitializeDrawEngine2d(drawEngine2d, cachePolicy, key);
 			InitializeTexture2d(texture);
-			
-			InitializeColumnIndex();
-			InitializeGridIndex();
-			InitializeNamedIndex();
+			InitializeIndexes();
 		}
 		
 		private void Cleanup()
 		{
-			CleanupNamedIndex();
-			CleanupGridIndex();
-			CleanupColumnIndex();
-			
+			CleanupIndexes();
 			CleanupTexture2d();
 			CleanupDrawEngine2d();
 		}
@@ -149,108 +140,154 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		
 		#endregion
 		
+		#region Indexes
+		
+		private void InitializeIndexes()
+		{
+			Indexes = new Dictionary<String, IndexBase>();
+		}
+		
+		private void CleanupIndexes()
+		{
+			foreach(IndexBase index in Indexes.Values)
+				index.Dispose();
+			Indexes.Clear();
+			Indexes = null;
+		}
+		
+		private Dictionary<String, IndexBase> Indexes;
+		
+		internal void AddIndex(IndexBase index)
+		{
+			if (Indexes.ContainsKey(index.Name))
+				throw new ArgumentException("Duplicate TiledTexture Index encountered (" + index.Name + ").");
+			
+			Indexes.Add(index.Name, index);
+		}
+		
+		internal void RemoveIndex(String name)
+		{
+			if (!Indexes.ContainsKey(name))
+				throw new ArgumentException("Unknown TiledTexture Index encountered (" + name + ").");
+			
+			Indexes.Remove(name);
+		}
+		
+		public ColumnIndex CreateColumnIndex(Int32 columns = ColumnIndex.DefaultColumns, String name = ColumnIndex.DefaultName)
+		{
+			return new ColumnIndex(this, columns, name);
+		}
+		
+		public GridIndex CreateGridIndex(Int32 columns = GridIndex.DefaultColumns, Int32 rows = GridIndex.DefaultRows, String name = GridIndex.DefaultName)
+		{
+			return new GridIndex(this, columns, rows, name);
+		}
+		
+		#endregion
+		
 		#region GetTextureCoordinates
 		
-		public Single[] GetTextureCoordinates(TiledTextureIndex index)
+//		public Single[] GetTextureCoordinates(TiledTextureIndex index)
+//		{
+//			switch(index.Type)
+//			{
+//				case IndexType.Column:
+//					return oldColumnIndex[index.Column].CoordinateArray;
+//					
+//				default:
+//					throw new InvalidOperationException("Unknown index type.");
+//			}
+//		}
+		
+//		public Single[] GetTextureCoordinates(TiledTextureIndex index, out Int32 width, out Int32 height)
+//		{
+//			switch(index.Type)
+//			{
+//				case IndexType.Column:
+//					width = oldColumnIndex[index.Column].Width;
+//					height = oldColumnIndex[index.Column].Height;
+//					return GetTextureCoordinates(index);
+//					
+//				default:
+//					throw new InvalidOperationException("Unknown index type.");
+//			}
+//		}
+		
+//		public Single[] GetTextureCoordinates(IndexKey key)
+//		{
+//			switch (key.Type)
+//			{
+//				case IndexType.Column:
+//					
+//					return GetTextureCoordinates(key.Column);
+//				case IndexType.Grid:
+//					return GetTextureCoordinates(key.Column, key.Row);
+//				case IndexType.NamedTiles:
+//					return GetTextureCoordinates(key.Name);
+//				default:
+//					throw new NotImplementedException();
+//			}
+//		}
+		
+		public Single[] GetTextureCoordinates(Int32 column)
 		{
-			switch(index.Type)
-			{
-				case IndexType.Column:
-					return ColumnIndex[index.Column].CoordinateArray;
-					
-				default:
-					throw new InvalidOperationException("Unknown index type.");
-			}
+			return GetTextureCoordinates(IndexBase.DefaultName, column);
 		}
 		
-		public Single[] GetTextureCoordinates(TiledTextureIndex index, out Int32 width, out Int32 height)
+		public Single[] GetTextureCoordinates(String name, Int32 column)
 		{
-			switch(index.Type)
-			{
-				case IndexType.Column:
-					width = ColumnIndex[index.Column].Width;
-					height = ColumnIndex[index.Column].Height;
-					return GetTextureCoordinates(index);
-					
-				default:
-					throw new InvalidOperationException("Unknown index type.");
-			}
+			ColumnIndex ci = Indexes[name] as ColumnIndex;
+			if (ci == null)
+				throw new InvalidOperationException();
+			
+			return ci.GetTextureCoordinates(column).CoordinateArray;
 		}
+		
+		public Single[] GetTextureCoordinates(Int32 column, Int32 row)
+		{
+			return GetTextureCoordinates(IndexBase.DefaultName, column, row);
+		}
+		
+		public Single[] GetTextureCoordinates(String name, Int32 column, Int32 row)
+		{
+			GridIndex gi = Indexes[name] as GridIndex;
+			if (gi == null)
+				throw new InvalidOperationException();
+			
+			return gi.GetTextureCoordinates(column, row).CoordinateArray;
+		}
+		
+		public Single[] GetTextureCoordinates(String tileName)
+		{
+			return GetTextureCoordinates(IndexBase.DefaultName, tileName);
+		}
+		
+		public Single[] GetTextureCoordinates(String name, String tileName)
+		{
+			NamedTileIndex nti = Indexes[name] as NamedTileIndex;
+			if (nti == null)
+				throw new InvalidOperationException();
+			
+			return nti.GetTextureCoordinates(tileName).CoordinateArray;
+		}
+		
+//		public void GetTileDimensions(IndexKey key)
+//		{
+//			switch (key.Type)
+//			{
+//				case IndexType.Column:
+//					return GetTextureCoordinates(name, key.Column);
+//				case IndexType.Grid:
+//					return GetTextureCoordinates(name, key.Column, key.Row);
+//				case IndexType.NamedTiles:
+//					return GetTextureCoordinates(name, key.Name);
+//				default:
+//					throw new NotImplementedException();
+//			}
+//		}
 		
 		#endregion
 		
-		#region ColumnIndex
-		
-		//Right now we will only support a single ColumnIndex.
-		//In the future, add support for an array of named ColumnIndexes,
-		// built from different source areas within the texture.
-		private void InitializeColumnIndex()
-		{
-			ColumnIndex = new Dictionary<Int32, Texture2dArea>();
-		}
-		
-		private void CleanupColumnIndex()
-		{
-			ColumnIndex.Clear();
-			ColumnIndex = null;
-		}
-		
-		private Dictionary<Int32, Texture2dArea> ColumnIndex;
-		
-		//TODO: Add support for optional source area and padding.
-		public void CreateColumnIndex(Int32 columns)
-		{
-			//TODO: for the moment, we only support a single ColumnIndex.
-			if(ColumnIndex.Count > 0)
-				throw new InvalidOperationException("Only one index supported currently.");
-			
-			if(columns < 1 || columns > Texture.Width)
-				throw new ArgumentOutOfRangeException();
-			
-			if(Texture.Width % columns != 0)
-				throw new ArgumentOutOfRangeException();
-			
-			Int32 tileWidth = Texture.Width / columns;
-			Int32 tileHeight = Texture.Height;
-			
-			for(Int32 i = 0; i < columns; i++)
-			{
-				Int32 left = i * tileWidth;
-				Int32 top = 0;
-				Int32 right = left + tileWidth;
-				Int32 bottom = tileHeight;
-				
-				Texture2dArea area = new Texture2dArea(left, top, right, bottom, Texture.Width, Texture.Height);
-				
-				ColumnIndex.Add(i, area);
-			}
-		}
-		
-		#endregion
-		
-		#region GridIndex
-		
-		private void InitializeGridIndex()
-		{
-		}
-		
-		private void CleanupGridIndex()
-		{
-		}
-		
-		#endregion
-		
-		#region NamedIndex
-		
-		private void InitializeNamedIndex()
-		{
-		}
-		
-		private void CleanupNamedIndex()
-		{
-		}
-		
-		#endregion
 	}
 }
 

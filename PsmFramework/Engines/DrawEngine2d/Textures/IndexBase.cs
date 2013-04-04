@@ -6,7 +6,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 	{
 		#region Constructor, Dispose
 		
-		public IndexBase(TiledTexture tiledTexture, String name)
+		public IndexBase(String name, TiledTexture tiledTexture)
 		{
 			InitializeInternal(name, tiledTexture);
 			Initialize();
@@ -66,7 +66,14 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		
 		public String Name { get; private set; }
 		
-		protected const String DefaultName = "Default";
+		public const String DefaultName = "Default";
+		
+		#endregion
+		
+		#region Type
+		
+		//This is a convenience that maybe saves casting time.
+		public abstract IndexType Type { get; }
 		
 		#endregion
 		
@@ -87,37 +94,22 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 			TiledTexture = null;
 		}
 		
-		protected TiledTexture TiledTexture;
+		public TiledTexture TiledTexture { get; protected set; }
 		
 		private void RegisterWithTiledTexture()
 		{
+			TiledTexture.AddIndex(this);
 		}
 		
 		private void UnregisterFromTiledTexture()
 		{
+			TiledTexture.RemoveIndex(Name);
 		}
 		
 		#endregion
 		
-		#region Tiles
-		
-//		private void InitializeTiles()
-//		{
-//			
-//		}
-//		
-//		private void CleanupTiles()
-//		{
-//		}
-		
-		#endregion
-		
-		#region Type
-		
-		//This is a convenience that maybe saves casting time.
-		public abstract IndexType Type { get; }
-		
-		#endregion
+//		#region Tiles
+//		#endregion
 	}
 }
 

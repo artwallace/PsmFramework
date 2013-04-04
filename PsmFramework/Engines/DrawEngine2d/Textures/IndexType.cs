@@ -6,8 +6,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 	{
 		Column,
 		Grid,
-		Name,
-		NamedSequences
+		NamedTiles,
+		NamedTileSequences
 	}
 }
 
