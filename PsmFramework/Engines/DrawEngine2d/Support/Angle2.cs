@@ -1,4 +1,5 @@
 using System;
+using Sce.PlayStation.Core;
 
 namespace PsmFramework.Engines.DrawEngine2d.Support
 {
@@ -41,7 +42,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 				degree = degree % 360.0f;
 			
 			if(degree < 0.0f)
-				degree = 360.0f - Math.Abs(degree);
+				degree = 360.0f - FMath.Abs(degree);//Math.Abs(degree);
 			
 			return degree;
 		}
@@ -52,7 +53,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		
 		public Single Radian;
 		
-		private static Single DegreeToRadianValue = (Single)(Math.PI / 180D);
+		private static Single DegreeToRadianValue =  FMath.PI / 180.0f;//(Single)(Math.PI / 180D);
 		
 		public static Single GetRadianAngle(Single degree)
 		{

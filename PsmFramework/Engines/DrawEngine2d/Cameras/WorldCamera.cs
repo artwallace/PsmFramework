@@ -123,6 +123,11 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 			throw new NotImplementedException();
 		}
 		
+		public void AdjustCenter(Single horizontal, Single vertical)
+		{
+			SetCenter(new Coordinate2(_Center.X + horizontal, _Center.Y + vertical));
+		}
+		
 		#endregion
 		
 		#region Dimensions

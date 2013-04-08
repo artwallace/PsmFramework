@@ -8,6 +8,7 @@ using PsmFramework.Engines.DrawEngine2d.Support;
 using PsmFramework.Engines.DrawEngine2d.Textures;
 using PsmFramework.Modes;
 using PsmFramework.Modes.TopDown2dAlt;
+using Sce.PlayStation.Core;
 
 namespace Demo.SpaceRockets
 {
@@ -107,9 +108,9 @@ namespace Demo.SpaceRockets
 			
 			Single xMove = 0.0f;
 			Single yMove = 0.0f;
-			if(Math.Abs(Mgr.GamePadData.AnalogLeftX) > 0.1f)
+			if(FMath.Abs(Mgr.GamePadData.AnalogLeftX) > 0.1f)
 				xMove = Mgr.GamePadData.AnalogLeftX * 2;
-			if(Math.Abs(Mgr.GamePadData.AnalogLeftY) > 0.1f)
+			if(FMath.Abs(Mgr.GamePadData.AnalogLeftY) > 0.1f)
 				yMove = Mgr.GamePadData.AnalogLeftY * 2;
 			Ship1.AdjustPosition(xMove, yMove);
 			
@@ -124,11 +125,16 @@ namespace Demo.SpaceRockets
 				yCam = -1f;
 			else if (Mgr.GamePad0_Down)
 				yCam = 1f;
-			DrawEngine2d.WorldCamera.SetCenter(DrawEngine2d.WorldCamera.Center.X + xCam, DrawEngine2d.WorldCamera.Center.Y + yCam);
+			DrawEngine2d.WorldCamera.AdjustCenter(xCam, yCam);
 			
 			if (Mgr.GamePad0_L1)
-				DrawEngine2d.WorldCamera.Rotation = new Angle2(DrawEngine2d.WorldCamera.Rotation.Degree - 1.0f);
+				Ship1.AdjustRotation(-1.0f);
 			else if (Mgr.GamePad0_R1)
+				Ship1.AdjustRotation(1.0f);
+			
+			if (Mgr.GamePad0_Square)
+				DrawEngine2d.WorldCamera.Rotation = new Angle2(DrawEngine2d.WorldCamera.Rotation.Degree - 1.0f);
+			else if (Mgr.GamePad0_Circle)
 				DrawEngine2d.WorldCamera.Rotation = new Angle2(DrawEngine2d.WorldCamera.Rotation.Degree + 1.0f);
 			
 			if (Mgr.GamePad0_Triangle)

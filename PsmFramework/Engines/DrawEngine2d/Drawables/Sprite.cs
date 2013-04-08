@@ -256,6 +256,11 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		public readonly Angle2 DefaultRotation = Angle2.Zero;
 		
+		public void AdjustRotation(Single angle)
+		{
+			Rotation = new Angle2(Rotation.Degree + angle);
+		}
+		
 		#endregion
 		
 		//Accomplished with width & height
@@ -449,10 +454,28 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			Shader.VertexBuffer.SetVertices(1, Key.TextureCoordinates);
 			DrawEngine2d.GraphicsContext.SetVertexBuffer(0, Shader.VertexBuffer);
 			
-			Matrix4 scaleMatrix = SpriteShader.GetScalingMatrix(Width, Height, 1.0f);
-			Matrix4 transMatrix = SpriteShader.GetTranslationMatrix(Position.X, Position.Y);//, 45.0f, ang);//Rotation.Radian);
-			//Matrix4 rotationMatrix = Matrix4.RotationZ(Angle2.GetRadianAngle(270f));
-			Matrix4 modelMatrix = transMatrix * scaleMatrix;// * rotationMatrix;
+			//From PSM SampleSprite.cs
+//			var centerMatrix = Matrix4.Translation(new Vector3(-centerX, -centerY, 0.0f));
+//			var transMatrix = Matrix4.Translation(new Vector3(positionX + centerX, positionY + centerY, 0.0f));
+//			var rotMatrix = Matrix4.RotationZ((float)(degree / 180.0f * FMath.PI));
+//			var scaleMatrix = Matrix4.Scale(new Vector3(scaleX, scaleY, 1.0f));
+//			return transMatrix * rotMatrix * scaleMatrix * centerMatrix;
+			
+//			Matrix4 cm = Matrix4.Translation( - HalfWidth, - HalfHeight, 0.0f);
+//			Matrix4 tm = Matrix4.Translation(Position.X + HalfWidth, Position.Y + HalfHeight, 0.0f);
+//			Matrix4 rm = Matrix4.RotationZ(Rotation.Radian);
+//			Matrix4 sm = Matrix4.Scale(Width, Height, 1.0f);
+//			Matrix4 modelMatrix = tm * rm * sm * cm;
+			
+			Matrix4 modelMatrix = SpriteShader.GetTranslationMatrix(Position.X, Position.Y);
+			
+			if (Rotation != DefaultRotation)
+			{
+				modelMatrix = modelMatrix * Matrix4.RotationZ(Rotation.Radian);
+			}
+			
+			modelMatrix = modelMatrix * SpriteShader.GetScalingMatrix(Width, Height, 1.0f);
+			
 			Matrix4 worldViewProj = Layer.Camera.ProjectionMatrix * modelMatrix;
 			
 			Shader.ShaderProgram.SetUniformValue(0, ref worldViewProj);

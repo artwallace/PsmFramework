@@ -255,33 +255,20 @@ namespace PsmFramework.Engines.DrawEngine2d.Shaders
 		
 		public static Matrix4 GetScalingMatrix(Single width, Single height, Single scale)
 		{
-			Single scaleX = width * scale;
-			Single scaleY = height * scale;
-			Single scaleZ = 1.0f;
-			
-			Vector3 scaleV = new Vector3(scaleX, scaleY, scaleZ);
-			
-			Matrix4 m = Matrix4.Scale(scaleV);
-			
-			return m;
+			return Matrix4.Scale(width * scale, height * scale, VertexZ);
 		}
 		
 		public static Matrix4 GetTranslationMatrix(Single x, Single y, Single scale, Single radianAngle)
 		{
+			//I'm not sure what this actually does.
 			Single nx = x + (scale * (FMath.Sin(radianAngle) - FMath.Cos(radianAngle)));
 			Single ny = y + (scale * (FMath.Cos(radianAngle) + FMath.Sin(radianAngle)));
-			
-			Vector3 transV = new Vector3(nx, ny, VertexZ);
-			
-			Matrix4 m = Matrix4.Translation(transV);
-			
-			return m;
+			return Matrix4.Translation(nx, ny, VertexZ);
 		}
 		
 		public static Matrix4 GetTranslationMatrix(Single x, Single y)
 		{
-			Vector3 transV = new Vector3(x, y, VertexZ);
-			return Matrix4.Translation(transV);
+			return Matrix4.Translation(x, y, VertexZ);
 		}
 	}
 }

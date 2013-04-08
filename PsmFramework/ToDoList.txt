@@ -1,20 +1,20 @@
 Rendering
-* Implement Image as a trial run of drawable using shared shader.
 * Consider adding a 2nd rendering pass. The first pass will only create ShaderObjects and the 2nd pass will consolidate 
-  all similar, contiguous ShaderObjects into VBO arrays and send them in bulk to GPU. this would allow removing 
-  of SpriteGroups, etc to make Update more flexible and render more efficient.
-* (probably not) Redo debug label so that it only exists in debuglayer and let other objects add to it for effecient rendering like a spritegroup.
+  all similar, contiguous ShaderObjects into VBO arrays and send them in bulk to GPU. this would make Update
+  more flexible and Render more efficient.
+* (maybe) Redo debug label so that it only exists in debuglayer and let other objects add to it for effecient rendering.
 * (maybe) Consolidate debug layers into one?
 
 Shaders
-* Move OpenGL code from drawables to shader classes.
+* 
 
 Drawables
-* Fix DrawableBase.Changed. It's completely borked.
-* fix drawablebase bounds
+* Add Rotation to Sprite.
+* fix bounds
 * Add foreground and background color support to DebugLabel.
 
 Cameras
 * Add world camera rotate at point
-* fix world zoom after a certain level sprites flip.
-* Check why de2d & ge2d show logo 1 pix differently. Probably zero based bug in de2d.
+
+Modes
+* discard gamepad input for 200ms when changing modes.
