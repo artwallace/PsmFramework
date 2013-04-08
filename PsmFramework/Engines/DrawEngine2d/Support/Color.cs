@@ -23,8 +23,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 			B = b;
 			A = a;
 			
-			_HashCodeDirty = true;
-			_HashCode = 0;
+			HashCodeDirty = true;
+			HashCode = 0;
 			
 			AsVector4 = new Vector4(R, G, B, A);
 		}
@@ -72,21 +72,21 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 				;
 		}
 		
-		private Int32 _HashCode;
+		private Int32 HashCode;
 		public override Int32 GetHashCode()
 		{
-			if(_HashCodeDirty)
+			if(HashCodeDirty)
 				UpdateHashCode();
-			return _HashCode;
+			return HashCode;
 		}
-		private Boolean _HashCodeDirty;
+		private Boolean HashCodeDirty;
 		private void UpdateHashCode()
 		{
 			//TODO: I'm not sure how accurate this formula is. Only gives 2 dec point precision to colors.
-			_HashCode = (Int32)(R * HashCodeMultiple) ^ (Int32)(G * HashCodeMultiple) ^ (Int32)(B * HashCodeMultiple) ^ (Int32)(A * HashCodeMultiple);
-			_HashCodeDirty = false;
+			HashCode = (Int32)(R * HashCodeMultiple) ^ (Int32)(G * HashCodeMultiple) ^ (Int32)(B * HashCodeMultiple) ^ (Int32)(A * HashCodeMultiple);
+			HashCodeDirty = false;
 		}
-		private const Int32 HashCodeMultiple = 100;
+		private const Int32 HashCodeMultiple = 1000;
 		
 		public static Boolean operator ==(Color o1, Color o2)
 		{

@@ -90,7 +90,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		
 		public GridKey GetKey(Int32 column, Int32 row)
 		{
-			throw new NotImplementedException();
+			GridLocation loc = new GridLocation(column, row);
+			return Keys[loc];
 		}
 		
 		#endregion

@@ -23,7 +23,7 @@ namespace PsmFramework.Modes
 		{
 			InitializeDrawEngine2d();
 			InitializeDebugInfo();
-			JustInitialized = true;
+			FirstPass = true;
 		}
 		
 		protected override void CleanupInternal()
@@ -32,7 +32,8 @@ namespace PsmFramework.Modes
 			CleanupDrawEngine2d();
 		}
 		
-		private Boolean JustInitialized;
+		//This is necessary to force debug info to draw at least once (if enabled).
+		private Boolean FirstPass;
 		
 		#endregion
 		
@@ -40,9 +41,10 @@ namespace PsmFramework.Modes
 		
 		internal override void UpdateInternalPre()
 		{
-			if (JustInitialized)
+			//This is necessary to force debug info to draw at least once (if enabled).
+			if (FirstPass)
 			{
-				JustInitialized = false;
+				FirstPass = false;
 				DrawEngine2d.SetRenderRequired();
 			}
 			
@@ -148,6 +150,8 @@ namespace PsmFramework.Modes
 			DrawEngine2d.SetRenderRequired();
 		}
 		
+		private readonly Coordinate2 DebugInfoPstn = new Coordinate2(0f, 0f);
+		
 		private void CreateDebugInfoLabel()
 		{
 			//This shouldn't happen but delete it if it's there.
@@ -155,7 +159,7 @@ namespace PsmFramework.Modes
 				DebugInfoLabel.Dispose();
 			
 			DebugInfoLabel = new DebugLabel(DrawEngine2d.GetOrCreateScreenDebugLayer());
-			DebugInfoLabel.Position = new Coordinate2(10, 10);
+			DebugInfoLabel.Position = DebugInfoPstn;
 		}
 		
 		private void RemoveDebugInfoLabel()
@@ -216,6 +220,54 @@ namespace PsmFramework.Modes
 			DebugInfo.Append(name);
 			DebugInfo.Append(DebugInfoSeparator);
 			DebugInfo.Append(data);
+			DebugInfo.AppendLine();
+		}
+		
+		protected void AddDebugInfoLine(String name, Single data)
+		{
+			DebugInfo.Append(name);
+			DebugInfo.Append(DebugInfoSeparator);
+			DebugInfo.Append(data.ToString());
+			DebugInfo.AppendLine();
+		}
+		
+		protected void AddDebugInfoLine(String name, Coordinate2 data)
+		{
+			DebugInfo.Append(name);
+			DebugInfo.Append(DebugInfoSeparator);
+			DebugInfo.Append(data.ToString());
+			DebugInfo.AppendLine();
+		}
+		
+		protected void AddDebugInfoLine(String name, Coordinate2i data)
+		{
+			DebugInfo.Append(name);
+			DebugInfo.Append(DebugInfoSeparator);
+			DebugInfo.Append(data.ToString());
+			DebugInfo.AppendLine();
+		}
+		
+		protected void AddDebugInfoLine(String name, RectangularArea2 data)
+		{
+			DebugInfo.Append(name);
+			DebugInfo.Append(DebugInfoSeparator);
+			DebugInfo.Append(data.ToString());
+			DebugInfo.AppendLine();
+		}
+		
+		protected void AddDebugInfoLine(String name, RectangularArea2i data)
+		{
+			DebugInfo.Append(name);
+			DebugInfo.Append(DebugInfoSeparator);
+			DebugInfo.Append(data.ToString());
+			DebugInfo.AppendLine();
+		}
+		
+		protected void AddDebugInfoLine(String name, Angle2 data)
+		{
+			DebugInfo.Append(name);
+			DebugInfo.Append(DebugInfoSeparator);
+			DebugInfo.Append(data.ToString());
 			DebugInfo.AppendLine();
 		}
 		

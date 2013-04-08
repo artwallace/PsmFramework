@@ -9,27 +9,23 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		
 		public Area2i(Coordinate2i topLeft, Coordinate2i bottomLeft, Coordinate2i topRight, Coordinate2i bottomRight)
 		{
-			_TopLeft = topLeft;
-			_BottomLeft = bottomLeft;
-			_TopRight = topRight;
-			_BottomRight = bottomRight;
+			TopLeft = topLeft;
+			BottomLeft = bottomLeft;
+			TopRight = topRight;
+			BottomRight = bottomRight;
 		}
 		
 		#endregion
 		
 		#region Coordinates
 		
-		private Coordinate2i _TopLeft;
-		public Coordinate2i TopLeft { get { return _TopLeft; } }
+		public readonly Coordinate2i TopLeft;
 		
-		private Coordinate2i _BottomLeft;
-		public Coordinate2i BottomLeft { get { return _BottomLeft; } }
+		public readonly Coordinate2i BottomLeft;
 		
-		private Coordinate2i _TopRight;
-		public Coordinate2i TopRight { get { return _TopRight; } }
+		public readonly Coordinate2i TopRight;
 		
-		private Coordinate2i _BottomRight;
-		public Coordinate2i BottomRight { get { return _BottomRight; } }
+		public readonly Coordinate2i BottomRight;
 		
 		#endregion
 		

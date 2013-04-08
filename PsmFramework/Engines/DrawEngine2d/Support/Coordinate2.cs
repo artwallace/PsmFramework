@@ -8,38 +8,20 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		
 		public Coordinate2(Single x, Single y)
 		{
-			_X = x;
-			_Y = y;
+			X = x;
+			Y = y;
 			
-			_HashCodeDirty = true;
-			_HashCode = 0;
+			HashCodeDirty = true;
+			HashCode = 0;
 		}
 		
 		#endregion
 		
 		#region XY
 		
-		private Single _X;
-		public Single X
-		{
-			get { return _X; }
-			set
-			{
-				_X = value;
-				_HashCodeDirty = true;
-			}
-		}
+		public readonly Single X;
 		
-		private Single _Y;
-		public Single Y
-		{
-			get { return _Y; }
-			set
-			{
-				_Y = value;
-				_HashCodeDirty = true;
-			}
-		}
+		public readonly Single Y;
 		
 		#endregion
 		
@@ -70,18 +52,18 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 				;
 		}
 		
-		private Int32 _HashCode;
+		private Int32 HashCode;
 		public override Int32 GetHashCode()
 		{
-			if(_HashCodeDirty)
+			if(HashCodeDirty)
 				UpdateHashCode();
-			return _HashCode;
+			return HashCode;
 		}
-		private Boolean _HashCodeDirty;
+		private Boolean HashCodeDirty;
 		private void UpdateHashCode()
 		{
-			_HashCode = (Int32)X ^ (Int32)Y;
-			_HashCodeDirty = false;
+			HashCode = (Int32)X ^ (Int32)Y;
+			HashCodeDirty = false;
 		}
 		
 		public static Boolean operator ==(Coordinate2 o1, Coordinate2 o2)
@@ -98,6 +80,15 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		public static Boolean operator !=(Coordinate2 o1, Coordinate2 o2)
 		{
 			return !(o1 == o2);
+		}
+		
+		#endregion
+		
+		#region ToString
+		
+		public override String ToString()
+		{
+			return X + "x" + Y;
 		}
 		
 		#endregion

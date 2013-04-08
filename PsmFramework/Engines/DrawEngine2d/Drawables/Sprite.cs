@@ -15,7 +15,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		public Sprite(LayerBase layer, KeyBase key)
 			: base(layer)
 		{
-			SetTiledTexture(key);
+			InitializeCustom(key);
 		}
 		
 		#endregion
@@ -28,14 +28,22 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			InitializeTiledTextureIndex();
 			
 			InitializePosition();
+			InitializeRotation();
 			InitializeDimensions();
 			InitializeColors();
+		}
+		
+		//Needed because of parameters.
+		private void InitializeCustom(KeyBase key)
+		{
+			SetTiledTexture(key);
 		}
 		
 		protected override void Cleanup()
 		{
 			CleanupColors();
 			CleanupDimensions();
+			CleanupRotation();
 			CleanupPosition();
 			
 			CleanupTiledTextureIndex();
@@ -64,6 +72,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void InitializeTiledTextureIndex()
 		{
+			Key = default(KeyBase);
 		}
 		
 		private void CleanupTiledTextureIndex()
@@ -88,7 +97,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			}
 		}
 		
-		private void SetTiledTexture(KeyBase key)
+		private void SetTiledTexture(KeyBase key, Boolean updateDimensions = true)
 		{
 			if(key == null)
 				throw new ArgumentNullException();
@@ -97,6 +106,9 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				UnregisterAsUserOfTiledTexture();
 			
 			Key = key;
+			
+			if (updateDimensions)
+				SetDimensionsFromTile();
 			
 			RegisterAsUserOfTiledTexture();
 		}
@@ -134,12 +146,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void InitializePosition()
 		{
-			Position = Coordinate2.X0Y0;
+			Position = DefaultPosition;
 		}
 		
 		private void CleanupPosition()
 		{
-			Position = Coordinate2.X0Y0;
+			Position = DefaultPosition;
 		}
 		
 		private Coordinate2 _Position;
@@ -159,10 +171,124 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		public void SetPosition(Coordinate2 position, RelativePosition relativeTo = RelativePosition.Center)
 		{
-			throw new NotImplementedException();
+			//TODO: Add support for CoordinateSystemMode
+			if (DrawEngine2d.CoordinateSystemMode != CoordinateSystemMode.OriginAtUpperLeft)
+				throw new NotImplementedException();
+			
+			switch (relativeTo)
+			{
+				case RelativePosition.Center :
+					Position = new Coordinate2(position.X - HalfWidth, position.Y - HalfHeight);
+					break;
+				
+				case RelativePosition.TopLeft :
+					Position = position;
+					break;
+				
+				case RelativePosition.Top :
+					Position = new Coordinate2(position.X - HalfWidth, position.Y);
+					break;
+				
+				case RelativePosition.TopRight :
+					Position = new Coordinate2(position.X - Width, position.Y);
+					break;
+				
+				case RelativePosition.Left :
+					Position = new Coordinate2(position.X, position.Y - HalfHeight);
+					break;
+				
+				case RelativePosition.Right :
+					Position = new Coordinate2(position.X - Width, position.Y - HalfHeight);
+					break;
+				
+				case RelativePosition.BottomLeft :
+					Position = new Coordinate2(position.X, position.Y - Height);
+					break;
+				
+				case RelativePosition.Bottom :
+					Position = new Coordinate2(position.X - HalfWidth, position.Y - Height);
+					break;
+				
+				case RelativePosition.BottomRight :
+					Position = new Coordinate2(position.X - Width, position.Y - Height);
+					break;
+				
+				default :
+					throw new NotImplementedException();
+			}
 		}
 		
+		public void AdjustPosition(Single horizontal, Single vertical)
+		{
+			Position = new Coordinate2(Position.X + horizontal, Position.Y + vertical);
+		}
+		
+		public readonly Coordinate2 DefaultPosition = Coordinate2.X0Y0;
+		
 		#endregion
+		
+		#region Rotation
+		
+		private void InitializeRotation()
+		{
+			Rotation = DefaultRotation;
+		}
+		
+		private void CleanupRotation()
+		{
+			Rotation = DefaultRotation;
+		}
+		
+		private Angle2 _Rotation;
+		public Angle2 Rotation
+		{
+			get { return _Rotation; }
+			set
+			{
+				if(_Rotation == value)
+					return;
+				
+				_Rotation = value;
+				
+				SetRecalcRequired();
+			}
+		}
+		
+		public readonly Angle2 DefaultRotation = Angle2.Zero;
+		
+		#endregion
+		
+		//Accomplished with width & height
+//		#region Scale
+//		
+//		private void InitializeScale()
+//		{
+//			Scale = DefaultScale;
+//		}
+//		
+//		private void CleanupScale()
+//		{
+//			Scale = DefaultScale;
+//		}
+//		
+//		private Single _Scale;
+//		public Single Scale
+//		{
+//			get { return _Scale; }
+//			set
+//			{
+//				if(_Scale == value)
+//					return;
+//				
+//				_Scale = value;
+//				
+//				SetRecalcRequired();
+//			}
+//		}
+//		
+//		public const Single DefaultScale = 1.0f;
+//		
+//		#endregion
 		
 		#region Dimensions
 		
@@ -174,8 +300,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void CleanupDimensions()
 		{
-			Width = 0;
-			Height = 0;
+			Width = default(Single);
+			Height = default(Single);
 		}
 		
 		private Single _Width;
@@ -188,6 +314,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 					return;
 				
 				_Width = value;
+				HalfWidth = _Width / 2;
 				
 				SetRecalcRequired();
 			}
@@ -203,24 +330,59 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 					return;
 				
 				_Height = value;
+				HalfHeight = _Height / 2;
 				
 				SetRecalcRequired();
 			}
 		}
 		
+		private Single HalfWidth;
+		private Single HalfHeight;
+		
 		private void SetDimensionsFromTile()
 		{
-			throw new NotImplementedException();
+			if (Key != null)
+			{
+				Width = Key.Tile.Width;
+				Height = Key.Tile.Height;
+			}
+			else
+			{
+				Width = 0;
+				Height = 0;
+			}
 		}
 		
-		private void SetDimensionsFromWidth()
+		private void SetDimensionsProportionallyFromWidth()
 		{
 			throw new NotImplementedException();
 		}
 		
-		private void SetDimensionsFromHeight()
+		private void SetDimensionsProportionallyFromHeight()
 		{
 			throw new NotImplementedException();
+		}
+		
+		public Int32 TileWidth
+		{
+			get
+			{
+				if (Key == null || Key.IsDisposed)
+					return 0;
+				
+				return Key.Tile.Width;
+			}
+		}
+		
+		public Int32 TileHeight
+		{
+			get
+			{
+				if (Key == null || Key.IsDisposed)
+					return 0;
+				
+				return Key.Tile.Height;
+			}
 		}
 		
 		#endregion
@@ -279,7 +441,25 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		public override void RenderHelper()
 		{
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
+			
+			DrawEngine2d.GraphicsContext.SetShaderProgram(Shader.ShaderProgram);
+			DrawEngine2d.SetOpenGlTexture(Key.TiledTexture.Key);
+			
+			Shader.VertexBuffer.SetVertices(1, Key.TextureCoordinates);
+			DrawEngine2d.GraphicsContext.SetVertexBuffer(0, Shader.VertexBuffer);
+			
+			Matrix4 scaleMatrix = SpriteShader.GetScalingMatrix(Width, Height, 1.0f);
+			Matrix4 transMatrix = SpriteShader.GetTranslationMatrix(Position.X, Position.Y);//, 45.0f, ang);//Rotation.Radian);
+			//Matrix4 rotationMatrix = Matrix4.RotationZ(Angle2.GetRadianAngle(270f));
+			Matrix4 modelMatrix = transMatrix * scaleMatrix;// * rotationMatrix;
+			Matrix4 worldViewProj = Layer.Camera.ProjectionMatrix * modelMatrix;
+			
+			Shader.ShaderProgram.SetUniformValue(0, ref worldViewProj);
+			
+			//TODO: this needs to be changed to be an array of VBOs, like ge2d.
+			Layer.DrawEngine2d.IncrementDrawArrayCallsCounter();
+			Layer.DrawEngine2d.GraphicsContext.DrawArrays(DrawMode.TriangleStrip, 0, SpriteShader.IndexCount);
 		}
 		
 		#endregion
@@ -288,12 +468,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		protected override void RecalcBounds()
 		{
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
 		}
 		
 		protected override void RecalcHelper()
 		{
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
 		}
 		
 		#endregion

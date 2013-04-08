@@ -118,5 +118,25 @@ namespace Demo.MainMenu
 		}
 		
 		#endregion
+		
+		#region DebugInfo
+		
+		protected override void GetAdditionalDebugInfo()
+		{
+			DebugInfo.Append("Camera Center: ");
+			DebugInfo.AppendLine(GameScene.Camera2D.Center.X + "x" + GameScene.Camera2D.Center.Y);
+			
+			DebugInfo.Append("Camera Bounds: ");
+			Bounds2 b = GameScene.Camera2D.CalcBounds();
+			DebugInfo.AppendLine(b.ToString());
+			
+			DebugInfo.Append("Logo Center: ");
+			DebugInfo.AppendLine(LogoSprite.Position.X + "x" + LogoSprite.Position.Y);
+			
+			DebugInfo.Append("Logo Center: ");
+			DebugInfo.AppendLine(LogoSprite.CalcSizeInPixels().ToString());
+		}
+		
+		#endregion
 	}
 }

@@ -8,64 +8,54 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		
 		public RectangularArea2i(Int32 left, Int32 top, Int32 right, Int32 bottom)
 		{
-			_Left = left;
-			_Top = top;
-			_Right = right;
-			_Bottom = bottom;
+			Left = left;
+			Top = top;
+			Right = right;
+			Bottom = bottom;
 			
-			_HashCodeDirty = true;
-			_HashCode = 0;
+			HashCodeDirty = true;
+			HashCode = 0;
 			
-			_TopLeft = new Coordinate2i(left, top);
-			_BottomLeft = new Coordinate2i(left, bottom);
-			_TopRight = new Coordinate2i(right, top);
-			_BottomRight = new Coordinate2i(right, bottom);
+			TopLeft = new Coordinate2i(left, top);
+			BottomLeft = new Coordinate2i(left, bottom);
+			TopRight = new Coordinate2i(right, top);
+			BottomRight = new Coordinate2i(right, bottom);
 			
-			_Width = right - left + 1; //zero based
-			_Height = top - bottom + 1; //zero based
+			Width = right - left;
+			Height = top - bottom;
 		}
 		
 		#endregion
 		
 		#region Boundaries
 		
-		private Int32 _Left;
-		public Int32 Left { get { return _Left; } }
+		public readonly Int32 Left;
 		
-		private Int32 _Top;
-		public Int32 Top { get { return _Top; } }
+		public readonly Int32 Top;
 		
-		private Int32 _Right;
-		public Int32 Right { get { return _Right; } }
+		public readonly Int32 Right;
 		
-		private Int32 _Bottom;
-		public Int32 Bottom { get { return _Bottom; } }
+		public readonly Int32 Bottom;
 		
 		#endregion
 		
 		#region Coordinates
 		
-		private Coordinate2i _TopLeft;
-		public Coordinate2i TopLeft { get { return _TopLeft; } }
+		public readonly Coordinate2i TopLeft;
 		
-		private Coordinate2i _BottomLeft;
-		public Coordinate2i BottomLeft { get { return _BottomLeft; } }
+		public readonly Coordinate2i BottomLeft;
 		
-		private Coordinate2i _TopRight;
-		public Coordinate2i TopRight { get { return _TopRight; } }
+		public readonly Coordinate2i TopRight;
 		
-		private Coordinate2i _BottomRight;
-		public Coordinate2i BottomRight { get { return _BottomRight; } }
+		public readonly Coordinate2i BottomRight;
 		
 		#endregion
 		
 		#region Dimensions
 		
-		private Int32 _Width;
-		public Int32 Width { get { return _Width; } }
+		public readonly Int32 Width;
 		
-		private Int32 _Height;
-		public Int32 Height { get { return _Height; } }
+		public readonly Int32 Height;
 		
 		#endregion
 		
@@ -98,18 +88,18 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 				;
 		}
 		
-		private Int32 _HashCode;
+		private Int32 HashCode;
 		public override Int32 GetHashCode()
 		{
-			if(_HashCodeDirty)
+			if(HashCodeDirty)
 				UpdateHashCode();
-			return _HashCode;
+			return HashCode;
 		}
-		private Boolean _HashCodeDirty;
+		private Boolean HashCodeDirty;
 		private void UpdateHashCode()
 		{
-			_HashCode = Left ^ Top ^ Right ^ Bottom;
-			_HashCodeDirty = false;
+			HashCode = Left ^ Top ^ Right ^ Bottom;
+			HashCodeDirty = false;
 		}
 		
 		public static Boolean operator ==(RectangularArea2i o1, RectangularArea2i o2)
@@ -126,6 +116,15 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		public static Boolean operator !=(RectangularArea2i o1, RectangularArea2i o2)
 		{
 			return !(o1 == o2);
+		}
+		
+		#endregion
+		
+		#region ToString
+		
+		public override String ToString()
+		{
+			return Left + "x" + Top  + "x" + Right + "x" + Bottom;
 		}
 		
 		#endregion

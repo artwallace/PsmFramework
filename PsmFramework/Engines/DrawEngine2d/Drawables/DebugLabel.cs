@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using PsmFramework.Engines.DrawEngine2d.Layers;
 using PsmFramework.Engines.DrawEngine2d.Shaders;
 using PsmFramework.Engines.DrawEngine2d.Support;
@@ -37,26 +36,18 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			InitializeColor();
 			InitializeVertexBuffer();
 			InitializeShaderProgram();
-			
-//			InitializeScalingMatrixCache();
-//			InitializeRotationMatrixCache();
-//			InitializeTransformationMatrixCache();
 		}
 		
 		protected override void Cleanup()
 		{
-			CleanupCharacterCoordinateCache();
-			
-//			CleanupScalingMatrixCache();
-//			CleanupRotationMatrixCache();
-//			CleanupTransformationMatrixCache();
-			
 			CleanupShaderProgram();
 			CleanupVertexBuffer();
 			CleanupColor();
 			CleanupTextureCoordinates();
 			CleanupIndices();
 			CleanupVertices();
+			
+			CleanupCharacterCoordinateCache();
 		}
 		
 		#endregion
@@ -92,10 +83,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				Layer.DrawEngine2d.IncrementDrawArrayCallsCounter();
 				Layer.DrawEngine2d.GraphicsContext.DrawArrays(DrawMode.TriangleStrip, 0, IndexCount);
 			}
-		}
-		
-		private void RenderChar()
-		{
 		}
 		
 		#endregion
@@ -170,8 +157,10 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 					RenderCache[cacheIndex].Character = c;
 				else
 					RenderCache[cacheIndex].Character = FallbackChar;
-				RenderCache[cacheIndex].Position.X = Position.X + ((DebugFont.FontWidth + SpacingAdjustmentX) * charOnThisLineNumber);
-				RenderCache[cacheIndex].Position.Y = Position.Y + ((DebugFont.FontHeight + SpacingAdjustmentY) * lineNumber);
+				
+				Single x = Position.X + ((DebugFont.FontWidth + SpacingAdjustmentX) * charOnThisLineNumber);
+				Single y = Position.Y + ((DebugFont.FontHeight + SpacingAdjustmentY) * lineNumber);
+				RenderCache[cacheIndex].Position = new Coordinate2(x, y);
 				
 				//Final things to do.
 				cacheIndex++;

@@ -11,8 +11,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 			_Degree = GetNormalizedDegree(degree);
 			Radian = GetRadianAngle(_Degree);
 			
-			_HashCodeDirty = true;
-			_HashCode = 0;
+			HashCodeDirty = true;
+			HashCode = 0;
 		}
 		
 		#endregion
@@ -26,12 +26,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		public Single Degree
 		{
 			get { return _Degree; }
-			set
+			private set
 			{
 				_Degree = GetNormalizedDegree(value);
 				Radian = GetRadianAngle(_Degree);
 				
-				_HashCodeDirty = true;
+				HashCodeDirty = true;
 			}
 		}
 		
@@ -87,18 +87,18 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 				;
 		}
 		
-		private Int32 _HashCode;
+		private Int32 HashCode;
 		public override Int32 GetHashCode()
 		{
-			if(_HashCodeDirty)
+			if(HashCodeDirty)
 				UpdateHashCode();
-			return _HashCode;
+			return HashCode;
 		}
-		private Boolean _HashCodeDirty;
+		private Boolean HashCodeDirty;
 		private void UpdateHashCode()
 		{
-			_HashCode = (Int32)Degree;
-			_HashCodeDirty = false;
+			HashCode = (Int32)Degree;
+			HashCodeDirty = false;
 		}
 		
 		public static Boolean operator ==(Angle2 o1, Angle2 o2)
@@ -115,6 +115,15 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		public static Boolean operator !=(Angle2 o1, Angle2 o2)
 		{
 			return !(o1 == o2);
+		}
+		
+		#endregion
+		
+		#region ToString
+		
+		public override String ToString()
+		{
+			 return Degree.ToString();
 		}
 		
 		#endregion

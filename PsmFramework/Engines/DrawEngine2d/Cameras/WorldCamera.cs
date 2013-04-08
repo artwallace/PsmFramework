@@ -87,7 +87,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		protected override void CleanupCenter()
 		{
-			_Center = default(Coordinate2);
+			SetCenterAtOrigin();
 		}
 		
 		private Coordinate2 _Center;
@@ -182,19 +182,64 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		}
 		
 		private Single _Top;
-		public override Single Top { get { return _Top; } }
+		public override Single Top
+		{
+			get
+			{
+				if(RecalcRequired)
+					RecalcProjectionMatrix();
+				
+				return _Top;
+			}
+		}
 		
 		private Single _Bottom;
-		public override Single Bottom { get { return _Bottom; } }
+		public override Single Bottom
+		{
+			get
+			{
+				if(RecalcRequired)
+					RecalcProjectionMatrix();
+				
+				return _Bottom;
+			}
+		}
 		
 		private Single _Left;
-		public override Single Left { get { return _Left; } }
+		public override Single Left
+		{
+			get
+			{
+				if(RecalcRequired)
+					RecalcProjectionMatrix();
+				
+				return _Left;
+			}
+		}
 		
 		private Single _Right;
-		public override Single Right { get { return _Right; } }
+		public override Single Right
+		{
+			get
+			{
+				if(RecalcRequired)
+					RecalcProjectionMatrix();
+				
+				return _Right;
+			}
+		}
 		
 		private RectangularArea2 _Bounds;
-		public override RectangularArea2 Bounds { get { return _Bounds; } }
+		public override RectangularArea2 Bounds
+		{
+			get
+			{
+				if(RecalcRequired)
+					RecalcProjectionMatrix();
+				
+				return _Bounds;
+			}
+		}
 		
 		#endregion
 		
@@ -207,7 +252,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		private void CleanupZoom()
 		{
-			_Zoom = default(Single);
+			SetZoomToDefault();
 		}
 		
 		private Single _Zoom;
@@ -216,10 +261,15 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 			get { return _Zoom; }
 			set
 			{
-				if(_Zoom == value)
+				Single newZoom = value;
+				
+				if (newZoom < MinZoom)
+					newZoom = MinZoom;
+				
+				if(_Zoom == newZoom)
 					return;
 				
-				_Zoom = value;
+				_Zoom = newZoom;
 				
 				SetRecalcRequired();
 			}
@@ -232,6 +282,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		public const Single DefaultZoom = 1.0f;
 		
+		public const Single MinZoom = 0.01f;
+		
 		#endregion
 		
 		#region Rotation
@@ -243,8 +295,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 		
 		private void CleanupRotation()
 		{
-			_Rotation = default(Angle2);
-			_RotationPoint = default(Coordinate2);
+			SetRotationToDefault();
 		}
 		
 		private Angle2 _Rotation;

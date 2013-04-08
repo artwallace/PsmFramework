@@ -7,7 +7,6 @@ using Demo.Zombies;
 using PsmFramework;
 using PsmFramework.Engines.DrawEngine2d.Drawables;
 using PsmFramework.Engines.DrawEngine2d.Layers;
-using PsmFramework.Engines.DrawEngine2d.Support;
 using PsmFramework.Engines.DrawEngine2d.Textures;
 using PsmFramework.Modes;
 
@@ -108,20 +107,35 @@ namespace Demo.MainMenuAlt
 			ColumnIndex ci = LogoTiledTexture.CreateColumnIndex(1);
 			ColumnKey key = ci.GetKey(0);
 			
-			//Create the sprite and add it to the layer.
-			SpriteGroup LogoSpriteGroup = new SpriteGroup(ScreenLayer, LogoTiledTexture);
-			SpriteGroupItem Logo = new SpriteGroupItem(LogoSpriteGroup, key);
-			Logo.SetPositionFromCenter(ScreenLayer.Camera.Center);
+			Logo = new Sprite(ScreenLayer, key);
+			Logo.SetPosition(ScreenLayer.Camera.Center);
 		}
 		
 		private void CleanupLayersAndSprites()
 		{
+			Logo = null;
+			
 			ScreenLayer = null;
 		}
 		
 		private const Int32 ScreenLayerId = 2;
 		
 		private ScreenLayer ScreenLayer;
+		
+		private Sprite Logo;
+		
+		#endregion
+		
+		#region DebugInfo
+		
+		protected override void GetAdditionalDebugInfo()
+		{
+			AddDebugInfoLine("Camera Center", DrawEngine2d.WorldCamera.Center);
+			AddDebugInfoLine("Camera Bounds", DrawEngine2d.WorldCamera.Bounds);
+			AddDebugInfoLine("Camera Width", DrawEngine2d.WorldCamera.Bounds.Width);
+//			AddDebugInfoLine("Logo Center", x + "x" + y);
+//			AddDebugInfoLine("Logo Bounds", Logo.TileWidth);
+		}
 		
 		#endregion
 	}
