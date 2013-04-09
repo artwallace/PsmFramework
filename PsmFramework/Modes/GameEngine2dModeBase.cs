@@ -260,8 +260,8 @@ namespace PsmFramework.Modes
 		
 		protected void EnableDebugInfo()
 		{
-			DebugPstnOffsetX = (Mgr.ScreenWidth / -2);// + 10;
-			DebugPstnOffsetY = (Mgr.ScreenHeight / 2);// - 19;
+			DebugPstnOffsetX = (Mgr.ScreenWidth / -2) + 10;
+			DebugPstnOffsetY = (Mgr.ScreenHeight / 2) - 19;
 			DebugHeight = GameScene.Camera2D.GetPixelSize() * EmbeddedDebugFontData.CharSizei.Y;
 			
 			GameScene.AdHocDraw += DrawDebugInfo;

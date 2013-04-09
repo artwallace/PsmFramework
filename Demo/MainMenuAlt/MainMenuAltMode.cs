@@ -1,13 +1,10 @@
-using System;
 using Demo.Fireworks;
-using Demo.MainMenu;
 using Demo.SpaceRockets;
 using Demo.TwinStickShooter;
 using Demo.Zombies;
 using PsmFramework;
 using PsmFramework.Engines.DrawEngine2d.Drawables;
 using PsmFramework.Engines.DrawEngine2d.Layers;
-using PsmFramework.Engines.DrawEngine2d.Support;
 using PsmFramework.Engines.DrawEngine2d.Textures;
 using PsmFramework.Modes;
 
@@ -47,8 +44,6 @@ namespace Demo.MainMenuAlt
 		
 		public override void Update()
 		{
-			Logo.AdjustRotation(1f);
-			
 			CheckForModeChange();
 		}
 		
@@ -61,25 +56,25 @@ namespace Demo.MainMenuAlt
 			if (!Mgr.ModeChangeAllowed)
 				return;
 			
-			if (Mgr.GamePad0_Cross_Pressed)
+			if (Mgr.GamePad0_Cross_Released)
 			{
 				Mgr.GoToMode(TwinStickShooterMode.TwinStickShooterModeFactory);
 				return;
 			}
 			
-			if (Mgr.GamePad0_Triangle_Pressed)
+			if (Mgr.GamePad0_Triangle_Released)
 			{
 				Mgr.GoToMode(FireworksMode.FireworksModeFactory);
 				return;
 			}
 			
-			if (Mgr.GamePad0_Square_Pressed)
+			if (Mgr.GamePad0_Square_Released)
 			{
 				Mgr.GoToMode(ZombieMode.ZombieModeFactory);
 				return;
 			}
 			
-			if (Mgr.GamePad0_Circle_Pressed)
+			if (Mgr.GamePad0_Circle_Released)
 			{
 				Mgr.GoToMode(SpaceRocketsMode.DrawEngineTestModeFactory);
 				return;
@@ -87,7 +82,13 @@ namespace Demo.MainMenuAlt
 			
 			if (Mgr.GamePad0_Start_Pressed)
 			{
-				Mgr.GoToMode(MainMenuMode.MainMenuModeFactory);
+				//Maybe do something here.
+				return;
+			}
+			
+			if (Mgr.GamePad0_Select_Pressed)
+			{
+				Mgr.FreeMemory();
 				return;
 			}
 		}
@@ -99,10 +100,10 @@ namespace Demo.MainMenuAlt
 		private void InitializeLayersAndSprites()
 		{
 			DebugInfoEnabled = true;
-			//DebugInfoForcesRender = false; //TODO: Remove this when swapbuffers bug is fixed.
+			//DebugInfoForcesRender = false;
 			
 			//Create the layer to draw sprites into.
-			ScreenLayer = DrawEngine2d.GetOrCreateScreenLayer(2);
+			ScreenLayer ScreenLayer = DrawEngine2d.GetOrCreateScreenLayer(2);
 			
 			//Load the logo png into a texture and create a single tile.
 			Texture2dPlus LogoTexture = new Texture2dPlus(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, Assets.Logo);
@@ -118,13 +119,7 @@ namespace Demo.MainMenuAlt
 		private void CleanupLayersAndSprites()
 		{
 			Logo = null;
-			
-			ScreenLayer = null;
 		}
-		
-		private const Int32 ScreenLayerId = 2;
-		
-		private ScreenLayer ScreenLayer;
 		
 		private Sprite Logo;
 		
@@ -132,14 +127,12 @@ namespace Demo.MainMenuAlt
 		
 		#region DebugInfo
 		
-		protected override void GetAdditionalDebugInfo()
-		{
-			AddDebugInfoLine("Camera Center", DrawEngine2d.WorldCamera.Center);
-			AddDebugInfoLine("Camera Bounds", DrawEngine2d.WorldCamera.Bounds);
-			AddDebugInfoLine("Camera Width", DrawEngine2d.WorldCamera.Bounds.Width);
-//			AddDebugInfoLine("Logo Center", x + "x" + y);
-//			AddDebugInfoLine("Logo Bounds", Logo.TileWidth);
-		}
+//		protected override void GetAdditionalDebugInfo()
+//		{
+//			AddDebugInfoLine("Camera Center", DrawEngine2d.WorldCamera.Center);
+//			AddDebugInfoLine("Camera Bounds", DrawEngine2d.WorldCamera.Bounds);
+//			AddDebugInfoLine("Camera Width", DrawEngine2d.WorldCamera.Bounds.Width);
+//		}
 		
 		#endregion
 	}

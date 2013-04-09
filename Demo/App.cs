@@ -1,4 +1,3 @@
-using Demo.MainMenu;
 using Demo.MainMenuAlt;
 using PsmFramework;
 using Sce.PlayStation.Core.Graphics;

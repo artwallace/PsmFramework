@@ -4,7 +4,6 @@ using PsmFramework.Modes;
 using PsmFramework.Modes.TopDown2d;
 using Sce.PlayStation.Core;
 using Sce.PlayStation.HighLevel.GameEngine2D.Base;
-using Demo.MainMenu;
 
 namespace Demo.TwinStickShooter
 {

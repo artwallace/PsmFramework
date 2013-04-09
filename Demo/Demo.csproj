@@ -52,8 +52,6 @@
     <Compile Include="AppOptions.cs" />
     <Compile Include="AppSaveData.cs" />
     <Compile Include="Fireworks\FireworksMode.cs" />
-    <Compile Include="MainMenu\Assets.cs" />
-    <Compile Include="MainMenu\MainMenuMode.cs" />
     <Compile Include="SpaceRockets\SpaceRocketsMode.cs" />
     <Compile Include="TwinStickShooter\Assets.cs" />
     <Compile Include="TwinStickShooter\Level1.cs" />
@@ -69,14 +67,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Fireworks\" />
-    <Folder Include="MainMenu\" />
     <Folder Include="SpaceRockets\" />
     <Folder Include="TwinStickShooter\" />
     <Folder Include="Zombies\" />
     <Folder Include="MainMenuAlt\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="MainMenu\MainMenu.png" />
     <Content Include="TwinStickShooter\Images\Background.png" />
     <Content Include="TwinStickShooter\Images\Logo.png" />
     <Content Include="TwinStickShooter\Images\MagneticBomb64.png" />

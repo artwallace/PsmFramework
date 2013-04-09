@@ -1,5 +1,4 @@
 using System;
-using Demo.MainMenu;
 using PsmFramework;
 using PsmFramework.Modes;
 using PsmFramework.Modes.FixedFront2d;
