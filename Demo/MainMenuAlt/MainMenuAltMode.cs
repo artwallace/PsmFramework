@@ -7,6 +7,7 @@ using Demo.Zombies;
 using PsmFramework;
 using PsmFramework.Engines.DrawEngine2d.Drawables;
 using PsmFramework.Engines.DrawEngine2d.Layers;
+using PsmFramework.Engines.DrawEngine2d.Support;
 using PsmFramework.Engines.DrawEngine2d.Textures;
 using PsmFramework.Modes;
 
@@ -46,6 +47,8 @@ namespace Demo.MainMenuAlt
 		
 		public override void Update()
 		{
+			Logo.AdjustRotation(1f);
+			
 			CheckForModeChange();
 		}
 		
@@ -109,6 +112,7 @@ namespace Demo.MainMenuAlt
 			
 			Logo = new Sprite(ScreenLayer, key);
 			Logo.SetPosition(ScreenLayer.Camera.Center);
+			
 		}
 		
 		private void CleanupLayersAndSprites()

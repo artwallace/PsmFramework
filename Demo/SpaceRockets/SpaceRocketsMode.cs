@@ -1,5 +1,4 @@
 using System;
-using Demo.MainMenu;
 using PsmFramework;
 using PsmFramework.Engines.DrawEngine2d;
 using PsmFramework.Engines.DrawEngine2d.Drawables;

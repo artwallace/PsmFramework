@@ -299,14 +299,14 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void InitializeDimensions()
 		{
-			Width = 0.0f;
-			Height = 0.0f;
+			Width = DefaultWidth;
+			Height = DefaultHeight;
 		}
 		
 		private void CleanupDimensions()
 		{
-			Width = default(Single);
-			Height = default(Single);
+			Width = DefaultWidth;
+			Height = DefaultHeight;
 		}
 		
 		private Single _Width;
@@ -346,16 +346,28 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void SetDimensionsFromTile()
 		{
-			if (Key != null)
+			if (Key == null)
 			{
-				Width = Key.Tile.Width;
-				Height = Key.Tile.Height;
+				Width = DefaultWidth;
+				Height = DefaultHeight;
+				return;
 			}
-			else
+			
+			Width = Key.Tile.Width;
+			Height = Key.Tile.Height;
+		}
+		
+		private void SetDimensionsFromTile(Single scale)
+		{
+			if (Key == null)
 			{
-				Width = 0;
-				Height = 0;
+				Width = DefaultWidth;
+				Height = DefaultHeight;
+				return;
 			}
+			
+			Width = Key.Tile.Width * scale;
+			Height = Key.Tile.Height * scale;
 		}
 		
 		private void SetDimensionsProportionallyFromWidth()
@@ -389,6 +401,10 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				return Key.Tile.Height;
 			}
 		}
+		
+		private const Single DefaultWidth = 0.0f;
+		
+		private const Single DefaultHeight = 0.0f;
 		
 		#endregion
 		
@@ -461,20 +477,36 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 //			var scaleMatrix = Matrix4.Scale(new Vector3(scaleX, scaleY, 1.0f));
 //			return transMatrix * rotMatrix * scaleMatrix * centerMatrix;
 			
-//			Matrix4 cm = Matrix4.Translation( - HalfWidth, - HalfHeight, 0.0f);
-//			Matrix4 tm = Matrix4.Translation(Position.X + HalfWidth, Position.Y + HalfHeight, 0.0f);
-//			Matrix4 rm = Matrix4.RotationZ(Rotation.Radian);
-//			Matrix4 sm = Matrix4.Scale(Width, Height, 1.0f);
-//			Matrix4 modelMatrix = tm * rm * sm * cm;
+			Matrix4 modelMatrix;
 			
-			Matrix4 modelMatrix = SpriteShader.GetTranslationMatrix(Position.X, Position.Y);
-			
-			if (Rotation != DefaultRotation)
+			if(true)
 			{
-				modelMatrix = modelMatrix * Matrix4.RotationZ(Rotation.Radian);
+				Single cx = Position.X + HalfWidth;
+				Single cy = Position.Y + HalfHeight;
+				
+				Single rax = (Position.X / cx) * -1;
+				Single ray = (Position.Y / cy) * -1;
+				
+				Single test = cx * rax;
+				
+				Matrix4 cm = Matrix4.Translation(-.5f,  -.5f, 0.0f);
+				Matrix4 tm = Matrix4.Translation(cx, cy, 0.0f);
+				Matrix4 rm = Matrix4.RotationZ(Rotation.Radian);
+				Matrix4 sm = Matrix4.Scale(Width, Height, 0.0f);
+				modelMatrix = tm;
+				modelMatrix = modelMatrix.Multiply(rm);
+				modelMatrix = modelMatrix.Multiply(sm);
+				modelMatrix = modelMatrix.Multiply(cm);
 			}
-			
-			modelMatrix = modelMatrix * SpriteShader.GetScalingMatrix(Width, Height, 1.0f);
+			else
+			{
+				modelMatrix = SpriteShader.GetTranslationMatrix(Position.X, Position.Y);
+				if (Rotation != DefaultRotation)
+				{
+					modelMatrix = modelMatrix * Matrix4.RotationZ(Rotation.Radian);
+				}
+				modelMatrix = modelMatrix * SpriteShader.GetScalingMatrix(Width, Height, 1.0f);
+			}
 			
 			Matrix4 worldViewProj = Layer.Camera.ProjectionMatrix * modelMatrix;
 			

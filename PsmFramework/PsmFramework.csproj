@@ -78,7 +78,6 @@
     <Compile Include="Engines\DrawEngine2d\Shaders\FontShader.cs" />
     <Compile Include="Engines\DrawEngine2d\Shaders\ShaderBase.cs" />
     <Compile Include="Engines\DrawEngine2d\Shaders\SpriteShader.cs" />
-    <Compile Include="Engines\DrawEngine2d\Support\Area2i.cs" />
     <Compile Include="Engines\DrawEngine2d\Support\Color.cs" />
     <Compile Include="Engines\DrawEngine2d\Support\Colors.cs" />
     <Compile Include="Engines\DrawEngine2d\Support\Coordinate2.cs" />
