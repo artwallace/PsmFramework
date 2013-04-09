@@ -8,13 +8,13 @@ using PsmFramework.Engines.DrawEngine2d.Layers;
 using PsmFramework.Engines.DrawEngine2d.Textures;
 using PsmFramework.Modes;
 
-namespace Demo.MainMenuAlt
+namespace Demo.MainMenu
 {
-	public class MainMenuAltMode : DrawEngine2dModeBase
+	public class MainMenuMode : DrawEngine2dModeBase
 	{
 		#region Constructor, Dispose
 		
-		public MainMenuAltMode(AppManager mgr)
+		public MainMenuMode(AppManager mgr)
 			: base(mgr)
 		{
 		}
@@ -23,9 +23,9 @@ namespace Demo.MainMenuAlt
 		
 		#region Mode Factory Delegate
 		
-		public static ModeBase MainMenuAltModeFactory(AppManager mgr)
+		public static ModeBase MainMenuModeFactory(AppManager mgr)
 		{
-			return new MainMenuAltMode(mgr);
+			return new MainMenuMode(mgr);
 		}
 		
 		#endregion

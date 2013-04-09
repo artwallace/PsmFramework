@@ -1,4 +1,4 @@
-using Demo.MainMenuAlt;
+using Demo.MainMenu;
 using PsmFramework;
 using Sce.PlayStation.Core.Graphics;
 
@@ -22,7 +22,7 @@ namespace Demo
 		private static void Initialize()
 		{
 			Opts = new AppOptions();
-			Mgr = new AppManager(Opts, GenerateGraphicsContext(), MainMenuAltMode.MainMenuAltModeFactory);
+			Mgr = new AppManager(Opts, GenerateGraphicsContext(), MainMenuMode.MainMenuModeFactory);
 			
 			Mgr.GoToTitleScreenMode();
 		}
