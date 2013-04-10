@@ -82,6 +82,13 @@
     <Content Include="TwinStickShooter\Images\Teleporter64.png" />
     <Content Include="Zombies\Images\Background.png" />
     <Content Include="MainMenu\MainMenu.png" />
+    <Content Include="MainMenu\PlayStation-Circle-200px.png" />
+    <Content Include="MainMenu\PlayStation-Cross-200px.png" />
+    <Content Include="MainMenu\PlayStation-Square-200px.png" />
+    <Content Include="MainMenu\PlayStation-Triangle-200px.png" />
+    <Content Include="MainMenu\GameEngine2d.png" />
+    <Content Include="MainMenu\PsmLogo.png" />
+    <Content Include="MainMenu\Modes.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Zombies\Level1Room1Background.xml" />

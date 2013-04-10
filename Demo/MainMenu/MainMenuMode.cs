@@ -1,3 +1,4 @@
+using System;
 using Demo.Fireworks;
 using Demo.SpaceRockets;
 using Demo.TwinStickShooter;
@@ -7,6 +8,7 @@ using PsmFramework.Engines.DrawEngine2d.Drawables;
 using PsmFramework.Engines.DrawEngine2d.Layers;
 using PsmFramework.Engines.DrawEngine2d.Textures;
 using PsmFramework.Modes;
+using PsmFramework.Engines.DrawEngine2d.Support;
 
 namespace Demo.MainMenu
 {
@@ -34,6 +36,9 @@ namespace Demo.MainMenu
 		
 		protected override void Initialize()
 		{
+			DebugInfoEnabled = true;
+			//DebugInfoForcesRender = false;
+			
 			InitializeLayersAndSprites();
 		}
 		
@@ -99,29 +104,81 @@ namespace Demo.MainMenu
 		
 		private void InitializeLayersAndSprites()
 		{
-			DebugInfoEnabled = true;
-			//DebugInfoForcesRender = false;
-			
 			//Create the layer to draw sprites into.
 			ScreenLayer ScreenLayer = DrawEngine2d.GetOrCreateScreenLayer(2);
 			
-			//Load the logo png into a texture and create a single tile.
-			Texture2dPlus LogoTexture = new Texture2dPlus(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, Assets.Logo);
-			TiledTexture LogoTiledTexture = new TiledTexture(DrawEngine2d, Assets.Logo, LogoTexture);
-			ColumnIndex ci = LogoTiledTexture.CreateColumnIndex(1);
-			ColumnKey key = ci.GetKey(0);
+			Single logoPstnX = ScreenLayer.Camera.Center.X;
+			Single logoPstnY = ScreenLayer.Camera.Top + ScreenLayer.Camera.Height * 0.17f;
+			Single logoH = ScreenLayer.Camera.Height * 0.15f;
 			
-			Logo = new Sprite(ScreenLayer, key);
-			Logo.SetPosition(ScreenLayer.Camera.Center);
+			Single buttonRight = ScreenLayer.Camera.Width * 0.2f;
+			Single buttonHeight = ScreenLayer.Camera.Height * 0.1f;
 			
+			Single modeLeft = buttonRight + ScreenLayer.Camera.Width * 0.05f;
+			
+			Single row1 = buttonHeight * 3.0f;
+			Single row2 = buttonHeight * 4.5f;
+			Single row3 = buttonHeight * 6.0f;
+			Single row4 = buttonHeight * 7.5f;
+			
+			//Create the Psm Logo
+			TiledTexture logoTT = new TiledTexture(DrawEngine2d, Assets.PsmLogo);
+			ColumnKey logoKey = logoTT.CreateColumnIndex(1).GetKey(0);
+			Sprite Logo = new Sprite(ScreenLayer, logoKey);
+			Logo.SetDimensionsProportionallyFromHeight(logoH);
+			Logo.SetPosition(logoPstnX, logoPstnY, PsmFramework.Engines.DrawEngine2d.Support.RelativePosition.Bottom);
+			
+			TiledTexture crossTT = new TiledTexture(DrawEngine2d, Assets.ButtonCross);
+			ColumnKey crossKey = crossTT.CreateColumnIndex(1).GetKey(0);
+			Sprite cross = new Sprite(ScreenLayer, crossKey);
+			cross.SetDimensionsProportionallyFromHeight(buttonHeight);
+			cross.SetPosition(buttonRight, row1, PsmFramework.Engines.DrawEngine2d.Support.RelativePosition.Right);
+			
+			TiledTexture squareTT = new TiledTexture(DrawEngine2d, Assets.ButtonSquare);
+			ColumnKey squareKey = squareTT.CreateColumnIndex(1).GetKey(0);
+			Sprite square = new Sprite(ScreenLayer, squareKey);
+			square.SetDimensionsProportionallyFromHeight(buttonHeight);
+			square.SetPosition(buttonRight, row2, PsmFramework.Engines.DrawEngine2d.Support.RelativePosition.Right);
+			
+			TiledTexture triangleTT = new TiledTexture(DrawEngine2d, Assets.ButtonTriangle);
+			ColumnKey triangleKey = triangleTT.CreateColumnIndex(1).GetKey(0);
+			Sprite triangle = new Sprite(ScreenLayer, triangleKey);
+			triangle.SetDimensionsProportionallyFromHeight(buttonHeight);
+			triangle.SetPosition(buttonRight, row3, PsmFramework.Engines.DrawEngine2d.Support.RelativePosition.Right);
+			
+			TiledTexture circleTT = new TiledTexture(DrawEngine2d, Assets.ButtonCircle);
+			ColumnKey circleKey = circleTT.CreateColumnIndex(1).GetKey(0);
+			Sprite circle = new Sprite(ScreenLayer, circleKey);
+			circle.SetDimensionsProportionallyFromHeight(buttonHeight);
+			circle.SetPosition(buttonRight, row4, PsmFramework.Engines.DrawEngine2d.Support.RelativePosition.Right);
+			
+			TiledTexture modesTT = new TiledTexture(DrawEngine2d, Assets.Modes);
+			GridIndex modesIndex = modesTT.CreateGridIndex(1,4);
+			
+			GridKey tssKey = modesIndex.GetKey(0, 0);
+			Sprite tss = new Sprite(ScreenLayer, tssKey);
+			tss.SetDimensionsProportionallyFromHeight(buttonHeight);
+			tss.SetPosition(modeLeft, row1,RelativePosition.Left);
+			
+			GridKey isoKey = modesIndex.GetKey(0, 1);
+			Sprite iso = new Sprite(ScreenLayer, isoKey);
+			iso.SetDimensionsProportionallyFromHeight(buttonHeight);
+			iso.SetPosition(modeLeft, row2,RelativePosition.Left);
+			
+			GridKey ge2dKey = modesIndex.GetKey(0, 2);
+			Sprite ge2d = new Sprite(ScreenLayer, ge2dKey);
+			ge2d.SetDimensionsProportionallyFromHeight(buttonHeight);
+			ge2d.SetPosition(modeLeft, row3,RelativePosition.Left);
+			
+			GridKey testKey = modesIndex.GetKey(0, 3);
+			Sprite test = new Sprite(ScreenLayer, testKey);
+			test.SetDimensionsProportionallyFromHeight(buttonHeight);
+			test.SetPosition(modeLeft, row4,RelativePosition.Left);
 		}
 		
 		private void CleanupLayersAndSprites()
 		{
-			Logo = null;
 		}
-		
-		private Sprite Logo;
 		
 		#endregion
 		

@@ -218,6 +218,11 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			}
 		}
 		
+		public void SetPosition(Single x, Single y, RelativePosition relativeTo = RelativePosition.Center)
+		{
+			SetPosition(new Coordinate2(x, y), relativeTo);
+		}
+		
 		public void AdjustPosition(Single horizontal, Single vertical)
 		{
 			Position = new Coordinate2(Position.X + horizontal, Position.Y + vertical);
@@ -316,20 +321,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		private Single HalfWidth;
 		private Single HalfHeight;
 		
-//		private void SetDimensionsFromTile()
-//		{
-//			if (Key == null)
-//			{
-//				Width = DefaultWidth;
-//				Height = DefaultHeight;
-//				return;
-//			}
-//			
-//			Width = Key.Tile.Width;
-//			Height = Key.Tile.Height;
-//		}
-		
-		private void SetDimensionsFromTile(Single scale = 1.000f)
+		public void SetDimensionsFromTile(Single scale = 1.000f)
 		{
 			if (Key == null)
 			{
@@ -342,14 +334,34 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			Height = Key.Tile.Height * scale;
 		}
 		
-		private void SetDimensionsProportionallyFromWidth()
+		public void SetDimensionsProportionallyFromWidth(Single width)
 		{
-			throw new NotImplementedException();
+			if (width < 1f || TileWidth < 1f)
+			{
+				Width = DefaultWidth;
+				Height = DefaultHeight;
+				return;
+			}
+			
+			Single scale = width / TileWidth;
+			
+			Width = width;
+			Height = TileHeight * scale;
 		}
 		
-		private void SetDimensionsProportionallyFromHeight()
+		public void SetDimensionsProportionallyFromHeight(Single height)
 		{
-			throw new NotImplementedException();
+			if (height < 1f || TileHeight < 1f)
+			{
+				Width = DefaultWidth;
+				Height = DefaultHeight;
+				return;
+			}
+			
+			Single scale = height / TileHeight;
+			
+			Width = TileWidth * scale;
+			Height = height;
 		}
 		
 		public Int32 TileWidth

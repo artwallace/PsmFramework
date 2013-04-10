@@ -2,7 +2,7 @@ using System;
 
 namespace PsmFramework.Engines.DrawEngine2d.Support
 {
-	internal struct GridLocation : IEquatable<GridLocation>
+	public struct GridLocation : IEquatable<GridLocation>
 	{
 		#region Constructor
 		

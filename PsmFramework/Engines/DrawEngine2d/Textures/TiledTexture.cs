@@ -97,7 +97,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 				throw new ArgumentException();
 			
 			Path = path;
-			Texture = new Texture2dPlus(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, path);
+			Texture = new Texture2dPlus(DrawEngine2d, CachePolicy, path);
 			
 			RegisterAsUserOfTexture2d();
 		}
