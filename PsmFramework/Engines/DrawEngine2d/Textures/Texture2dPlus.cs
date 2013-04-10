@@ -7,23 +7,23 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 	{
 		#region Constructor, Dispose
 		
-		public Texture2dPlus(DrawEngine2d drawEngine2d, TextureCachePolicy cachePolicy, String path)
+		internal Texture2dPlus(DrawEngine2d drawEngine2d, String path, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
 			: base(path, false)
 		{
 			Initialize(drawEngine2d, cachePolicy, path);
 		}
 		
-		public Texture2dPlus(DrawEngine2d drawEngine2d, TextureCachePolicy cachePolicy, String key, Int32 width, Int32 height, PixelFormat pixelFormat)
+		internal Texture2dPlus(DrawEngine2d drawEngine2d, String key, Int32 width, Int32 height, PixelFormat pixelFormat, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
 			: base(width, height, false, pixelFormat)
 		{
 			Initialize(drawEngine2d, cachePolicy, key);
 		}
 		
-		protected override void Dispose (bool disposing)
+		protected override void Dispose(bool disposing)
 		{
 			Cleanup();
 			
-			base.Dispose (disposing);
+			base.Dispose(disposing);
 		}
 		
 		#endregion

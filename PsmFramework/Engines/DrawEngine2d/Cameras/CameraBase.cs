@@ -8,7 +8,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 	{
 		#region Constructor, Dispose
 		
-		public CameraBase(DrawEngine2d drawEngine2d)
+		internal CameraBase(DrawEngine2d drawEngine2d)
 		{
 			InitializeInternal(drawEngine2d);
 			Initialize();

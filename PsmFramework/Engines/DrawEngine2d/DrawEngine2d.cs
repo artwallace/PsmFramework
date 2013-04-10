@@ -14,7 +14,7 @@ namespace PsmFramework.Engines.DrawEngine2d
 	{
 		#region Constructor, Dispose
 		
-		public DrawEngine2d(GraphicsContext graphicsContext, CoordinateSystemMode coordinateSystemMode = CoordinateSystemMode.OriginAtUpperLeft)
+		internal DrawEngine2d(GraphicsContext graphicsContext, CoordinateSystemMode coordinateSystemMode = CoordinateSystemMode.OriginAtUpperLeft)
 		{
 			if (graphicsContext == null)
 				throw new ArgumentNullException();
@@ -522,6 +522,16 @@ namespace PsmFramework.Engines.DrawEngine2d
 			GraphicsContext.SetTexture(index, Textures[key]);
 		}
 		
+		public Texture2dPlus CreateTexture(String path, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
+		{
+			return new Texture2dPlus(this, path, cachePolicy);
+		}
+		
+		public Texture2dPlus CreateTexture(String key, Int32 width, Int32 height, PixelFormat pixelFormat, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
+		{
+			return new Texture2dPlus(this, key, width, height, pixelFormat, cachePolicy);
+		}
+		
 		public Texture2dPlus GetTexture(String key)
 		{
 			if(String.IsNullOrWhiteSpace(key))
@@ -652,6 +662,16 @@ namespace PsmFramework.Engines.DrawEngine2d
 			
 			//Let the cache policy decide what to do.
 			ApplyTiledTextureCachePolicyForRemovalOfUser(key);
+		}
+		
+		public TiledTexture CreateTiledTexture(String path, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
+		{
+			return new TiledTexture(this, path, cachePolicy);
+		}
+		
+		public TiledTexture CreateTiledTexture(String key, Texture2dPlus texture, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
+		{
+			return new TiledTexture(this, key, texture, cachePolicy);
 		}
 		
 		public TiledTexture GetTiledTexture(String key)

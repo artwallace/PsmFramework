@@ -10,7 +10,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Shaders
 	{
 		#region Constructor, Dispose
 		
-		public ShaderBase(DrawEngine2d drawEngine2d)
+		internal ShaderBase(DrawEngine2d drawEngine2d)
 		{
 			InitializeInternal(drawEngine2d);
 			Initialize();

@@ -9,7 +9,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 	{
 		#region Constructor, Dispose
 		
-		public DebugFont(DrawEngine2d drawEngine2d)
+		internal DebugFont(DrawEngine2d drawEngine2d)
 		{
 			Initialize(drawEngine2d);
 		}
@@ -82,9 +82,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		
 		private Int32 TextureWidth = MaxTextureCharCapacity * FontWidth;
 		private Int32 TextureHeight = FontHeight;
-		
-		//ASCII code range from zero that contain non-printable chars.
-		//private const Int32 NonPrintableChars = 32;
 		
 		private const Byte PixelDark = (Byte)0x00;
 		private const Byte PixelLit = (Byte)0xff;
@@ -275,7 +272,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 			TiledFontTexture = null;
 		}
 		
-		public const String TextureKey = "DebugFont";
+		internal const String TextureKey = "DebugFont";
 		
 		private Byte[] TexturePixels;
 		
@@ -319,11 +316,11 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		
 		private void BuildTexture()
 		{
-			Texture2dPlus FontTexture = new Texture2dPlus(DrawEngine2d, TextureCachePolicy.KeepAlways, TextureKey, TextureWidth, TextureHeight, PixelFormat.Luminance);
+			Texture2dPlus FontTexture = DrawEngine2d.CreateTexture(TextureKey, TextureWidth, TextureHeight, PixelFormat.Luminance, TextureCachePolicy.KeepAlways);
 			FontTexture.SetPixels(0, TexturePixels, PixelFormat.Luminance);
 			FontTexture.SetFilter(TextureFilterMode.Nearest, TextureFilterMode.Nearest, TextureFilterMode.Nearest);
 			
-			TiledFontTexture = new TiledTexture(DrawEngine2d, TextureKey, FontTexture, TextureCachePolicy.KeepAlways);
+			TiledFontTexture = DrawEngine2d.CreateTiledTexture(TextureKey, FontTexture, TextureCachePolicy.KeepAlways);
 			TextureColumnIndex = TiledFontTexture.CreateColumnIndex(MaxTextureCharCapacity);
 			
 			FontTexture = null;

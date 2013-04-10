@@ -7,7 +7,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 	{
 		#region Constructor
 		
-		public Texture2dArea(Int32 left, Int32 top, Int32 right, Int32 bottom, Int32 textureWidth, Int32 textureHeight)
+		internal Texture2dArea(Int32 left, Int32 top, Int32 right, Int32 bottom, Int32 textureWidth, Int32 textureHeight)
 		{
 			Left = left;
 			Top = top;

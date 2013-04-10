@@ -8,12 +8,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 	{
 		#region Constructor, Dispose
 		
-		public TiledTexture(DrawEngine2d drawEngine2d, String path, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
+		internal TiledTexture(DrawEngine2d drawEngine2d, String path, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
 		{
 			Initialize(drawEngine2d, cachePolicy, path);
 		}
 		
-		public TiledTexture(DrawEngine2d drawEngine2d, String key, Texture2dPlus texture, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
+		internal TiledTexture(DrawEngine2d drawEngine2d, String key, Texture2dPlus texture, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
 		{
 			Initialize(drawEngine2d, cachePolicy, key, texture);
 		}
@@ -97,7 +97,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 				throw new ArgumentException();
 			
 			Path = path;
-			Texture = new Texture2dPlus(DrawEngine2d, CachePolicy, path);
+			Texture = DrawEngine2d.CreateTexture(path, CachePolicy);
 			
 			RegisterAsUserOfTexture2d();
 		}

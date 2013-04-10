@@ -1,14 +1,15 @@
 using System;
-using Demo.Fireworks;
+using Demo.ImageViewer;
+using Demo.Isometric;
 using Demo.SpaceRockets;
 using Demo.TwinStickShooter;
 using Demo.Zombies;
 using PsmFramework;
 using PsmFramework.Engines.DrawEngine2d.Drawables;
 using PsmFramework.Engines.DrawEngine2d.Layers;
+using PsmFramework.Engines.DrawEngine2d.Support;
 using PsmFramework.Engines.DrawEngine2d.Textures;
 using PsmFramework.Modes;
-using PsmFramework.Engines.DrawEngine2d.Support;
 
 namespace Demo.MainMenu
 {
@@ -32,7 +33,7 @@ namespace Demo.MainMenu
 		
 		#endregion
 		
-		#region Mode Logic
+		#region Initialize, Cleanup
 		
 		protected override void Initialize()
 		{
@@ -46,6 +47,10 @@ namespace Demo.MainMenu
 		{
 			CleanupLayersAndSprites();
 		}
+		
+		#endregion
+		
+		#region Update
 		
 		public override void Update()
 		{
@@ -69,13 +74,13 @@ namespace Demo.MainMenu
 			
 			if (Mgr.GamePad0_Triangle_Released)
 			{
-				Mgr.GoToMode(FireworksMode.FireworksModeFactory);
+				Mgr.GoToMode(ImageViewerMode.ImageViewerModeFactory);
 				return;
 			}
 			
 			if (Mgr.GamePad0_Square_Released)
 			{
-				Mgr.GoToMode(ZombieMode.ZombieModeFactory);
+				Mgr.GoToMode(IsometricMode.IsometricModeFactory);
 				return;
 			}
 			
@@ -85,9 +90,9 @@ namespace Demo.MainMenu
 				return;
 			}
 			
-			if (Mgr.GamePad0_Start_Pressed)
+			if (Mgr.GamePad0_Start_Released)
 			{
-				//Maybe do something here.
+				//Mgr.SetRunStateToEnding();
 				return;
 			}
 			
@@ -122,37 +127,37 @@ namespace Demo.MainMenu
 			Single row4 = buttonHeight * 7.5f;
 			
 			//Create the Psm Logo
-			TiledTexture logoTT = new TiledTexture(DrawEngine2d, Assets.PsmLogo);
+			TiledTexture logoTT = DrawEngine2d.CreateTiledTexture(Assets.PsmLogo);
 			ColumnKey logoKey = logoTT.CreateColumnIndex(1).GetKey(0);
 			Sprite Logo = new Sprite(ScreenLayer, logoKey);
 			Logo.SetDimensionsProportionallyFromHeight(logoH);
 			Logo.SetPosition(logoPstnX, logoPstnY, PsmFramework.Engines.DrawEngine2d.Support.RelativePosition.Bottom);
 			
-			TiledTexture crossTT = new TiledTexture(DrawEngine2d, Assets.ButtonCross);
+			TiledTexture crossTT = DrawEngine2d.CreateTiledTexture(Assets.ButtonCross);
 			ColumnKey crossKey = crossTT.CreateColumnIndex(1).GetKey(0);
 			Sprite cross = new Sprite(ScreenLayer, crossKey);
 			cross.SetDimensionsProportionallyFromHeight(buttonHeight);
 			cross.SetPosition(buttonRight, row1, PsmFramework.Engines.DrawEngine2d.Support.RelativePosition.Right);
 			
-			TiledTexture squareTT = new TiledTexture(DrawEngine2d, Assets.ButtonSquare);
+			TiledTexture squareTT = DrawEngine2d.CreateTiledTexture(Assets.ButtonSquare);
 			ColumnKey squareKey = squareTT.CreateColumnIndex(1).GetKey(0);
 			Sprite square = new Sprite(ScreenLayer, squareKey);
 			square.SetDimensionsProportionallyFromHeight(buttonHeight);
 			square.SetPosition(buttonRight, row2, PsmFramework.Engines.DrawEngine2d.Support.RelativePosition.Right);
 			
-			TiledTexture triangleTT = new TiledTexture(DrawEngine2d, Assets.ButtonTriangle);
+			TiledTexture triangleTT = DrawEngine2d.CreateTiledTexture(Assets.ButtonTriangle);
 			ColumnKey triangleKey = triangleTT.CreateColumnIndex(1).GetKey(0);
 			Sprite triangle = new Sprite(ScreenLayer, triangleKey);
 			triangle.SetDimensionsProportionallyFromHeight(buttonHeight);
 			triangle.SetPosition(buttonRight, row3, PsmFramework.Engines.DrawEngine2d.Support.RelativePosition.Right);
 			
-			TiledTexture circleTT = new TiledTexture(DrawEngine2d, Assets.ButtonCircle);
+			TiledTexture circleTT = DrawEngine2d.CreateTiledTexture(Assets.ButtonCircle);
 			ColumnKey circleKey = circleTT.CreateColumnIndex(1).GetKey(0);
 			Sprite circle = new Sprite(ScreenLayer, circleKey);
 			circle.SetDimensionsProportionallyFromHeight(buttonHeight);
 			circle.SetPosition(buttonRight, row4, PsmFramework.Engines.DrawEngine2d.Support.RelativePosition.Right);
 			
-			TiledTexture modesTT = new TiledTexture(DrawEngine2d, Assets.Modes);
+			TiledTexture modesTT = DrawEngine2d.CreateTiledTexture(Assets.Modes);
 			GridIndex modesIndex = modesTT.CreateGridIndex(1,4);
 			
 			GridKey tssKey = modesIndex.GetKey(0, 0);

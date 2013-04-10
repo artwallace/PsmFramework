@@ -46,36 +46,18 @@ namespace Demo.SpaceRockets
 			DebugInfoForcesRender = false;
 			
 			String shipSprite = "/Application/TwinStickShooter/Images/Ship64.png";
-			Texture2dPlus t2d = new Texture2dPlus(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, shipSprite);
-			TiledTexture tt = new TiledTexture(DrawEngine2d, shipSprite, t2d);
-			ColumnIndex ci = tt.CreateColumnIndex(1);
-			ColumnKey key = ci.GetKey(0);
+			
+			TiledTexture tt = DrawEngine2d.CreateTiledTexture(shipSprite);
+			ColumnKey key = tt.CreateColumnIndex(1).GetKey(0);
 			
 			LayerBase l2 = DrawEngine2d.GetOrCreateWorldLayer(1);
-			
-//			SpriteGroup sssg = new SpriteGroup(l2, tt);
-//			_Ship1 = new SpriteGroupItem(sssg, key);
-//			_Ship1.SetPositionFromCenter();
-//			SpriteGroupItem sss2 = new SpriteGroupItem(sssg, key);
-//			sss2.SetPositionFromCenter(new Coordinate2(96f, 32f));
-			//sss2.Rotation = 45.0f;
 			
 			Ship1 = new Sprite(l2, key);
 			Ship1.SetPosition(new Coordinate2(100f, 100f));
 			
-			
-			
 			Sprite testSprite = new Sprite(l2,key);
-			testSprite.Height = 200;
-			testSprite.Width = 200;
+			testSprite.SetDimensionsProportionallyFromWidth(200f);
 			testSprite.SetPosition(l2.Camera.Center);
-			
-//			Texture2dPlus testT2d = DrawEngine2d.GetTexture(DebugFont.TextureKey);
-//			TiledTexture ttTest = new TiledTexture(DrawEngine2d, TextureCachePolicy.DisposeAfterLastUse, "test", testT2d);
-//			ttTest.CreateColumnIndex(1);
-//			SpriteGroup testSG = new SpriteGroup(l2, ttTest);
-//			SpriteGroupItem testSS = new SpriteGroupItem(testSG, new TiledTextureIndex(0));
-//			testSS.Position = new Coordinate2(32f, 200f);
 			
 			LayerBase debugOverlay = DrawEngine2d.GetOrCreateScreenLayer(2);
 			_DebugTextLabel = new DebugLabel(debugOverlay);

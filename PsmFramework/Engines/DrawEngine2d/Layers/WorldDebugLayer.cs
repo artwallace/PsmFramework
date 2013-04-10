@@ -8,7 +8,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Layers
 	{
 		#region Constructor, Dispose
 		
-		public WorldDebugLayer(DrawEngine2d drawEngine2d, Int32 zIndex)
+		internal WorldDebugLayer(DrawEngine2d drawEngine2d, Int32 zIndex)
 			: base(drawEngine2d, zIndex)
 		{
 		}

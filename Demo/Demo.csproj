@@ -51,7 +51,6 @@
     <Compile Include="App.cs" />
     <Compile Include="AppOptions.cs" />
     <Compile Include="AppSaveData.cs" />
-    <Compile Include="Fireworks\FireworksMode.cs" />
     <Compile Include="SpaceRockets\SpaceRocketsMode.cs" />
     <Compile Include="TwinStickShooter\Assets.cs" />
     <Compile Include="TwinStickShooter\Level1.cs" />
@@ -64,13 +63,17 @@
     <Compile Include="Zombies\ZombieMode.cs" />
     <Compile Include="MainMenu\MainMenuMode.cs" />
     <Compile Include="MainMenu\Assets.cs" />
+    <Compile Include="Isometric\IsometricMode.cs" />
+    <Compile Include="ImageViewer\ImageViewerMode.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Fireworks\" />
     <Folder Include="SpaceRockets\" />
     <Folder Include="TwinStickShooter\" />
     <Folder Include="Zombies\" />
     <Folder Include="MainMenu\" />
+    <Folder Include="Isometric\" />
+    <Folder Include="ImageViewer\" />
+    <Folder Include="GE2dDemo\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TwinStickShooter\Images\Background.png" />

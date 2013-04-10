@@ -9,7 +9,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Layers
 	{
 		#region Constructor, Dispose
 		
-		public LayerBase(DrawEngine2d drawEngine2d, Int32 zIndex)
+		internal LayerBase(DrawEngine2d drawEngine2d, Int32 zIndex)
 		{
 			InitializeInternal(drawEngine2d, zIndex);
 			Initialize();

@@ -9,7 +9,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Shaders
 	{
 		#region Constructor
 		
-		public FontShader(DrawEngine2d drawEngine2d)
+		internal FontShader(DrawEngine2d drawEngine2d)
 			: base(drawEngine2d)
 		{
 		}

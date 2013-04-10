@@ -10,7 +10,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 	{
 		#region Constructor, Dispose
 		
-		public WorldCamera(DrawEngine2d drawEngine2d)
+		internal WorldCamera(DrawEngine2d drawEngine2d)
 			: base(drawEngine2d)
 		{
 		}
