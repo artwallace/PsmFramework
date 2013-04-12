@@ -222,6 +222,7 @@
     <Compile Include="Engines\DrawEngine2d\Textures\GridKey.cs" />
     <Compile Include="Engines\DrawEngine2d\Textures\NamedTileKey.cs" />
     <Compile Include="Engines\DrawEngine2d\Support\GridLocation.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\SinglePositionDrawableBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedShaderProgram Include="Engines\DrawEngine2d\Shaders\Font.fcg" />

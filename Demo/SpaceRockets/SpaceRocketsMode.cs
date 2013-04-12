@@ -53,7 +53,7 @@ namespace Demo.SpaceRockets
 			LayerBase l2 = DrawEngine2d.GetOrCreateWorldLayer(1);
 			
 			Ship1 = new Sprite(l2, key);
-			Ship1.SetPosition(new Coordinate2(100f, 100f));
+			Ship1.SetPosition(100f, 100f);
 			
 			Sprite testSprite = new Sprite(l2,key);
 			testSprite.SetDimensionsProportionallyFromWidth(200f);
@@ -62,7 +62,7 @@ namespace Demo.SpaceRockets
 			LayerBase debugOverlay = DrawEngine2d.GetOrCreateScreenLayer(2);
 			_DebugTextLabel = new DebugLabel(debugOverlay);
 			_DebugTextLabel.Text = "This text is in a screen layer.";
-			_DebugTextLabel.Position = new Coordinate2(100.0f, 100.0f);
+			_DebugTextLabel.SetPosition(100.0f, 100.0f);
 		}
 		
 		protected override void Cleanup()

@@ -13,7 +13,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 	/// and does not support rotation.
 	/// DebugLabel is always drawn on top of every other Drawable in a special Render pass.
 	/// </summary>
-	public sealed class DebugLabel : DrawableBase
+	public sealed class DebugLabel : SinglePositionDrawableBase
 	{
 		#region Constructor, Dispose
 		
@@ -98,6 +98,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		{
 			SetRenderRecacheRequired();
 		}
+		
+		#endregion
+		
+		#region Rotation
+		
+		protected override Boolean RotationSupported { get { return false; } }
 		
 		#endregion
 		
@@ -215,24 +221,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		#endregion
 		
-		#region Position
-		
-		private Coordinate2 _Position;
-		public Coordinate2 Position
-		{
-			get { return _Position; }
-			set
-			{
-				if (_Position == value)
-					return;
-				
-				_Position = value;
-				
-				SetRecalcRequired();
-			}
-		}
-		
-		#endregion
 		
 		
 		

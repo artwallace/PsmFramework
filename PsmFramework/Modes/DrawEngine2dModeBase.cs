@@ -159,7 +159,7 @@ namespace PsmFramework.Modes
 				DebugInfoLabel.Dispose();
 			
 			DebugInfoLabel = new DebugLabel(DrawEngine2d.GetOrCreateScreenDebugLayer());
-			DebugInfoLabel.Position = DebugInfoPstn;
+			DebugInfoLabel.SetPosition(DebugInfoPstn);
 		}
 		
 		private void RemoveDebugInfoLabel()

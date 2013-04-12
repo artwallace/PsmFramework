@@ -11,6 +11,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		public DrawableBase(LayerBase layer)
 		{
 			InitializeInternal(layer);
+			InitializeIntermediary();
 			Initialize();
 		}
 		
@@ -20,6 +21,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				return;
 			
 			Cleanup();
+			CleanupIntermediary();
 			CleanupInternal();
 			IsDisposed = true;
 		}
@@ -48,6 +50,14 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			
 			CleanupDrawEngine2d();
 			CleanupLayer();
+		}
+		
+		protected virtual void InitializeIntermediary()
+		{
+		}
+		
+		protected virtual void CleanupIntermediary()
+		{
 		}
 		
 		protected virtual void Initialize()

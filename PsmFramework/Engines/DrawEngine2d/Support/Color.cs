@@ -1,5 +1,6 @@
 using System;
 using Sce.PlayStation.Core;
+using Sce.PlayStation.Core.Imaging;
 
 namespace PsmFramework.Engines.DrawEngine2d.Support
 {
@@ -23,23 +24,67 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 			B = b;
 			A = a;
 			
+			Ri = (Int32)(r * 255);
+			Gi = (Int32)(g * 255);
+			Bi = (Int32)(b * 255);
+			Ai = (Int32)(a * 255);
+			
+			ImageColor = new ImageColor(Ri, Gi, Bi, Ai);
+			AsVector4 = new Vector4(R, G, B, A);
+			
 			HashCodeDirty = true;
 			HashCode = 0;
+		}
+		
+		public Color(Int32 r, Int32 g, Int32 b, Int32 a)
+		{
+			if (r < 0 || r > 255)
+				throw new ArgumentOutOfRangeException();
+			if (g < 0 || g > 255)
+				throw new ArgumentOutOfRangeException();
+			if (b < 0 || b > 255)
+				throw new ArgumentOutOfRangeException();
+			if (a < 0 || a > 255)
+				throw new ArgumentOutOfRangeException();
 			
+			Ri = r;
+			Gi = g;
+			Bi = b;
+			Ai = a;
+			
+			R = r / 255;
+			G = g / 255;
+			B = b / 255;
+			A = a / 255;
+			
+			ImageColor = new ImageColor(Ri, Gi, Bi, Ai);
 			AsVector4 = new Vector4(R, G, B, A);
+			
+			HashCodeDirty = true;
+			HashCode = 0;
 		}
 		
 		#endregion
 		
 		#region RGBA
 		
+		//From 0.0f-1.0f
 		public readonly Single R;
-		
 		public readonly Single G;
-		
 		public readonly Single B;
-		
 		public readonly Single A;
+		
+		//From 0-256
+		public readonly Int32 Ri;
+		public readonly Int32 Gi;
+		public readonly Int32 Bi;
+		public readonly Int32 Ai;
+		
+		#endregion
+		
+		#region ImageColor
+		
+		public readonly ImageColor ImageColor;
 		
 		#endregion
 		

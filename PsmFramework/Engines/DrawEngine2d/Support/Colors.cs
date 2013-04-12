@@ -1,5 +1,4 @@
 using System;
-using Sce.PlayStation.Core;
 
 namespace PsmFramework.Engines.DrawEngine2d.Support
 {

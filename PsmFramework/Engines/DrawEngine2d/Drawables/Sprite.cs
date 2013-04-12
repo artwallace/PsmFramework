@@ -1,14 +1,13 @@
 using System;
 using PsmFramework.Engines.DrawEngine2d.Layers;
 using PsmFramework.Engines.DrawEngine2d.Shaders;
-using PsmFramework.Engines.DrawEngine2d.Support;
 using PsmFramework.Engines.DrawEngine2d.Textures;
 using Sce.PlayStation.Core;
 using Sce.PlayStation.Core.Graphics;
 
 namespace PsmFramework.Engines.DrawEngine2d.Drawables
 {
-	public sealed class Sprite : DrawableBase
+	public sealed class Sprite : SinglePositionDrawableBase
 	{
 		#region Constructor, Dispose
 		
@@ -26,11 +25,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		{
 			InitializeShaderProgram();
 			InitializeTiledTextureIndex();
-			
-			InitializePosition();
-			InitializeRotation();
-			InitializeDimensions();
-			InitializeColors();
 		}
 		
 		//Needed because of parameters.
@@ -41,11 +35,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		protected override void Cleanup()
 		{
-			CleanupColors();
-			CleanupDimensions();
-			CleanupRotation();
-			CleanupPosition();
-			
 			CleanupTiledTextureIndex();
 			CleanupShaderProgram();
 		}
@@ -107,8 +96,10 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			
 			Key = key;
 			
+			SetNaturalDimensionsFromTile();
+			
 			if (updateDimensions)
-				SetDimensionsFromTile();
+				SetDimensions();
 			
 			RegisterAsUserOfTiledTexture();
 		}
@@ -142,302 +133,14 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		#endregion
 		
-		#region Position
-		
-		private void InitializePosition()
-		{
-			Position = DefaultPosition;
-		}
-		
-		private void CleanupPosition()
-		{
-			Position = DefaultPosition;
-		}
-		
-		private Coordinate2 _Position;
-		public Coordinate2 Position
-		{
-			get { return _Position; }
-			private set
-			{
-				if(_Position == value)
-					return;
-				
-				_Position = value;
-				
-				SetRecalcRequired();
-			}
-		}
-		
-		public void SetPosition(Coordinate2 position, RelativePosition relativeTo = RelativePosition.Center)
-		{
-			//TODO: Add support for CoordinateSystemMode
-			if (DrawEngine2d.CoordinateSystemMode != CoordinateSystemMode.OriginAtUpperLeft)
-				throw new NotImplementedException();
-			
-			switch (relativeTo)
-			{
-				case RelativePosition.Center :
-					Position = new Coordinate2(position.X - HalfWidth, position.Y - HalfHeight);
-					break;
-				
-				case RelativePosition.TopLeft :
-					Position = position;
-					break;
-				
-				case RelativePosition.Top :
-					Position = new Coordinate2(position.X - HalfWidth, position.Y);
-					break;
-				
-				case RelativePosition.TopRight :
-					Position = new Coordinate2(position.X - Width, position.Y);
-					break;
-				
-				case RelativePosition.Left :
-					Position = new Coordinate2(position.X, position.Y - HalfHeight);
-					break;
-				
-				case RelativePosition.Right :
-					Position = new Coordinate2(position.X - Width, position.Y - HalfHeight);
-					break;
-				
-				case RelativePosition.BottomLeft :
-					Position = new Coordinate2(position.X, position.Y - Height);
-					break;
-				
-				case RelativePosition.Bottom :
-					Position = new Coordinate2(position.X - HalfWidth, position.Y - Height);
-					break;
-				
-				case RelativePosition.BottomRight :
-					Position = new Coordinate2(position.X - Width, position.Y - Height);
-					break;
-				
-				default :
-					throw new NotImplementedException();
-			}
-		}
-		
-		public void SetPosition(Single x, Single y, RelativePosition relativeTo = RelativePosition.Center)
-		{
-			SetPosition(new Coordinate2(x, y), relativeTo);
-		}
-		
-		public void AdjustPosition(Single horizontal, Single vertical)
-		{
-			Position = new Coordinate2(Position.X + horizontal, Position.Y + vertical);
-		}
-		
-		public readonly Coordinate2 DefaultPosition = Coordinate2.X0Y0;
-		
-		#endregion
-		
-		#region Rotation
-		
-		private void InitializeRotation()
-		{
-			Rotation = DefaultRotation;
-		}
-		
-		private void CleanupRotation()
-		{
-			Rotation = DefaultRotation;
-		}
-		
-		private Angle2 _Rotation;
-		public Angle2 Rotation
-		{
-			get { return _Rotation; }
-			set
-			{
-				if(_Rotation == value)
-					return;
-				
-				_Rotation = value;
-				
-				SetRecalcRequired();
-			}
-		}
-		
-		public readonly Angle2 DefaultRotation = Angle2.Zero;
-		
-		public void AdjustRotation(Single angle)
-		{
-			Rotation = new Angle2(Rotation.Degree + angle);
-		}
-		
-		public const Single RotationCenterX = 0.5f;
-		public const Single RotationCenterY = 0.5f;
-		public const Single RotationCenterZ = 0.0f;
-		
-		#endregion
-		
 		#region Dimensions
 		
-		private void InitializeDimensions()
+		private void SetNaturalDimensionsFromTile()
 		{
-			Width = DefaultWidth;
-			Height = DefaultHeight;
-		}
-		
-		private void CleanupDimensions()
-		{
-			Width = DefaultWidth;
-			Height = DefaultHeight;
-		}
-		
-		private Single _Width;
-		public Single Width
-		{
-			get { return _Width; }
-			set
-			{
-				if(_Width == value)
-					return;
-				
-				_Width = value;
-				HalfWidth = _Width / 2;
-				
-				SetRecalcRequired();
-			}
-		}
-		
-		private Single _Height;
-		public Single Height
-		{
-			get { return _Height; }
-			set
-			{
-				if(_Height == value)
-					return;
-				
-				_Height = value;
-				HalfHeight = _Height / 2;
-				
-				SetRecalcRequired();
-			}
-		}
-		
-		private Single HalfWidth;
-		private Single HalfHeight;
-		
-		public void SetDimensionsFromTile(Single scale = 1.000f)
-		{
-			if (Key == null)
-			{
-				Width = DefaultWidth;
-				Height = DefaultHeight;
-				return;
-			}
-			
-			Width = Key.Tile.Width * scale;
-			Height = Key.Tile.Height * scale;
-		}
-		
-		public void SetDimensionsProportionallyFromWidth(Single width)
-		{
-			if (width < 1f || TileWidth < 1f)
-			{
-				Width = DefaultWidth;
-				Height = DefaultHeight;
-				return;
-			}
-			
-			Single scale = width / TileWidth;
-			
-			Width = width;
-			Height = TileHeight * scale;
-		}
-		
-		public void SetDimensionsProportionallyFromHeight(Single height)
-		{
-			if (height < 1f || TileHeight < 1f)
-			{
-				Width = DefaultWidth;
-				Height = DefaultHeight;
-				return;
-			}
-			
-			Single scale = height / TileHeight;
-			
-			Width = TileWidth * scale;
-			Height = height;
-		}
-		
-		public Int32 TileWidth
-		{
-			get
-			{
-				if (Key == null || Key.IsDisposed)
-					return 0;
-				
-				return Key.Tile.Width;
-			}
-		}
-		
-		public Int32 TileHeight
-		{
-			get
-			{
-				if (Key == null || Key.IsDisposed)
-					return 0;
-				
-				return Key.Tile.Height;
-			}
-		}
-		
-		private const Single DefaultWidth = 0.0f;
-		
-		private const Single DefaultHeight = 0.0f;
-		
-		#endregion
-		
-		#region Colors
-		
-		private void InitializeColors()
-		{
-			SetColorsToDefault();
-		}
-		
-		private void CleanupColors()
-		{
-			SetColorsToDefault();
-		}
-		
-		private Color _BackgroundColor;
-		public Color BackgroundColor
-		{
-			get { return _BackgroundColor; }
-			set
-			{
-				if(_BackgroundColor == value)
-					return;
-				
-				_BackgroundColor = value;
-				
-				SetRecalcRequired();
-			}
-		}
-		
-		private Color _ForegroundColor;
-		public Color ForegroundColor
-		{
-			get { return _ForegroundColor; }
-			set
-			{
-				if(_ForegroundColor == value)
-					return;
-				
-				_ForegroundColor = value;
-				
-				SetRecalcRequired();
-			}
-		}
-		
-		public void SetColorsToDefault()
-		{
-			BackgroundColor = Colors.Black;
-			ForegroundColor = Colors.White;
+			if (Key == null || Key.IsDisposed)
+				SetNaturalDimensions(0.0f, 0.0f);
+			else
+				SetNaturalDimensions(Key.Tile.Width, Key.Tile.Height);
 		}
 		
 		#endregion
