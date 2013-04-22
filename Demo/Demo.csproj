@@ -73,7 +73,6 @@
     <Folder Include="MainMenu\" />
     <Folder Include="Isometric\" />
     <Folder Include="ImageViewer\" />
-    <Folder Include="GE2dDemo\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TwinStickShooter\Images\Background.png" />

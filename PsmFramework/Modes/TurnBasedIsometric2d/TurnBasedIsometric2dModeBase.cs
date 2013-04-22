@@ -2,7 +2,7 @@ using System;
 
 namespace PsmFramework.Modes.TurnBasedIsometric2d
 {
-	public abstract class TurnBasedIsometric2dModeBase : GameEngine2dModeBase
+	public abstract class TurnBasedIsometric2dModeBase : DrawEngine2dModeBase
 	{
 		#region Constructor, Dispose
 		

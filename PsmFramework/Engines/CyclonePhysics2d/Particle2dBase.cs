@@ -7,7 +7,6 @@
 
 using System;
 using Sce.PlayStation.Core;
-using PssMath = Sce.PlayStation.HighLevel.GameEngine2D.Base.Math;
 
 namespace PsmFramework.Engines.CyclonePhysics2d
 {

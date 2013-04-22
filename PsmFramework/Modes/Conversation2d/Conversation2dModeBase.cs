@@ -2,7 +2,7 @@ using System;
 
 namespace PsmFramework.Modes.Conversation2d
 {
-	public abstract class Conversation2dModeBase : GameEngine2dModeBase
+	public abstract class Conversation2dModeBase : DrawEngine2dModeBase
 	{
 		#region Constructor, Dispose
 		

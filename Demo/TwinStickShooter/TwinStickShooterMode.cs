@@ -3,7 +3,6 @@ using PsmFramework;
 using PsmFramework.Modes;
 using PsmFramework.Modes.TopDown2d;
 using Sce.PlayStation.Core;
-using Sce.PlayStation.HighLevel.GameEngine2D.Base;
 
 namespace Demo.TwinStickShooter
 {
@@ -31,20 +30,15 @@ namespace Demo.TwinStickShooter
 		
 		protected override void Initialize()
 		{
-			EnableDebugInfo();
-			
-			Level = Level1.Level1Factory(this);
+//			EnableDebugInfo();
+//			
+//			Level = Level1.Level1Factory(this);
 		}
 		
 		protected override void Cleanup()
 		{
-			Level.Dispose();
+//			Level.Dispose();
 		}
-		
-		protected override UInt32 SpritesCapacity { get { return 4000; } }
-		protected override UInt32 DrawHelpersCapacity { get { return 5000; } }
-		protected override Vector4 ClearColor { get { return Colors.Grey20; } }
-		protected override Boolean DrawDebugGrid { get { return true; } }
 		
 		#endregion
 		
