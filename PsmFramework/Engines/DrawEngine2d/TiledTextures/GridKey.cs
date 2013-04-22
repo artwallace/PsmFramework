@@ -1,6 +1,7 @@
 using System;
+using PsmFramework.Engines.DrawEngine2d.Textures;
 
-namespace PsmFramework.Engines.DrawEngine2d.Textures
+namespace PsmFramework.Engines.DrawEngine2d.TiledTextures
 {
 	public sealed class GridKey : KeyBase
 	{

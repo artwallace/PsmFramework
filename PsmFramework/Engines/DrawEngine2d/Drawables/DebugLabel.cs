@@ -5,6 +5,7 @@ using PsmFramework.Engines.DrawEngine2d.Support;
 using PsmFramework.Engines.DrawEngine2d.Textures;
 using Sce.PlayStation.Core;
 using Sce.PlayStation.Core.Graphics;
+using PsmFramework.Engines.DrawEngine2d.TiledTextures;
 
 namespace PsmFramework.Engines.DrawEngine2d.Drawables
 {
@@ -73,12 +74,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		{
 			//TODO: These need to be changed as little as possible
 			DrawEngine2d.GraphicsContext.SetShaderProgram(Shader.ShaderProgram);
-			DrawEngine2d.SetOpenGlTexture(DebugFont.TextureKey);
+			DrawEngine2d.Textures.SetOpenGlTexture(DebugFont.TextureKey);
 			
 			if(RecalcRenderCacheRequired)
 				RecalcRenderCache();
 			
-			TiledTexture tt = DrawEngine2d.GetTiledTexture(DebugFont.TextureKey);
+			TiledTexture tt = DrawEngine2d.TiledTextures.GetTiledTexture(DebugFont.TextureKey);
 			
 			foreach(RenderCacheData cacheData in RenderCache)
 			{

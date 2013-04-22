@@ -42,6 +42,7 @@
     <Folder Include="Modes\" />
     <Folder Include="Engines\DrawEngine2d\Layers\" />
     <Folder Include="Engines\DrawEngine2d\Cameras\" />
+    <Folder Include="Engines\DrawEngine2d\TiledTextures\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engines\CyclonePhysics2d\Particle2dBase.cs" />
@@ -89,7 +90,6 @@
     <Compile Include="Engines\DrawEngine2d\Textures\Texture2dArea.cs" />
     <Compile Include="Engines\DrawEngine2d\Textures\Texture2dPlus.cs" />
     <Compile Include="Engines\DrawEngine2d\Textures\TextureCachePolicy.cs" />
-    <Compile Include="Engines\DrawEngine2d\Textures\TiledTexture.cs" />
     <Compile Include="Engines\Messaging\GenericMessage.cs" />
     <Compile Include="Engines\Messaging\IExecuteWithObject.cs" />
     <Compile Include="Engines\Messaging\IMessenger.cs" />
@@ -138,14 +138,6 @@
     <Compile Include="Engines\DrawEngine2d\Support\Angle2.cs" />
     <Compile Include="Engines\DrawEngine2d\Drawables\Sprite.cs" />
     <Compile Include="Engines\DrawEngine2d\Support\RelativePosition.cs" />
-    <Compile Include="Engines\DrawEngine2d\Textures\IndexBase.cs" />
-    <Compile Include="Engines\DrawEngine2d\Textures\ColumnIndex.cs" />
-    <Compile Include="Engines\DrawEngine2d\Textures\GridIndex.cs" />
-    <Compile Include="Engines\DrawEngine2d\Textures\NamedTileIndex.cs" />
-    <Compile Include="Engines\DrawEngine2d\Textures\KeyBase.cs" />
-    <Compile Include="Engines\DrawEngine2d\Textures\ColumnKey.cs" />
-    <Compile Include="Engines\DrawEngine2d\Textures\GridKey.cs" />
-    <Compile Include="Engines\DrawEngine2d\Textures\NamedTileKey.cs" />
     <Compile Include="Engines\DrawEngine2d\Support\GridLocation.cs" />
     <Compile Include="Engines\DrawEngine2d\Layers\LayerType.cs" />
     <Compile Include="Engines\DrawEngine2d\Drawables\SpriteDrawableBase.cs" />
@@ -153,6 +145,17 @@
     <Compile Include="Engines\DrawEngine2d\Support\TextAlignment.cs" />
     <Compile Include="Engines\DrawEngine2d\Layers\LayerManager.cs" />
     <Compile Include="Engines\DrawEngine2d\ManagerBase.cs" />
+    <Compile Include="Engines\DrawEngine2d\TiledTextures\ColumnIndex.cs" />
+    <Compile Include="Engines\DrawEngine2d\TiledTextures\ColumnKey.cs" />
+    <Compile Include="Engines\DrawEngine2d\TiledTextures\GridIndex.cs" />
+    <Compile Include="Engines\DrawEngine2d\TiledTextures\GridKey.cs" />
+    <Compile Include="Engines\DrawEngine2d\TiledTextures\IndexBase.cs" />
+    <Compile Include="Engines\DrawEngine2d\TiledTextures\KeyBase.cs" />
+    <Compile Include="Engines\DrawEngine2d\TiledTextures\NamedTileIndex.cs" />
+    <Compile Include="Engines\DrawEngine2d\TiledTextures\NamedTileKey.cs" />
+    <Compile Include="Engines\DrawEngine2d\TiledTextures\TiledTexture.cs" />
+    <Compile Include="Engines\DrawEngine2d\Textures\TextureManager.cs" />
+    <Compile Include="Engines\DrawEngine2d\TiledTextures\TiledTextureManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedShaderProgram Include="Engines\DrawEngine2d\Shaders\Font.fcg" />

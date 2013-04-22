@@ -8,6 +8,7 @@ using PsmFramework.Engines.DrawEngine2d.Textures;
 using PsmFramework.Modes;
 using PsmFramework.Modes.TopDown2dAlt;
 using Sce.PlayStation.Core;
+using PsmFramework.Engines.DrawEngine2d.TiledTextures;
 
 namespace Demo.SpaceRockets
 {
@@ -39,7 +40,7 @@ namespace Demo.SpaceRockets
 			DebugInfoForcesRender = false;
 			DrawEngine2d.ClearColor = Colors.Blue;
 			
-			TiledTexture tt = DrawEngine2d.CreateTiledTexture("/Application/TwinStickShooter/Images/Ship64.png");
+			TiledTexture tt = DrawEngine2d.TiledTextures.CreateTiledTexture("/Application/TwinStickShooter/Images/Ship64.png");
 			ColumnKey key = tt.CreateColumnIndex(1).GetKey(0);
 			
 			LayerBase l2 = DrawEngine2d.Layers.GetOrCreateWorldLayer(1);

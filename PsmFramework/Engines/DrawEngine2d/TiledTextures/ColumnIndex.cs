@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using PsmFramework.Engines.DrawEngine2d.Textures;
 
-namespace PsmFramework.Engines.DrawEngine2d.Textures
+namespace PsmFramework.Engines.DrawEngine2d.TiledTextures
 {
 	public sealed class ColumnIndex : IndexBase
 	{

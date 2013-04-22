@@ -53,12 +53,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 			Key = key;
 			CachePolicy = cachePolicy;
 			
-			DrawEngine2d.RegisterTexture2dPlus(Key, this, cachePolicy);
+			DrawEngine2d.Textures.RegisterTexture2dPlus(Key, this, cachePolicy);
 		}
 		
 		private void CleanupDrawEngine2d()
 		{
-			DrawEngine2d.UnregisterTexture2dPlus(Key);
+			DrawEngine2d.Textures.UnregisterTexture2dPlus(Key);
 			
 			Key = null;
 			DrawEngine2d = null;

@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Sce.PlayStation.Core.Graphics;
+using PsmFramework.Engines.DrawEngine2d.Textures;
 
-namespace PsmFramework.Engines.DrawEngine2d.Textures
+namespace PsmFramework.Engines.DrawEngine2d.TiledTextures
 {
 	public sealed class TiledTexture : IDisposablePlus
 	{
@@ -84,12 +85,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 			Key = key;
 			CachePolicy = cachePolicy;
 			
-			DrawEngine2d.RegisterTiledTexture(Key, this, cachePolicy);
+			DrawEngine2d.TiledTextures.RegisterTiledTexture(Key, this, cachePolicy);
 		}
 		
 		private void CleanupKey()
 		{
-			DrawEngine2d.UnregisterTiledTexture(Key);
+			DrawEngine2d.TiledTextures.UnregisterTiledTexture(Key);
 			
 			Key = null;
 		}
@@ -111,7 +112,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 				throw new ArgumentException();
 			
 			Path = path;
-			Texture = DrawEngine2d.CreateTexture(path, CachePolicy);
+			Texture = DrawEngine2d.Textures.CreateTexture(path, CachePolicy);
 			
 			RegisterAsUserOfTexture2d();
 		}
@@ -144,12 +145,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		
 		private void RegisterAsUserOfTexture2d()
 		{
-			DrawEngine2d.AddTexture2dPlusUser(Texture.Key, this);
+			DrawEngine2d.Textures.AddTexture2dPlusUser(Texture.Key, this);
 		}
 		
 		private void UnregisterAsUserOfTexture2d()
 		{
-			DrawEngine2d.RemoveTexture2dPlusUser(Texture.Key, this);
+			DrawEngine2d.Textures.RemoveTexture2dPlusUser(Texture.Key, this);
 		}
 		
 		#endregion

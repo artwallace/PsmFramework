@@ -1,6 +1,6 @@
 using System;
 
-namespace PsmFramework.Engines.DrawEngine2d.Textures
+namespace PsmFramework.Engines.DrawEngine2d.TiledTextures
 {
 	public abstract class IndexBase : IDisposablePlus
 	{

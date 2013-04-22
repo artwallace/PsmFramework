@@ -10,6 +10,7 @@ using PsmFramework.Engines.DrawEngine2d.Support;
 using PsmFramework.Engines.DrawEngine2d.Textures;
 using PsmFramework.Modes;
 using Sce.PlayStation.Core.Imaging;
+using PsmFramework.Engines.DrawEngine2d.TiledTextures;
 
 namespace Demo.MainMenu
 {
@@ -127,37 +128,37 @@ namespace Demo.MainMenu
 			Single row4 = rowHeight * 7.7f;
 			
 			//Create the Psm Logo
-			TiledTexture logoTT = DrawEngine2d.CreateTiledTexture(Assets.PsmLogo);
+			TiledTexture logoTT = DrawEngine2d.TiledTextures.CreateTiledTexture(Assets.PsmLogo);
 			ColumnKey logoKey = logoTT.CreateColumnIndex(1).GetKey(0);
 			Sprite Logo = new Sprite(ScreenLayer, logoKey);
 			Logo.SetDimensionsProportionallyByHeight(logoH);
 			Logo.SetPosition(logoPstnX, logoPstnY, PsmFramework.Engines.DrawEngine2d.Support.RelativePosition.Bottom);
 			
-			TiledTexture crossTT = DrawEngine2d.CreateTiledTexture(Assets.ButtonCross);
+			TiledTexture crossTT = DrawEngine2d.TiledTextures.CreateTiledTexture(Assets.ButtonCross);
 			ColumnKey crossKey = crossTT.CreateColumnIndex(1).GetKey(0);
 			Sprite cross = new Sprite(ScreenLayer, crossKey);
 			cross.SetDimensionsProportionallyByHeight(rowHeight);
 			cross.SetPosition(buttonRight, row1, PsmFramework.Engines.DrawEngine2d.Support.RelativePosition.Right);
 			
-			TiledTexture squareTT = DrawEngine2d.CreateTiledTexture(Assets.ButtonSquare);
+			TiledTexture squareTT = DrawEngine2d.TiledTextures.CreateTiledTexture(Assets.ButtonSquare);
 			ColumnKey squareKey = squareTT.CreateColumnIndex(1).GetKey(0);
 			Sprite square = new Sprite(ScreenLayer, squareKey);
 			square.SetDimensionsProportionallyByHeight(rowHeight);
 			square.SetPosition(buttonRight, row2, PsmFramework.Engines.DrawEngine2d.Support.RelativePosition.Right);
 			
-			TiledTexture triangleTT = DrawEngine2d.CreateTiledTexture(Assets.ButtonTriangle);
+			TiledTexture triangleTT = DrawEngine2d.TiledTextures.CreateTiledTexture(Assets.ButtonTriangle);
 			ColumnKey triangleKey = triangleTT.CreateColumnIndex(1).GetKey(0);
 			Sprite triangle = new Sprite(ScreenLayer, triangleKey);
 			triangle.SetDimensionsProportionallyByHeight(rowHeight);
 			triangle.SetPosition(buttonRight, row3, PsmFramework.Engines.DrawEngine2d.Support.RelativePosition.Right);
 			
-			TiledTexture circleTT = DrawEngine2d.CreateTiledTexture(Assets.ButtonCircle);
+			TiledTexture circleTT = DrawEngine2d.TiledTextures.CreateTiledTexture(Assets.ButtonCircle);
 			ColumnKey circleKey = circleTT.CreateColumnIndex(1).GetKey(0);
 			Sprite circle = new Sprite(ScreenLayer, circleKey);
 			circle.SetDimensionsProportionallyByHeight(rowHeight);
 			circle.SetPosition(buttonRight, row4, PsmFramework.Engines.DrawEngine2d.Support.RelativePosition.Right);
 			
-			TiledTexture modesTT = DrawEngine2d.CreateTiledTexture(Assets.Modes);
+			TiledTexture modesTT = DrawEngine2d.TiledTextures.CreateTiledTexture(Assets.Modes);
 			GridIndex modesIndex = modesTT.CreateGridIndex(1,4);
 			
 			GridKey tssKey = modesIndex.GetKey(0, 0);

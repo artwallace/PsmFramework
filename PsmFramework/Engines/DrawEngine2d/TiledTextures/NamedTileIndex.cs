@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace PsmFramework.Engines.DrawEngine2d.Textures
+namespace PsmFramework.Engines.DrawEngine2d.TiledTextures
 {
 	public sealed class NamedTileIndex : IndexBase
 	{

@@ -1,17 +1,18 @@
 using System;
+using PsmFramework.Engines.DrawEngine2d.Textures;
 
-namespace PsmFramework.Engines.DrawEngine2d.Textures
+namespace PsmFramework.Engines.DrawEngine2d.TiledTextures
 {
-	public sealed class NamedTileKey : KeyBase
+	public sealed class ColumnKey : KeyBase
 	{
 		#region Constructor, Dispose
 		
-		internal NamedTileKey(NamedTileIndex index, String name, Texture2dArea tile)
+		internal ColumnKey(ColumnIndex index, Int32 column, Texture2dArea tile)
 			: base(tile)
 		{
 			//Inits moved here because parameters need to be passed.
 			InitializeIndex(index);
-			InitializeKey(name);
+			InitializeKey(column);
 		}
 		
 		#endregion
@@ -32,7 +33,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		
 		#region Index
 		
-		private void InitializeIndex(NamedTileIndex index)
+		private void InitializeIndex(ColumnIndex index)
 		{
 			if (index == null)
 				throw new ArgumentNullException();
@@ -45,7 +46,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 			Index = null;
 		}
 		
-		public NamedTileIndex Index { get; private set; }
+		public ColumnIndex Index { get; private set; }
 		
 		#endregion
 		
@@ -56,7 +57,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 			get
 			{
 				if (IsDisposed)
-					throw new ObjectDisposedException("NamedTileKey");
+					throw new ObjectDisposedException("ColumnKey");
 				
 				if (Index == null)
 					throw new InvalidOperationException();
@@ -69,20 +70,20 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		
 		#region Key
 		
-		private void InitializeKey(String name)
+		private void InitializeKey(Int32 column)
 		{
-			if (String.IsNullOrWhiteSpace(name))
+			if (column < 0)
 				throw new ArgumentOutOfRangeException();
 			
-			Name = name;
+			Column = column;
 		}
 		
 		private void CleanupKey()
 		{
-			Name = default(String);
+			Column = default(Int32);
 		}
 		
-		public String Name { get; private set; }
+		public Int32 Column { get; private set; }
 		
 		#endregion
 	}

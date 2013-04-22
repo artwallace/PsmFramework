@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using PsmFramework.Engines.DrawEngine2d.Textures;
+using PsmFramework.Engines.DrawEngine2d.TiledTextures;
 using Sce.PlayStation.Core.Graphics;
 
 namespace PsmFramework.Engines.DrawEngine2d.Support
@@ -316,11 +317,11 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		
 		private void BuildTexture()
 		{
-			Texture2dPlus FontTexture = DrawEngine2d.CreateTexture(TextureKey, TextureWidth, TextureHeight, PixelFormat.Luminance, TextureCachePolicy.KeepAlways);
+			Texture2dPlus FontTexture = DrawEngine2d.Textures.CreateTexture(TextureKey, TextureWidth, TextureHeight, PixelFormat.Luminance, TextureCachePolicy.KeepAlways);
 			FontTexture.SetPixels(0, TexturePixels, PixelFormat.Luminance);
 			FontTexture.SetFilter(TextureFilterMode.Nearest, TextureFilterMode.Nearest, TextureFilterMode.Nearest);
 			
-			TiledFontTexture = DrawEngine2d.CreateTiledTexture(TextureKey, FontTexture, TextureCachePolicy.KeepAlways);
+			TiledFontTexture = DrawEngine2d.TiledTextures.CreateTiledTexture(TextureKey, FontTexture, TextureCachePolicy.KeepAlways);
 			TextureColumnIndex = TiledFontTexture.CreateColumnIndex(MaxTextureCharCapacity);
 			
 			FontTexture = null;

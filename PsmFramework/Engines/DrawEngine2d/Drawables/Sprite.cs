@@ -1,10 +1,10 @@
 using System;
 using PsmFramework.Engines.DrawEngine2d.Layers;
 using PsmFramework.Engines.DrawEngine2d.Shaders;
-using PsmFramework.Engines.DrawEngine2d.Textures;
+using PsmFramework.Engines.DrawEngine2d.Support;
+using PsmFramework.Engines.DrawEngine2d.TiledTextures;
 using Sce.PlayStation.Core;
 using Sce.PlayStation.Core.Graphics;
-using PsmFramework.Engines.DrawEngine2d.Support;
 
 namespace PsmFramework.Engines.DrawEngine2d.Drawables
 {
@@ -100,7 +100,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			if (Key.TiledTexture == null)
 				throw new InvalidOperationException();
 			
-			DrawEngine2d.AddTiledTextureUser(Key.TiledTexture.Key, this);
+			DrawEngine2d.TiledTextures.AddTiledTextureUser(Key.TiledTexture.Key, this);
 		}
 		
 		private void UnregisterAsUserOfTiledTexture()
@@ -108,7 +108,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			if (Key.TiledTexture == null)
 				return;
 			
-			DrawEngine2d.RemoveTiledTextureUser(Key.TiledTexture.Key, this);
+			DrawEngine2d.TiledTextures.RemoveTiledTextureUser(Key.TiledTexture.Key, this);
 		}
 		
 		#endregion
@@ -159,7 +159,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		public override void RenderHelper()
 		{
 			DrawEngine2d.GraphicsContext.SetShaderProgram(Shader.ShaderProgram);
-			DrawEngine2d.SetOpenGlTexture(Key.TiledTexture.Key);
+			DrawEngine2d.Textures.SetOpenGlTexture(Key.TiledTexture.Key);
 			
 			Shader.VertexBuffer.SetVertices(1, Key.TextureCoordinates);
 			DrawEngine2d.GraphicsContext.SetVertexBuffer(0, Shader.VertexBuffer);
