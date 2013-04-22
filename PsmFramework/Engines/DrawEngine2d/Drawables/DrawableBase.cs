@@ -40,10 +40,14 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			InitializeRecalcRequired();
 			InitializeVisible();
 			InitializeBounds();
+			
+			InitializeDebugInfo();
 		}
 		
 		private void CleanupInternal()
 		{
+			CleanupDebugInfo();
+			
 			CleanupBounds();
 			CleanupVisible();
 			CleanupRecalcRequired();
@@ -52,10 +56,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			CleanupLayer();
 		}
 		
+		//TODO: This is dumb. Replace these with overrides.
 		protected virtual void InitializeIntermediary()
 		{
 		}
 		
+		//TODO: This is dumb. Replace these with overrides.
 		protected virtual void CleanupIntermediary()
 		{
 		}
@@ -229,6 +235,32 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		protected abstract void RecalcBounds();
 		
 		protected abstract void RecalcHelper();
+		
+		#endregion
+		
+		#region DebugInfo
+		
+		private void InitializeDebugInfo()
+		{
+			DebugInfoEnabled = false;
+			DebugInfoPosition = RelativePosition.Right;
+			DebugInfoAlignment = TextAlignment.Left;
+		}
+		
+		private void CleanupDebugInfo()
+		{
+			DebugInfoEnabled = false;
+			DebugInfoPosition = RelativePosition.Right;
+			DebugInfoAlignment = TextAlignment.Left;
+		}
+		
+		private Boolean DebugInfoEnabled;
+		
+		public RelativePosition DebugInfoPosition;
+		
+		public TextAlignment DebugInfoAlignment;
+		
+		
 		
 		#endregion
 	}

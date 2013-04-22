@@ -99,6 +99,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Cameras
 				return;
 			
 			_Center = center;
+			
 			SetRecalcRequired();
 		}
 		

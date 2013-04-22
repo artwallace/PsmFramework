@@ -1,14 +1,16 @@
 using System;
 using PsmFramework.Engines.DrawEngine2d.Layers;
+using PsmFramework.Engines.DrawEngine2d.Shaders;
 using PsmFramework.Engines.DrawEngine2d.Support;
+using Sce.PlayStation.Core;
 
 namespace PsmFramework.Engines.DrawEngine2d.Drawables
 {
-	public abstract class SinglePositionDrawableBase : DrawableBase
+	public abstract class SpriteDrawableBase : DrawableBase
 	{
 		#region Constructor, Dispose
 		
-		public SinglePositionDrawableBase(LayerBase layer)
+		public SpriteDrawableBase(LayerBase layer)
 			: base(layer)
 		{
 		}
@@ -19,6 +21,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		protected override void InitializeIntermediary()
 		{
+			InitializeShaderProgram();
 			InitializePosition();
 			InitializeRotation();
 			InitializeDimensions();
@@ -31,7 +34,24 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			CleanupDimensions();
 			CleanupRotation();
 			CleanupPosition();
+			CleanupShaderProgram();
 		}
+		
+		#endregion
+		
+		#region Shader Program
+		
+		private void InitializeShaderProgram()
+		{
+			Shader = DrawEngine2d.SpriteShader;
+		}
+		
+		private void CleanupShaderProgram()
+		{
+			Shader = null;
+		}
+		
+		protected SpriteShader Shader;
 		
 		#endregion
 		
@@ -141,13 +161,10 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		public Angle2 Rotation
 		{
 			get { return _Rotation; }
-			set
+			private set
 			{
 				if(_Rotation == value)
 					return;
-				
-				if (!RotationSupported && value != DefaultRotation)
-					throw new NotSupportedException("Rotation not support for this drawable.");
 				
 				_Rotation = value;
 				
@@ -155,18 +172,21 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			}
 		}
 		
-		public readonly Angle2 DefaultRotation = Angle2.Zero;
-		
-		public void AdjustRotation(Single angle)
+		protected void SetRotation(Angle2 angle)
 		{
-			Rotation = new Angle2(Rotation.Degree + angle);
+			Rotation = angle;
 		}
+		
+		protected void AdjustRotation(Angle2 angle)
+		{
+			Rotation = new Angle2(Rotation.Degree + angle.Degree);
+		}
+		
+		public readonly Angle2 DefaultRotation = Angle2.Zero;
 		
 		protected const Single RotationCenterX = 0.5f;
 		protected const Single RotationCenterY = 0.5f;
 		protected const Single RotationCenterZ = 0.0f;
-		
-		protected virtual Boolean RotationSupported { get { return true; } }
 		
 		#endregion
 		
@@ -194,7 +214,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		public Single Width
 		{
 			get { return _Width; }
-			set
+			private set
 			{
 				if(_Width == value)
 					return;
@@ -210,7 +230,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		public Single Height
 		{
 			get { return _Height; }
-			set
+			private set
 			{
 				if(_Height == value)
 					return;
@@ -222,8 +242,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			}
 		}
 		
-		protected Single HalfWidth;
-		protected Single HalfHeight;
+		protected Single HalfWidth { get; private set; }
+		protected Single HalfHeight { get; private set; }
 		
 		public Single NaturalWidth { get; private set; }
 		public Single NaturalHeight { get; private set; }
@@ -239,13 +259,13 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			SetRecalcRequired();
 		}
 		
-		public void SetDimensions()
+		protected void SetDimensions()
 		{
 			Width = NaturalWidth;
 			Height = NaturalHeight;
 		}
 		
-		public void SetDimensionsByScale(Single scale)
+		protected void SetDimensionsByScale(Single scale)
 		{
 			if (scale < 0.0f)
 				throw new ArgumentOutOfRangeException();
@@ -254,7 +274,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			Height = NaturalHeight * scale;
 		}
 		
-		public void SetDimensionsProportionallyFromWidth(Single width)
+		protected void SetDimensionsProportionallyByWidth(Single width)
 		{
 			if (width < 1f || NaturalWidth < 1f)
 			{
@@ -269,7 +289,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			Height = NaturalHeight * scale;
 		}
 		
-		public void SetDimensionsProportionallyFromHeight(Single height)
+		protected void SetDimensionsProportionallyByHeight(Single height)
 		{
 			if (height < 1f || NaturalHeight < 1f)
 			{
@@ -284,11 +304,11 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			Height = height;
 		}
 		
-		private const Single DefaultWidth = 0.0f;
-		private const Single DefaultHeight = 0.0f;
+		protected const Single DefaultWidth = 0.0f;
+		protected const Single DefaultHeight = 0.0f;
 		
-		private const Single DefaultNaturalWidth = 0.0f;
-		private const Single DefaultNaturalHeight = 0.0f;
+		protected const Single DefaultNaturalWidth = 0.0f;
+		protected const Single DefaultNaturalHeight = 0.0f;
 		
 		#endregion
 		

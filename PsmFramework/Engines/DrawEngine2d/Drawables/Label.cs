@@ -8,7 +8,7 @@ using Sce.PlayStation.Core.Graphics;
 
 namespace PsmFramework.Engines.DrawEngine2d.Drawables
 {
-	public class Label : SinglePositionDrawableBase
+	public class Label : SpriteDrawableBase
 	{
 		#region Constructor, Dispose
 		
@@ -23,26 +23,10 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		protected override void Initialize()
 		{
-//			InitializeCharacterCoordinateCache();
-//			
-//			InitializeVertices();
-//			InitializeIndices();
-//			InitializeTextureCoordinates();
-//			InitializeColor();
-//			InitializeVertexBuffer();
-//			InitializeShaderProgram();
 		}
 		
 		protected override void Cleanup()
 		{
-//			CleanupShaderProgram();
-//			CleanupVertexBuffer();
-//			CleanupColor();
-//			CleanupTextureCoordinates();
-//			CleanupIndices();
-//			CleanupVertices();
-//			
-//			CleanupCharacterCoordinateCache();
 		}
 		
 		#endregion
@@ -68,8 +52,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		}
 		
 		#endregion
-		
-		
 		
 		#region Text
 		

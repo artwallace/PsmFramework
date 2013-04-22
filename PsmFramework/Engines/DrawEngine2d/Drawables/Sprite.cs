@@ -4,10 +4,11 @@ using PsmFramework.Engines.DrawEngine2d.Shaders;
 using PsmFramework.Engines.DrawEngine2d.Textures;
 using Sce.PlayStation.Core;
 using Sce.PlayStation.Core.Graphics;
+using PsmFramework.Engines.DrawEngine2d.Support;
 
 namespace PsmFramework.Engines.DrawEngine2d.Drawables
 {
-	public sealed class Sprite : SinglePositionDrawableBase
+	public sealed class Sprite : SpriteDrawableBase
 	{
 		#region Constructor, Dispose
 		
@@ -23,8 +24,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		protected override void Initialize()
 		{
-			InitializeShaderProgram();
 			InitializeTiledTextureIndex();
+			InitializeMatrices();
 		}
 		
 		//Needed because of parameters.
@@ -35,25 +36,9 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		protected override void Cleanup()
 		{
+			CleanupMatrices();
 			CleanupTiledTextureIndex();
-			CleanupShaderProgram();
 		}
-		
-		#endregion
-		
-		#region Shader Program
-		
-		private void InitializeShaderProgram()
-		{
-			Shader = DrawEngine2d.SpriteShader;
-		}
-		
-		private void CleanupShaderProgram()
-		{
-			Shader = null;
-		}
-		
-		private SpriteShader Shader;
 		
 		#endregion
 		
@@ -126,14 +111,38 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			DrawEngine2d.RemoveTiledTextureUser(Key.TiledTexture.Key, this);
 		}
 		
-//		public Single[] GetTiledTextureCoordinates(TiledTextureIndex index, out Int32 width, out Int32 height)
-//		{
-//			return TiledTexture.GetTextureCoordinates(index, out width, out height);
-//		}
+		#endregion
+		
+		#region Rotation
+		
+		public new void SetRotation(Angle2 angle)
+		{
+			base.SetRotation(angle);
+		}
+		
+		public new void AdjustRotation(Angle2 angle)
+		{
+			base.AdjustRotation(angle);
+		}
 		
 		#endregion
 		
 		#region Dimensions
+		
+		public new void SetDimensionsByScale(Single scale)
+		{
+			base.SetDimensionsByScale(scale);
+		}
+		
+		public new void SetDimensionsProportionallyByWidth(Single width)
+		{
+			base.SetDimensionsProportionallyByWidth(width);
+		}
+		
+		public new void SetDimensionsProportionallyByHeight(Single height)
+		{
+			base.SetDimensionsProportionallyByHeight(height);
+		}
 		
 		private void SetNaturalDimensionsFromTile()
 		{
@@ -154,6 +163,9 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			
 			Shader.VertexBuffer.SetVertices(1, Key.TextureCoordinates);
 			DrawEngine2d.GraphicsContext.SetVertexBuffer(0, Shader.VertexBuffer);
+			
+//			GenerateModelMatrix();
+//			Matrix4 wvp = GenerateWorldViewProjectionMatrix();
 			
 			Matrix4 cm = Matrix4.Translation(-RotationCenterX,  -RotationCenterY, RotationCenterZ);
 			Matrix4 tm = Matrix4.Translation(Position.X + HalfWidth, Position.Y + HalfHeight, 0.0f);
@@ -182,6 +194,50 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		protected override void RecalcHelper()
 		{
 			//throw new NotImplementedException();
+		}
+		
+		#endregion
+		
+		#region Matrices
+		
+		private void InitializeMatrices()
+		{
+			//As of now, RotationCenter cannot be changed so this can be computed once.
+			CenterMatrix = Matrix4.Translation(-RotationCenterX,  -RotationCenterY, RotationCenterZ);
+		}
+		
+		private void CleanupMatrices()
+		{
+		}
+		
+		private Matrix4 CenterMatrix;
+		private Matrix4 TranslationMatrix;
+		private Matrix4 RotationMatrix;
+		private Matrix4 ScaleMatrix;
+		
+		private Matrix4 ModelMatrix { get; set; }
+		
+		private Matrix4 WorldViewProjectionMatrix { get; set; }
+		
+		private void GenerateModelMatrix()
+		{
+			//TODO: These should only be recalced if the values changed.
+			TranslationMatrix = Matrix4.Translation(Position.X + HalfWidth, Position.Y + HalfHeight, 0.0f);
+			ScaleMatrix = Matrix4.Scale(Width, Height, 0.0f);
+			
+			ModelMatrix = TranslationMatrix * ScaleMatrix * CenterMatrix;
+			
+			if (Rotation != DefaultRotation)
+			{
+				RotationMatrix = Matrix4.RotationZ(Rotation.Radian);
+				ModelMatrix *= RotationMatrix;
+			}
+		}
+		
+		private Matrix4 GenerateWorldViewProjectionMatrix()
+		{
+			WorldViewProjectionMatrix = Layer.Camera.ProjectionMatrix * ModelMatrix;
+			return WorldViewProjectionMatrix;
 		}
 		
 		#endregion

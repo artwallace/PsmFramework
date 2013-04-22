@@ -10,12 +10,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		
 		internal TiledTexture(DrawEngine2d drawEngine2d, String path, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
 		{
-			Initialize(drawEngine2d, cachePolicy, path);
+			Initialize(drawEngine2d, path, cachePolicy);
 		}
 		
 		internal TiledTexture(DrawEngine2d drawEngine2d, String key, Texture2dPlus texture, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
 		{
-			Initialize(drawEngine2d, cachePolicy, key, texture);
+			Initialize(drawEngine2d, key, texture, cachePolicy);
 		}
 		
 		public void Dispose()
@@ -33,16 +33,18 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		
 		#region Initialize, Cleanup
 		
-		private void Initialize(DrawEngine2d drawEngine2d, TextureCachePolicy cachePolicy, String path)
+		private void Initialize(DrawEngine2d drawEngine2d, String path, TextureCachePolicy cachePolicy)
 		{
-			InitializeDrawEngine2d(drawEngine2d, cachePolicy, path);
+			InitializeDrawEngine2d(drawEngine2d);
+			InitializeKey(path, cachePolicy);
 			InitializeTexture2d(path);
 			InitializeIndexes();
 		}
 		
-		private void Initialize(DrawEngine2d drawEngine2d, TextureCachePolicy cachePolicy, String key, Texture2dPlus texture)
+		private void Initialize(DrawEngine2d drawEngine2d, String key, Texture2dPlus texture, TextureCachePolicy cachePolicy)
 		{
-			InitializeDrawEngine2d(drawEngine2d, cachePolicy, key);
+			InitializeDrawEngine2d(drawEngine2d);
+			InitializeKey(key, cachePolicy);
 			InitializeTexture2d(texture);
 			InitializeIndexes();
 		}
@@ -58,27 +60,39 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		
 		#region DrawEngine2d
 		
-		private void InitializeDrawEngine2d(DrawEngine2d drawEngine2d, TextureCachePolicy cachePolicy, String key)
+		private void InitializeDrawEngine2d(DrawEngine2d drawEngine2d)
 		{
 			if (drawEngine2d == null)
 				throw new ArgumentNullException();
 			
 			DrawEngine2d = drawEngine2d;
+		}
+		
+		private void CleanupDrawEngine2d()
+		{
+			DrawEngine2d = null;
+		}
+		
+		private DrawEngine2d DrawEngine2d;
+		
+		#endregion
+		
+		#region Key
+		
+		private void InitializeKey(String key, TextureCachePolicy cachePolicy)
+		{
 			Key = key;
 			CachePolicy = cachePolicy;
 			
 			DrawEngine2d.RegisterTiledTexture(Key, this, cachePolicy);
 		}
 		
-		private void CleanupDrawEngine2d()
+		private void CleanupKey()
 		{
 			DrawEngine2d.UnregisterTiledTexture(Key);
 			
 			Key = null;
-			DrawEngine2d = null;
 		}
-		
-		private DrawEngine2d DrawEngine2d;
 		
 		public String Key { get; private set; }
 		
@@ -91,7 +105,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		private void InitializeTexture2d(String path)
 		{
 			if(Texture != null)
-				throw new NotSupportedException("Cannot initialize object more than once.");
+				throw new InvalidOperationException("Cannot initialize object more than once.");
 			
 			if(String.IsNullOrWhiteSpace(path))
 				throw new ArgumentException();
@@ -105,7 +119,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		private void InitializeTexture2d(Texture2dPlus texture)
 		{
 			if(Texture != null)
-				throw new NotSupportedException("Cannot initialize object more than once.");
+				throw new InvalidOperationException("Cannot initialize object more than once.");
 			
 			if(texture == null)
 				throw new ArgumentNullException();
@@ -192,48 +206,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		
 		#region GetTextureCoordinates
 		
-//		public Single[] GetTextureCoordinates(TiledTextureIndex index)
-//		{
-//			switch(index.Type)
-//			{
-//				case IndexType.Column:
-//					return oldColumnIndex[index.Column].CoordinateArray;
-//					
-//				default:
-//					throw new InvalidOperationException("Unknown index type.");
-//			}
-//		}
-		
-//		public Single[] GetTextureCoordinates(TiledTextureIndex index, out Int32 width, out Int32 height)
-//		{
-//			switch(index.Type)
-//			{
-//				case IndexType.Column:
-//					width = oldColumnIndex[index.Column].Width;
-//					height = oldColumnIndex[index.Column].Height;
-//					return GetTextureCoordinates(index);
-//					
-//				default:
-//					throw new InvalidOperationException("Unknown index type.");
-//			}
-//		}
-		
-//		public Single[] GetTextureCoordinates(IndexKey key)
-//		{
-//			switch (key.Type)
-//			{
-//				case IndexType.Column:
-//					
-//					return GetTextureCoordinates(key.Column);
-//				case IndexType.Grid:
-//					return GetTextureCoordinates(key.Column, key.Row);
-//				case IndexType.NamedTiles:
-//					return GetTextureCoordinates(key.Name);
-//				default:
-//					throw new NotImplementedException();
-//			}
-//		}
-		
 		public Single[] GetTextureCoordinates(Int32 column)
 		{
 			return GetTextureCoordinates(IndexBase.DefaultName, column);
@@ -276,23 +248,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 			return nti.GetKey(tileName).TextureCoordinates;
 		}
 		
-//		public void GetTileDimensions(IndexKey key)
-//		{
-//			switch (key.Type)
-//			{
-//				case IndexType.Column:
-//					return GetTextureCoordinates(name, key.Column);
-//				case IndexType.Grid:
-//					return GetTextureCoordinates(name, key.Column, key.Row);
-//				case IndexType.NamedTiles:
-//					return GetTextureCoordinates(name, key.Name);
-//				default:
-//					throw new NotImplementedException();
-//			}
-//		}
-		
 		#endregion
-		
 	}
 }
 

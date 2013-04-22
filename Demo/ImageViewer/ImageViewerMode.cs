@@ -12,20 +12,20 @@ namespace Demo.ImageViewer
 {
 	public class ImageViewerMode : DrawEngine2dModeBase
 	{
-		#region Constructor
-		
-		public ImageViewerMode(AppManager mgr)
-			: base(mgr)
-		{
-		}
-		
-		#endregion
-		
 		#region Mode Factory Delegate
 		
 		public static ModeBase ImageViewerModeFactory(AppManager mgr)
 		{
 			return new ImageViewerMode(mgr);
+		}
+		
+		#endregion
+		
+		#region Constructor
+		
+		public ImageViewerMode(AppManager mgr)
+			: base(mgr)
+		{
 		}
 		
 		#endregion

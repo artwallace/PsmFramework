@@ -5,12 +5,21 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 {
 	public struct Angle2 : IEquatable<Angle2>
 	{
+		#region Factory
+		
+		public static Angle2 GetAngleFromOrigin(Single x, Single y)
+		{
+			return new Angle2(FMath.Atan2(x, y) * FMath.RadToDeg);
+		}
+		
+		#endregion
+		
 		#region Constructor
 		
 		public Angle2(Single degree)
 		{
-			_Degree = GetNormalizedDegree(degree);
-			Radian = GetRadianAngle(_Degree);
+			Degree = GetNormalizedDegree(degree);
+			Radian = GetRadianAngle(Degree);
 			
 			HashCodeDirty = true;
 			HashCode = 0;
@@ -23,18 +32,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		/// <summary>
 		/// Always stored as 0 =< x < 360.
 		/// </summary>
-		private Single _Degree;
-		public Single Degree
-		{
-			get { return _Degree; }
-			private set
-			{
-				_Degree = GetNormalizedDegree(value);
-				Radian = GetRadianAngle(_Degree);
-				
-				HashCodeDirty = true;
-			}
-		}
+		public readonly Single Degree;
 		
 		public static Single GetNormalizedDegree(Single degree)
 		{
@@ -42,7 +40,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 				degree = degree % 360.0f;
 			
 			if(degree < 0.0f)
-				degree = 360.0f - FMath.Abs(degree);//Math.Abs(degree);
+				degree = 360.0f - FMath.Abs(degree);
 			
 			return degree;
 		}
@@ -51,13 +49,11 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		
 		#region Radian
 		
-		public Single Radian;
-		
-		private static Single DegreeToRadianValue =  FMath.PI / 180.0f;//(Single)(Math.PI / 180D);
+		public readonly Single Radian;
 		
 		public static Single GetRadianAngle(Single degree)
 		{
-			return degree * DegreeToRadianValue;
+			return degree * FMath.DegToRad;
 		}
 		
 		#endregion

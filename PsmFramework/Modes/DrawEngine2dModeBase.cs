@@ -3,6 +3,7 @@ using System.Text;
 using PsmFramework.Engines.DrawEngine2d;
 using PsmFramework.Engines.DrawEngine2d.Drawables;
 using PsmFramework.Engines.DrawEngine2d.Support;
+using PsmFramework.Engines.DrawEngine2d.Layers;
 
 namespace PsmFramework.Modes
 {
@@ -131,12 +132,12 @@ namespace PsmFramework.Modes
 				
 				_DebugInfoEnabled = value;
 				
-				//This is necessary until DebugLabel supports better draw method.
+				//TODO: This is necessary until DebugLabel supports better draw method.
 				ToggleDebugInfo();
 			}
 		}
 		
-		//This is necessary until DebugLabel supports better draw method.
+		//TODO: This is necessary until DebugLabel supports better draw method.
 		private void ToggleDebugInfo()
 		{
 			if(IsDisposed)
@@ -158,7 +159,7 @@ namespace PsmFramework.Modes
 			if(DebugInfoLabel != null)
 				DebugInfoLabel.Dispose();
 			
-			DebugInfoLabel = new DebugLabel(DrawEngine2d.GetOrCreateScreenDebugLayer());
+			DebugInfoLabel = DebugLabel.CreateDebugLabel(DrawEngine2d, LayerType.Screen);
 			DebugInfoLabel.SetPosition(DebugInfoPstn);
 		}
 		

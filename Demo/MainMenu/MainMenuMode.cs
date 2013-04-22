@@ -3,7 +3,6 @@ using Demo.ImageViewer;
 using Demo.Isometric;
 using Demo.SpaceRockets;
 using Demo.TwinStickShooter;
-using Demo.Zombies;
 using PsmFramework;
 using PsmFramework.Engines.DrawEngine2d.Drawables;
 using PsmFramework.Engines.DrawEngine2d.Layers;
@@ -16,20 +15,20 @@ namespace Demo.MainMenu
 {
 	public class MainMenuMode : DrawEngine2dModeBase
 	{
-		#region Constructor, Dispose
-		
-		public MainMenuMode(AppManager mgr)
-			: base(mgr)
-		{
-		}
-		
-		#endregion
-		
 		#region Mode Factory Delegate
 		
 		public static ModeBase MainMenuModeFactory(AppManager mgr)
 		{
 			return new MainMenuMode(mgr);
+		}
+		
+		#endregion
+		
+		#region Constructor, Dispose
+		
+		public MainMenuMode(AppManager mgr)
+			: base(mgr)
+		{
 		}
 		
 		#endregion
@@ -111,7 +110,7 @@ namespace Demo.MainMenu
 		private void InitializeLayersAndSprites()
 		{
 			//Create the layer to draw sprites into.
-			ScreenLayer ScreenLayer = DrawEngine2d.GetOrCreateScreenLayer(2);
+			ScreenLayer ScreenLayer = DrawEngine2d.Layers.GetOrCreateScreenLayer(2);
 			
 			Single logoPstnX = ScreenLayer.Camera.Center.X;
 			Single logoPstnY = ScreenLayer.Camera.Top + ScreenLayer.Camera.Height * 0.23f;
@@ -131,31 +130,31 @@ namespace Demo.MainMenu
 			TiledTexture logoTT = DrawEngine2d.CreateTiledTexture(Assets.PsmLogo);
 			ColumnKey logoKey = logoTT.CreateColumnIndex(1).GetKey(0);
 			Sprite Logo = new Sprite(ScreenLayer, logoKey);
-			Logo.SetDimensionsProportionallyFromHeight(logoH);
+			Logo.SetDimensionsProportionallyByHeight(logoH);
 			Logo.SetPosition(logoPstnX, logoPstnY, PsmFramework.Engines.DrawEngine2d.Support.RelativePosition.Bottom);
 			
 			TiledTexture crossTT = DrawEngine2d.CreateTiledTexture(Assets.ButtonCross);
 			ColumnKey crossKey = crossTT.CreateColumnIndex(1).GetKey(0);
 			Sprite cross = new Sprite(ScreenLayer, crossKey);
-			cross.SetDimensionsProportionallyFromHeight(rowHeight);
+			cross.SetDimensionsProportionallyByHeight(rowHeight);
 			cross.SetPosition(buttonRight, row1, PsmFramework.Engines.DrawEngine2d.Support.RelativePosition.Right);
 			
 			TiledTexture squareTT = DrawEngine2d.CreateTiledTexture(Assets.ButtonSquare);
 			ColumnKey squareKey = squareTT.CreateColumnIndex(1).GetKey(0);
 			Sprite square = new Sprite(ScreenLayer, squareKey);
-			square.SetDimensionsProportionallyFromHeight(rowHeight);
+			square.SetDimensionsProportionallyByHeight(rowHeight);
 			square.SetPosition(buttonRight, row2, PsmFramework.Engines.DrawEngine2d.Support.RelativePosition.Right);
 			
 			TiledTexture triangleTT = DrawEngine2d.CreateTiledTexture(Assets.ButtonTriangle);
 			ColumnKey triangleKey = triangleTT.CreateColumnIndex(1).GetKey(0);
 			Sprite triangle = new Sprite(ScreenLayer, triangleKey);
-			triangle.SetDimensionsProportionallyFromHeight(rowHeight);
+			triangle.SetDimensionsProportionallyByHeight(rowHeight);
 			triangle.SetPosition(buttonRight, row3, PsmFramework.Engines.DrawEngine2d.Support.RelativePosition.Right);
 			
 			TiledTexture circleTT = DrawEngine2d.CreateTiledTexture(Assets.ButtonCircle);
 			ColumnKey circleKey = circleTT.CreateColumnIndex(1).GetKey(0);
 			Sprite circle = new Sprite(ScreenLayer, circleKey);
-			circle.SetDimensionsProportionallyFromHeight(rowHeight);
+			circle.SetDimensionsProportionallyByHeight(rowHeight);
 			circle.SetPosition(buttonRight, row4, PsmFramework.Engines.DrawEngine2d.Support.RelativePosition.Right);
 			
 			TiledTexture modesTT = DrawEngine2d.CreateTiledTexture(Assets.Modes);
@@ -163,22 +162,22 @@ namespace Demo.MainMenu
 			
 			GridKey tssKey = modesIndex.GetKey(0, 0);
 			Sprite tss = new Sprite(ScreenLayer, tssKey);
-			tss.SetDimensionsProportionallyFromHeight(rowHeight);
+			tss.SetDimensionsProportionallyByHeight(rowHeight);
 			tss.SetPosition(modeLeft, row1,RelativePosition.Left);
 			
 			GridKey isoKey = modesIndex.GetKey(0, 1);
 			Sprite iso = new Sprite(ScreenLayer, isoKey);
-			iso.SetDimensionsProportionallyFromHeight(rowHeight);
+			iso.SetDimensionsProportionallyByHeight(rowHeight);
 			iso.SetPosition(modeLeft, row2,RelativePosition.Left);
 			
 			GridKey ge2dKey = modesIndex.GetKey(0, 2);
 			Sprite ge2d = new Sprite(ScreenLayer, ge2dKey);
-			ge2d.SetDimensionsProportionallyFromHeight(rowHeight);
+			ge2d.SetDimensionsProportionallyByHeight(rowHeight);
 			ge2d.SetPosition(modeLeft, row3,RelativePosition.Left);
 			
 			GridKey testKey = modesIndex.GetKey(0, 3);
 			Sprite test = new Sprite(ScreenLayer, testKey);
-			test.SetDimensionsProportionallyFromHeight(rowHeight);
+			test.SetDimensionsProportionallyByHeight(rowHeight);
 			test.SetPosition(modeLeft, row4,RelativePosition.Left);
 			
 			Font f = new Font(FontAlias.System, (Int32)rowHeight, FontStyle.Regular);

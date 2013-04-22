@@ -111,8 +111,7 @@ namespace PsmFramework.Engines.DrawEngine2d
 			
 			GraphicsContext.Clear();
 			
-			foreach(LayerBase layer in Layers.Values)
-				layer.Render();
+			Layers.Render();
 			
 			//Console.WriteLine("DrawEngine2d RenderWork " + DateTime.Now.Ticks);
 		}
@@ -130,6 +129,9 @@ namespace PsmFramework.Engines.DrawEngine2d
 		// contain the exact same image.
 		private Int32 WorkaroundBuffersFilled;
 		
+		//Value of 2 needed to fix bug where PSM discards first buffer.
+		//If that bug is fixed, value can be dropped to 1,
+		// which is needed to workaround stupid SwapBuffers behaviour.
 		private const Int32 WorkaroundBuffersNeeded = 2;
 		
 		private void IncrementWorkaroundBuffersFilled()
@@ -259,114 +261,18 @@ namespace PsmFramework.Engines.DrawEngine2d
 		
 		#region Layers
 		
-		//TODO: Move to a single DebugLayer?
-		
 		private void InitializeLayers()
 		{
-			Layers = new SortedList<Int32, LayerBase>();
+			Layers = new LayerManager(this);
 		}
 		
 		private void CleanupLayers()
 		{
-			LayerBase[] layers = new LayerBase[Layers.Values.Count];
-			Layers.Values.CopyTo(layers, 0);
-			
-			foreach(LayerBase layer in layers)
-				layer.Dispose();
-			Layers.Clear();
-			
+			Layers.Dispose();
 			Layers = null;
 		}
 		
-		private SortedList<Int32, LayerBase> Layers { get; set; }
-		
-		public WorldLayer GetOrCreateWorldLayer(Int32 zIndex)
-		{
-			if(Layers.ContainsKey(zIndex))
-			{
-				if(Layers[zIndex] is WorldLayer)
-					return (WorldLayer)Layers[zIndex];
-				else
-					throw new ArgumentException("The requested layer is not a WorldLayer.");
-			}
-			else
-			{
-				if(zIndex > LayerMaxZIndex || zIndex < LayerMinZIndex)
-					throw new ArgumentOutOfRangeException();
-				else
-					return new WorldLayer(this, zIndex);
-			}
-		}
-		
-		public ScreenLayer GetOrCreateScreenLayer(Int32 zIndex)
-		{
-			if(Layers.ContainsKey(zIndex))
-			{
-				if(Layers[zIndex] is ScreenLayer)
-					return (ScreenLayer)Layers[zIndex];
-				else
-					throw new ArgumentException("The requested layer is not a ScreenLayer.");
-			}
-			else
-			{
-				if(zIndex > LayerMaxZIndex || zIndex < LayerMinZIndex)
-					throw new ArgumentOutOfRangeException();
-				else
-					return new ScreenLayer(this, zIndex);
-			}
-		}
-		
-		internal WorldDebugLayer GetOrCreateWorldDebugLayer()
-		{
-			if(Layers.ContainsKey(WorldDebugLayerZIndex))
-				return (WorldDebugLayer)Layers[WorldDebugLayerZIndex];
-			else
-				return new WorldDebugLayer(this, WorldDebugLayerZIndex);
-		}
-		
-		internal ScreenDebugLayer GetOrCreateScreenDebugLayer()
-		{
-			if(Layers.ContainsKey(ScreenDebugLayerZIndex))
-				return (ScreenDebugLayer)Layers[ScreenDebugLayerZIndex];
-			else
-				return new ScreenDebugLayer(this, ScreenDebugLayerZIndex);
-		}
-		
-		internal void AddLayer(LayerBase layer, Int32 zIndex)
-		{
-			if(layer == null)
-				throw new ArgumentNullException();
-			
-			if(Layers.ContainsValue(layer))
-				throw new ArgumentException("Duplicate layer added to DrawEngine2d.");
-			
-			SetRenderRequired();
-			Layers.Add(zIndex, layer);
-		}
-		
-		public void RemoveLayer(LayerBase layer)
-		{
-			if(layer == null)
-				throw new ArgumentNullException();
-			
-			if(!Layers.ContainsValue(layer))
-				throw new ArgumentException("Unknown layer removal requested from DrawEngine2d.");
-			
-			SetRenderRequired();
-			Int32 valueLocation = Layers.IndexOfValue(layer);
-			Int32 zIndex = Layers.Keys[valueLocation];
-			Layers.Remove(zIndex);
-		}
-		
-		public Boolean CheckIfLayerExists(Int32 zIndex)
-		{
-			return Layers.ContainsKey(zIndex);
-		}
-		
-		public const Int32 LayerMinZIndex = -10000;
-		public const Int32 LayerMaxZIndex = 10000;
-		private const Int32 WorldDebugLayerZIndex = 10001;
-		private const Int32 ScreenDebugLayerZIndex = 10002;
+		public LayerManager Layers { get; private set; }
 		
 		#endregion
 		

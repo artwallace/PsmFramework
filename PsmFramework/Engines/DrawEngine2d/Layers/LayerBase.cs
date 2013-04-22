@@ -70,12 +70,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Layers
 		private void InitializeDrawEngine2d(DrawEngine2d drawEngine2d)
 		{
 			DrawEngine2d = drawEngine2d;
-			DrawEngine2d.AddLayer(this, ZIndex);
+			DrawEngine2d.Layers.AddLayer(this);
 		}
 		
 		private void CleanupDrawEngine2d()
 		{
-			DrawEngine2d.RemoveLayer(this);
+			DrawEngine2d.Layers.RemoveLayer(this);
 			DrawEngine2d = null;
 		}
 		
@@ -83,9 +83,11 @@ namespace PsmFramework.Engines.DrawEngine2d.Layers
 		
 		#endregion
 		
-		#region Camera
+		#region Type
 		
-		public abstract CameraBase Camera { get; }
+		public abstract LayerType Type { get; }
+		
+		internal virtual Boolean IsDebugLayer { get { return false; } }
 		
 		#endregion
 		
@@ -98,9 +100,16 @@ namespace PsmFramework.Engines.DrawEngine2d.Layers
 		
 		private void CleanupZIndex()
 		{
+			ZIndex = default(Int32);
 		}
 		
 		public Int32 ZIndex { get; private set; }
+		
+		#endregion
+		
+		#region Camera
+		
+		public abstract CameraBase Camera { get; }
 		
 		#endregion
 		

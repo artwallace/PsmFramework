@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using PsmFramework.Modes;
+using Sce.PlayStation.Core;
 using Sce.PlayStation.Core.Environment;
 using Sce.PlayStation.Core.Graphics;
 using Sce.PlayStation.Core.Imaging;
@@ -506,7 +507,7 @@ namespace PsmFramework
 		public Boolean CollectGamePadData { get; private set; }
 		public Boolean CollectTouchData { get; private set; }
 		
-		public GamePadData GamePadData { get; private set; }
+		private GamePadData GamePadData;// { get; private set; }
 		public List<TouchData> TouchData { get; private set; }
 		
 		private void RefreshInputData()
@@ -781,6 +782,50 @@ namespace PsmFramework
 		public Boolean GamePad0_Enter_Released
 		{
 			get { return ((GamePadData.ButtonsUp & GamePadButtons.Enter) != 0); }
+		}
+		
+		#endregion
+		
+		#endregion
+		
+		#region Analog Stick Shortcuts
+		
+		public Single AnalogStickDeadZone = 0.01f;
+		
+		#region Left Stick
+		
+		public Boolean GamePad0_LeftStick_Active
+		{
+			get { return FMath.Abs(GamePad0_LeftStick_X) > AnalogStickDeadZone || FMath.Abs(GamePad0_LeftStick_Y) > AnalogStickDeadZone; }
+		}
+		
+		public Single GamePad0_LeftStick_X
+		{
+			get { return GamePadData.AnalogLeftX; }
+		}
+		
+		public Single GamePad0_LeftStick_Y
+		{
+			get { return GamePadData.AnalogLeftY; }
+		}
+		
+		#endregion
+		
+		#region Right Stick
+		
+		public Boolean GamePad0_RightStick_Active
+		{
+			get { return FMath.Abs(GamePad0_RightStick_X) > AnalogStickDeadZone || FMath.Abs(GamePad0_RightStick_Y) > AnalogStickDeadZone; }
+		}
+		
+		public Single GamePad0_RightStick_X
+		{
+			get { return GamePadData.AnalogRightX; }
+		}
+		
+		public Single GamePad0_RightStick_Y
+		{
+			get { return GamePadData.AnalogRightY; }
 		}
 		
 		#endregion

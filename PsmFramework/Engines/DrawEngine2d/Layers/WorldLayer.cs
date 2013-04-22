@@ -21,6 +21,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Layers
 		public override CameraBase Camera { get { return DrawEngine2d.WorldCamera; } }
 		
 		#endregion
+		
+		#region Type
+		
+		public override LayerType Type { get { return LayerType.World; } }
+		
+		#endregion
 	}
 }
 

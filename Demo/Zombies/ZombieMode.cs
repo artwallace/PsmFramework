@@ -9,10 +9,14 @@ namespace Demo.Zombies
 {
 	public class ZombieMode : Isometric2dModeBase
 	{
-		protected override UInt32 SpritesCapacity { get { return 4000; } }
-		protected override UInt32 DrawHelpersCapacity { get { return 5000; } }
-		protected override Vector4 ClearColor { get { return Colors.Grey20; } }
-		protected override Boolean DrawDebugGrid { get { return true; } }
+		#region Mode Factory Delegate
+		
+		public static ModeBase ZombieModeFactory(AppManager mgr)
+		{
+			return new ZombieMode(mgr);
+		}
+		
+		#endregion
 		
 		#region Constructor, Dispose
 		
@@ -23,7 +27,7 @@ namespace Demo.Zombies
 		
 		#endregion
 		
-		#region Mode Logic
+		#region Initialize, Cleanup
 		
 		protected override void Initialize()
 		{
@@ -36,6 +40,15 @@ namespace Demo.Zombies
 		{
 			Level.Dispose();
 		}
+		
+		protected override UInt32 SpritesCapacity { get { return 4000; } }
+		protected override UInt32 DrawHelpersCapacity { get { return 5000; } }
+		protected override Vector4 ClearColor { get { return Colors.Grey20; } }
+		protected override Boolean DrawDebugGrid { get { return true; } }
+		
+		#endregion
+		
+		#region Update
 		
 		public override void Update()
 		{
@@ -52,15 +65,6 @@ namespace Demo.Zombies
 				else
 					Mgr.SetRunStateToRunning();
 			}
-		}
-		
-		#endregion
-		
-		#region Mode Factory Delegate
-		
-		public static ModeBase ZombieModeFactory(AppManager mgr)
-		{
-			return new ZombieMode(mgr);
 		}
 		
 		#endregion

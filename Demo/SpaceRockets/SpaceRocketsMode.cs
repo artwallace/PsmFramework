@@ -13,15 +13,6 @@ namespace Demo.SpaceRockets
 {
 	public class SpaceRocketsMode : TopDown2dAltModeBase
 	{
-		#region Constructor
-		
-		public SpaceRocketsMode(AppManager mgr)
-			: base(mgr)
-		{
-		}
-		
-		#endregion
-		
 		#region Mode Factory Delegate
 		
 		public static ModeBase DrawEngineTestModeFactory(AppManager mgr)
@@ -31,45 +22,51 @@ namespace Demo.SpaceRockets
 		
 		#endregion
 		
-		#region Mode Logic
+		#region Constructor
 		
-		private DebugLabel _DebugTextLabel;
+		public SpaceRocketsMode(AppManager mgr)
+			: base(mgr)
+		{
+		}
 		
-		private Sprite Ship1;
+		#endregion
+		
+		#region Initialize, Cleanup
 		
 		protected override void Initialize()
 		{
-			//TODO: Remove this after testing!
-			DrawEngine2d.ClearColor = Colors.Blue;
-			
 			DebugInfoEnabled = true;
 			DebugInfoForcesRender = false;
+			DrawEngine2d.ClearColor = Colors.Blue;
 			
-			String shipSprite = "/Application/TwinStickShooter/Images/Ship64.png";
-			
-			TiledTexture tt = DrawEngine2d.CreateTiledTexture(shipSprite);
+			TiledTexture tt = DrawEngine2d.CreateTiledTexture("/Application/TwinStickShooter/Images/Ship64.png");
 			ColumnKey key = tt.CreateColumnIndex(1).GetKey(0);
 			
-			LayerBase l2 = DrawEngine2d.GetOrCreateWorldLayer(1);
+			LayerBase l2 = DrawEngine2d.Layers.GetOrCreateWorldLayer(1);
 			
 			Ship1 = new Sprite(l2, key);
 			Ship1.SetPosition(100f, 100f);
 			
 			Sprite testSprite = new Sprite(l2,key);
-			testSprite.SetDimensionsProportionallyFromWidth(200f);
+			testSprite.SetDimensionsProportionallyByWidth(200f);
 			testSprite.SetPosition(l2.Camera.Center);
 			
-			LayerBase debugOverlay = DrawEngine2d.GetOrCreateScreenLayer(2);
-			_DebugTextLabel = new DebugLabel(debugOverlay);
-			_DebugTextLabel.Text = "This text is in a screen layer.";
-			_DebugTextLabel.SetPosition(100.0f, 100.0f);
+			DebugLabel debugTextLabel = DebugLabel.CreateDebugLabel(DrawEngine2d, LayerType.Screen);
+			debugTextLabel.Text = "This text is in a screen layer.";
+			debugTextLabel.SetPosition(400.0f, 100.0f);
 		}
 		
 		protected override void Cleanup()
 		{
-			_DebugTextLabel.Dispose();
-			_DebugTextLabel = null;
+			Ship1.Dispose();
+			Ship1 = null;
 		}
+		
+		private Sprite Ship1;
+		
+		#endregion
+		
+		#region Update
 		
 		public override void Update()
 		{
@@ -85,16 +82,17 @@ namespace Demo.SpaceRockets
 					Mgr.SetRunStateToPaused();
 				else
 					Mgr.SetRunStateToRunning();
+				
+				return;
 			}
 			
 			Single xMove = 0.0f;
 			Single yMove = 0.0f;
-			if(FMath.Abs(Mgr.GamePadData.AnalogLeftX) > 0.1f)
-				xMove = Mgr.GamePadData.AnalogLeftX * 2;
-			if(FMath.Abs(Mgr.GamePadData.AnalogLeftY) > 0.1f)
-				yMove = Mgr.GamePadData.AnalogLeftY * 2;
+			if(FMath.Abs(Mgr.GamePad0_LeftStick_X) > 0.1f)
+				xMove = Mgr.GamePad0_LeftStick_X * 2;
+			if(FMath.Abs(Mgr.GamePad0_LeftStick_Y) > 0.1f)
+				yMove = Mgr.GamePad0_LeftStick_Y * 2;
 			Ship1.AdjustPosition(xMove, yMove);
-			
 			
 			Single xCam = 0.0f;
 			Single yCam = 0.0f;
@@ -108,10 +106,13 @@ namespace Demo.SpaceRockets
 				yCam = 1f;
 			DrawEngine2d.WorldCamera.AdjustCenter(xCam, yCam);
 			
+			if(Mgr.GamePad0_LeftStick_Active)
+				Ship1.SetRotation(Angle2.GetAngleFromOrigin(Mgr.GamePad0_LeftStick_X, -Mgr.GamePad0_LeftStick_Y));
+			
 			if (Mgr.GamePad0_L1)
-				Ship1.AdjustRotation(-1.0f);
+				Ship1.AdjustRotation(turnLeft);
 			else if (Mgr.GamePad0_R1)
-				Ship1.AdjustRotation(1.0f);
+				Ship1.AdjustRotation(turnRight);
 			
 			if (Mgr.GamePad0_Square)
 				DrawEngine2d.WorldCamera.Rotation = new Angle2(DrawEngine2d.WorldCamera.Rotation.Degree - 1.0f);
@@ -124,6 +125,9 @@ namespace Demo.SpaceRockets
 				DrawEngine2d.WorldCamera.Zoom -= 0.1f;
 		}
 		
+		private readonly Angle2 turnLeft = new Angle2(-1.0f);
+		private readonly Angle2 turnRight = new Angle2(1.0f);
+		
 		#endregion
 		
 		#region DebugInfo
@@ -135,13 +139,7 @@ namespace Demo.SpaceRockets
 			AddDebugInfoLine("Camera Width", DrawEngine2d.WorldCamera.Bounds.Width);
 			AddDebugInfoLine("Camera Rotation", DrawEngine2d.WorldCamera.Rotation);
 			AddDebugInfoLine("Camera Zoom", DrawEngine2d.WorldCamera.Zoom);
-			
-//			Single x = Logo.Position.X + Logo.TileWidth / 2;
-//			Single y = Logo.Position.Y + Logo.TileHeight / 2;
-//			
-//			AddDebugInfoLine("Logo Center", x + "x" + y);
-//			
-//			AddDebugInfoLine("Logo Bounds", Logo.TileWidth);
+			AddDebugInfoLine("Left Analog", Mgr.GamePad0_LeftStick_X + "x" + Mgr.GamePad0_LeftStick_Y);
 		}
 		
 		#endregion

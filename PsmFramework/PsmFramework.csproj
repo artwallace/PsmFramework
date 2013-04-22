@@ -222,7 +222,12 @@
     <Compile Include="Engines\DrawEngine2d\Textures\GridKey.cs" />
     <Compile Include="Engines\DrawEngine2d\Textures\NamedTileKey.cs" />
     <Compile Include="Engines\DrawEngine2d\Support\GridLocation.cs" />
-    <Compile Include="Engines\DrawEngine2d\Drawables\SinglePositionDrawableBase.cs" />
+    <Compile Include="Engines\DrawEngine2d\Layers\LayerType.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\SpriteDrawableBase.cs" />
+    <Compile Include="Engines\DrawEngine2d\Drawables\VectorDrawableBase.cs" />
+    <Compile Include="Engines\DrawEngine2d\Support\TextAlignment.cs" />
+    <Compile Include="Engines\DrawEngine2d\Layers\LayerManager.cs" />
+    <Compile Include="Engines\DrawEngine2d\ManagerBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedShaderProgram Include="Engines\DrawEngine2d\Shaders\Font.fcg" />

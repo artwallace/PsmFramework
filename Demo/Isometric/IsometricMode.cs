@@ -12,20 +12,20 @@ namespace Demo.Isometric
 {
 	public class IsometricMode : DrawEngine2dModeBase
 	{
-		#region Constructor
-		
-		public IsometricMode(AppManager mgr)
-			: base(mgr)
-		{
-		}
-		
-		#endregion
-		
 		#region Mode Factory Delegate
 		
 		public static ModeBase IsometricModeFactory(AppManager mgr)
 		{
 			return new IsometricMode(mgr);
+		}
+		
+		#endregion
+		
+		#region Constructor
+		
+		public IsometricMode(AppManager mgr)
+			: base(mgr)
+		{
 		}
 		
 		#endregion

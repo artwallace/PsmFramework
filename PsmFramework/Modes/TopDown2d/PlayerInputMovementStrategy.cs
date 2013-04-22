@@ -31,7 +31,7 @@ namespace PsmFramework.Modes.TopDown2d
 		
 		private void Move_LeftAnalog()
 		{
-			if(Mgr.GamePadData.AnalogLeftX > 0.1f || Mgr.GamePadData.AnalogLeftX < -0.1f)
+			if(Mgr.GamePad0_LeftStick_X > 0.1f || Mgr.GamePad0_LeftStick_X < -0.1f)
 			{
 				//Testing.
 			}
