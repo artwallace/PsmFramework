@@ -7,16 +7,16 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 	{
 		#region Constructor, Dispose
 		
-		internal Texture2dPlus(DrawEngine2d drawEngine2d, String path, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
+		internal Texture2dPlus(TextureManager textureMgr, String path, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
 			: base(path, false)
 		{
-			Initialize(drawEngine2d, cachePolicy, path);
+			Initialize(textureMgr, cachePolicy, path);
 		}
 		
-		internal Texture2dPlus(DrawEngine2d drawEngine2d, String key, Int32 width, Int32 height, PixelFormat pixelFormat, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
+		internal Texture2dPlus(TextureManager textureMgr, String key, Int32 width, Int32 height, PixelFormat pixelFormat, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
 			: base(width, height, false, pixelFormat)
 		{
-			Initialize(drawEngine2d, cachePolicy, key);
+			Initialize(textureMgr, cachePolicy, key);
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -30,41 +30,41 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		
 		#region Initialize, Cleanup
 		
-		private void Initialize(DrawEngine2d drawEngine2d, TextureCachePolicy cachePolicy, String key)
+		private void Initialize(TextureManager textureMgr, TextureCachePolicy cachePolicy, String key)
 		{
-			InitializeDrawEngine2d(drawEngine2d, cachePolicy, key);
+			InitializeTextureManager(textureMgr, cachePolicy, key);
 		}
 		
 		private void Cleanup()
 		{
-			CleanupDrawEngine2d();
+			CleanupTextureManager();
 		}
 		
 		#endregion
 		
-		#region DrawEngine2d
+		#region TextureManager
 		
-		private void InitializeDrawEngine2d(DrawEngine2d drawEngine2d, TextureCachePolicy cachePolicy, String key)
+		private void InitializeTextureManager(TextureManager textureMgr, TextureCachePolicy cachePolicy, String key)
 		{
-			if (drawEngine2d == null)
+			if (textureMgr == null)
 				throw new ArgumentNullException();
 			
-			DrawEngine2d = drawEngine2d;
+			TextureManager = textureMgr;
 			Key = key;
 			CachePolicy = cachePolicy;
 			
-			DrawEngine2d.Textures.RegisterTexture2dPlus(Key, this, cachePolicy);
+			TextureManager.RegisterTexture(Key, this, cachePolicy);
 		}
 		
-		private void CleanupDrawEngine2d()
+		private void CleanupTextureManager()
 		{
-			DrawEngine2d.Textures.UnregisterTexture2dPlus(Key);
+			TextureManager.UnregisterTexture(Key);
 			
 			Key = null;
-			DrawEngine2d = null;
+			TextureManager = null;
 		}
 		
-		private DrawEngine2d DrawEngine2d;
+		private TextureManager TextureManager;
 		
 		public String Key { get; private set; }
 		

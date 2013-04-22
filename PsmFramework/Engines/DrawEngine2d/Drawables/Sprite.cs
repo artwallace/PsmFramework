@@ -100,7 +100,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			if (Key.TiledTexture == null)
 				throw new InvalidOperationException();
 			
-			DrawEngine2d.TiledTextures.AddTiledTextureUser(Key.TiledTexture.Key, this);
+			DrawEngine2d.TiledTextures.AddUser(Key.TiledTexture.Key, this);
 		}
 		
 		private void UnregisterAsUserOfTiledTexture()
@@ -108,7 +108,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			if (Key.TiledTexture == null)
 				return;
 			
-			DrawEngine2d.TiledTextures.RemoveTiledTextureUser(Key.TiledTexture.Key, this);
+			DrawEngine2d.TiledTextures.RemoveUser(Key.TiledTexture.Key, this);
 		}
 		
 		#endregion

@@ -9,14 +9,14 @@ namespace PsmFramework.Engines.DrawEngine2d.TiledTextures
 	{
 		#region Constructor, Dispose
 		
-		internal TiledTexture(DrawEngine2d drawEngine2d, String path, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
+		internal TiledTexture(TiledTextureManager tileMgr, String path, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
 		{
-			Initialize(drawEngine2d, path, cachePolicy);
+			Initialize(tileMgr, path, cachePolicy);
 		}
 		
-		internal TiledTexture(DrawEngine2d drawEngine2d, String key, Texture2dPlus texture, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
+		internal TiledTexture(TiledTextureManager tileMgr, String key, Texture2dPlus texture, TextureCachePolicy cachePolicy = TextureCachePolicy.DisposeAfterLastUse)
 		{
-			Initialize(drawEngine2d, key, texture, cachePolicy);
+			Initialize(tileMgr, key, texture, cachePolicy);
 		}
 		
 		public void Dispose()
@@ -34,17 +34,17 @@ namespace PsmFramework.Engines.DrawEngine2d.TiledTextures
 		
 		#region Initialize, Cleanup
 		
-		private void Initialize(DrawEngine2d drawEngine2d, String path, TextureCachePolicy cachePolicy)
+		private void Initialize(TiledTextureManager tileMgr, String path, TextureCachePolicy cachePolicy)
 		{
-			InitializeDrawEngine2d(drawEngine2d);
+			InitializeTiledTextureManager(tileMgr);
 			InitializeKey(path, cachePolicy);
 			InitializeTexture2d(path);
 			InitializeIndexes();
 		}
 		
-		private void Initialize(DrawEngine2d drawEngine2d, String key, Texture2dPlus texture, TextureCachePolicy cachePolicy)
+		private void Initialize(TiledTextureManager tileMgr, String key, Texture2dPlus texture, TextureCachePolicy cachePolicy)
 		{
-			InitializeDrawEngine2d(drawEngine2d);
+			InitializeTiledTextureManager(tileMgr);
 			InitializeKey(key, cachePolicy);
 			InitializeTexture2d(texture);
 			InitializeIndexes();
@@ -54,27 +54,27 @@ namespace PsmFramework.Engines.DrawEngine2d.TiledTextures
 		{
 			CleanupIndexes();
 			CleanupTexture2d();
-			CleanupDrawEngine2d();
+			CleanupTiledTextureManager();
 		}
 		
 		#endregion
 		
-		#region DrawEngine2d
+		#region TiledTextureManager
 		
-		private void InitializeDrawEngine2d(DrawEngine2d drawEngine2d)
+		private void InitializeTiledTextureManager(TiledTextureManager tileMgr)
 		{
-			if (drawEngine2d == null)
+			if (tileMgr == null)
 				throw new ArgumentNullException();
 			
-			DrawEngine2d = drawEngine2d;
+			TiledTextureManager = tileMgr;
 		}
 		
-		private void CleanupDrawEngine2d()
+		private void CleanupTiledTextureManager()
 		{
-			DrawEngine2d = null;
+			TiledTextureManager = null;
 		}
 		
-		private DrawEngine2d DrawEngine2d;
+		private TiledTextureManager TiledTextureManager;
 		
 		#endregion
 		
@@ -85,12 +85,12 @@ namespace PsmFramework.Engines.DrawEngine2d.TiledTextures
 			Key = key;
 			CachePolicy = cachePolicy;
 			
-			DrawEngine2d.TiledTextures.RegisterTiledTexture(Key, this, cachePolicy);
+			TiledTextureManager.RegisterTiledTexture(Key, this, cachePolicy);
 		}
 		
 		private void CleanupKey()
 		{
-			DrawEngine2d.TiledTextures.UnregisterTiledTexture(Key);
+			TiledTextureManager.UnregisterTiledTexture(Key);
 			
 			Key = null;
 		}
@@ -112,7 +112,7 @@ namespace PsmFramework.Engines.DrawEngine2d.TiledTextures
 				throw new ArgumentException();
 			
 			Path = path;
-			Texture = DrawEngine2d.Textures.CreateTexture(path, CachePolicy);
+			Texture = TiledTextureManager.DrawEngine2d.Textures.CreateTexture(path, CachePolicy);
 			
 			RegisterAsUserOfTexture2d();
 		}
@@ -145,12 +145,12 @@ namespace PsmFramework.Engines.DrawEngine2d.TiledTextures
 		
 		private void RegisterAsUserOfTexture2d()
 		{
-			DrawEngine2d.Textures.AddTexture2dPlusUser(Texture.Key, this);
+			TiledTextureManager.DrawEngine2d.Textures.AddUser(Texture.Key, this);
 		}
 		
 		private void UnregisterAsUserOfTexture2d()
 		{
-			DrawEngine2d.Textures.RemoveTexture2dPlusUser(Texture.Key, this);
+			TiledTextureManager.DrawEngine2d.Textures.RemoveUser(Texture.Key, this);
 		}
 		
 		#endregion
