@@ -16,13 +16,21 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 			HashCodeDirty = true;
 			HashCode = 0;
 			
-			TopLeft = new Coordinate2i(left, top);
-			BottomLeft = new Coordinate2i(left, bottom);
-			TopRight = new Coordinate2i(right, top);
-			BottomRight = new Coordinate2i(right, bottom);
-			
 			Width = right - left;
 			Height = top - bottom;
+			
+			Int32 cx = left + Width / 2;
+			Int32 cy = top + Height / 2;
+			
+			TopLeft = new Coordinate2i(left, top);
+			TopCenter = new Coordinate2i(cx, top);
+			TopRight = new Coordinate2i(right, top);
+			CenterLeft = new Coordinate2i(left, cy);
+			Center = new Coordinate2i(cx, cy);
+			CenterRight = new Coordinate2i(right, cy);
+			BottomLeft = new Coordinate2i(left, bottom);
+			BottomCenter = new Coordinate2i(cx, bottom);
+			BottomRight = new Coordinate2i(right, bottom);
 		}
 		
 		#endregion
@@ -43,9 +51,19 @@ namespace PsmFramework.Engines.DrawEngine2d.Support
 		
 		public readonly Coordinate2i TopLeft;
 		
-		public readonly Coordinate2i BottomLeft;
+		public readonly Coordinate2i TopCenter;
 		
 		public readonly Coordinate2i TopRight;
+		
+		public readonly Coordinate2i CenterLeft;
+		
+		public readonly Coordinate2i Center;
+		
+		public readonly Coordinate2i CenterRight;
+		
+		public readonly Coordinate2i BottomLeft;
+		
+		public readonly Coordinate2i BottomCenter;
 		
 		public readonly Coordinate2i BottomRight;
 		

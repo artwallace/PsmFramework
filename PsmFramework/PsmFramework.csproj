@@ -73,7 +73,6 @@
     <Compile Include="Engines\DrawEngine2d\Drawables\Image.cs" />
     <Compile Include="Engines\DrawEngine2d\Drawables\Label.cs" />
     <Compile Include="Engines\DrawEngine2d\Drawables\Line.cs" />
-    <Compile Include="Engines\DrawEngine2d\Drawables\Point.cs" />
     <Compile Include="Engines\DrawEngine2d\Drawables\Rectangle.cs" />
     <Compile Include="Engines\DrawEngine2d\Shaders\FontShader.cs" />
     <Compile Include="Engines\DrawEngine2d\Shaders\ShaderBase.cs" />
@@ -156,6 +155,11 @@
     <Compile Include="Engines\DrawEngine2d\TiledTextures\TiledTexture.cs" />
     <Compile Include="Engines\DrawEngine2d\Textures\TextureManager.cs" />
     <Compile Include="Engines\DrawEngine2d\TiledTextures\TiledTextureManager.cs" />
+    <Compile Include="Engines\DrawEngine2d\Support\IBounded.cs" />
+    <Compile Include="Engines\DrawEngine2d\Support\IDebugInfo.cs" />
+    <Compile Include="IDisposableStatus.cs" />
+    <Compile Include="Engines\DrawEngine2d\Support\IDebuggable.cs" />
+    <Compile Include="Engines\DrawEngine2d\Support\PlacementPosition.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedShaderProgram Include="Engines\DrawEngine2d\Shaders\Font.fcg" />

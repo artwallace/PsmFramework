@@ -20,16 +20,16 @@ namespace PsmFramework.Engines.DrawEngine2d.Textures
 		
 		protected override void Initialize()
 		{
-			InitializeTextures();
 			InitializeCachePolicies();
 			InitializeUsers();
+			InitializeTextures();
 		}
 		
 		protected override void Cleanup()
 		{
+			CleanupTextures();
 			CleanupUsers();
 			CleanupCachePolicies();
-			CleanupTextures();
 		}
 		
 		#endregion

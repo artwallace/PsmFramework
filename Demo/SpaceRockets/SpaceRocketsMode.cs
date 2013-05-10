@@ -4,11 +4,10 @@ using PsmFramework.Engines.DrawEngine2d;
 using PsmFramework.Engines.DrawEngine2d.Drawables;
 using PsmFramework.Engines.DrawEngine2d.Layers;
 using PsmFramework.Engines.DrawEngine2d.Support;
-using PsmFramework.Engines.DrawEngine2d.Textures;
+using PsmFramework.Engines.DrawEngine2d.TiledTextures;
 using PsmFramework.Modes;
 using PsmFramework.Modes.TopDown2dAlt;
 using Sce.PlayStation.Core;
-using PsmFramework.Engines.DrawEngine2d.TiledTextures;
 
 namespace Demo.SpaceRockets
 {
@@ -37,7 +36,7 @@ namespace Demo.SpaceRockets
 		protected override void Initialize()
 		{
 			DebugInfoEnabled = true;
-			DebugInfoForcesRender = false;
+			DebugInfo.RefreshForcesRender = false;
 			DrawEngine2d.ClearColor = Colors.Blue;
 			
 			TiledTexture tt = DrawEngine2d.TiledTextures.CreateTiledTexture("/Application/TwinStickShooter/Images/Ship64.png");
@@ -51,10 +50,6 @@ namespace Demo.SpaceRockets
 			Sprite testSprite = new Sprite(l2,key);
 			testSprite.SetDimensionsProportionallyByWidth(200f);
 			testSprite.SetPosition(l2.Camera.Center);
-			
-			DebugLabel debugTextLabel = DebugLabel.CreateDebugLabel(DrawEngine2d, LayerType.Screen);
-			debugTextLabel.Text = "This text is in a screen layer.";
-			debugTextLabel.SetPosition(400.0f, 100.0f);
 		}
 		
 		protected override void Cleanup()
@@ -133,14 +128,15 @@ namespace Demo.SpaceRockets
 		
 		#region DebugInfo
 		
-		protected override void GetAdditionalDebugInfo()
+		public override void RefreshDebugInfo()
 		{
-			AddDebugInfoLine("Camera Center", DrawEngine2d.WorldCamera.Center);
-			AddDebugInfoLine("Camera Bounds", DrawEngine2d.WorldCamera.Bounds);
-			AddDebugInfoLine("Camera Width", DrawEngine2d.WorldCamera.Bounds.Width);
-			AddDebugInfoLine("Camera Rotation", DrawEngine2d.WorldCamera.Rotation);
-			AddDebugInfoLine("Camera Zoom", DrawEngine2d.WorldCamera.Zoom);
-			AddDebugInfoLine("Left Analog", Mgr.GamePad0_LeftStick_X + "x" + Mgr.GamePad0_LeftStick_Y);
+			base.RefreshDebugInfo();
+//			AddDebugInfoLine("Camera Center", DrawEngine2d.WorldCamera.Center);
+//			AddDebugInfoLine("Camera Bounds", DrawEngine2d.WorldCamera.Bounds);
+//			AddDebugInfoLine("Camera Width", DrawEngine2d.WorldCamera.Bounds.Width);
+//			AddDebugInfoLine("Camera Rotation", DrawEngine2d.WorldCamera.Rotation);
+//			AddDebugInfoLine("Camera Zoom", DrawEngine2d.WorldCamera.Zoom);
+//			AddDebugInfoLine("Left Analog", Mgr.GamePad0_LeftStick_X + "x" + Mgr.GamePad0_LeftStick_Y);
 		}
 		
 		#endregion

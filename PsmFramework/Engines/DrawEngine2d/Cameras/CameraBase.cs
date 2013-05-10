@@ -4,7 +4,7 @@ using Sce.PlayStation.Core;
 
 namespace PsmFramework.Engines.DrawEngine2d.Cameras
 {
-	public abstract class CameraBase : IDisposablePlus
+	public abstract class CameraBase : IDisposablePlus, IBounded
 	{
 		#region Constructor, Dispose
 		

@@ -4,7 +4,7 @@ using PsmFramework.Engines.DrawEngine2d.Support;
 
 namespace PsmFramework.Engines.DrawEngine2d.Drawables
 {
-	public abstract class DrawableBase : IDisposablePlus
+	public abstract class DrawableBase : IDisposablePlus, IDebuggable
 	{
 		#region Constructor, Dispose
 		
@@ -35,7 +35,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		private void InitializeInternal(LayerBase layer)
 		{
 			InitializeLayer(layer);
-			InitializeDrawEngine2d();
 			
 			InitializeRecalcRequired();
 			InitializeVisible();
@@ -52,7 +51,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			CleanupVisible();
 			CleanupRecalcRequired();
 			
-			CleanupDrawEngine2d();
 			CleanupLayer();
 		}
 		
@@ -90,23 +88,28 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			Layer = null;
 		}
 		
-		public LayerBase Layer;
+		public LayerBase Layer { get; private set; }
+		
+		public void ChangeLayer(LayerBase layer)
+		{
+			throw new NotImplementedException();
+			//remember to update the debugInfo's layer too.
+		}
 		
 		#endregion
 		
 		#region DrawEngine2d
 		
-		private void InitializeDrawEngine2d()
+		public DrawEngine2d DrawEngine2d
 		{
-			DrawEngine2d = Layer.DrawEngine2d;
+			get
+			{
+				if (IsDisposed || Layer == null || Layer.IsDisposed)
+					return null;
+				
+				return Layer.DrawEngine2d;
+			}
 		}
-		
-		private void CleanupDrawEngine2d()
-		{
-			DrawEngine2d = null;
-		}
-		
-		public DrawEngine2d DrawEngine2d { get; private set; }
 		
 		#endregion
 		
@@ -177,7 +180,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				
 				_Visible = value;
 				
-				//if(_Visible)//TODO: It may be better to recalc always. This could be dangerous.
 				SetRecalcRequired();
 			}
 		}
@@ -188,11 +190,12 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void InitializeBounds()
 		{
+			Bounds = RectangularArea2.Zero;
 		}
 		
 		private void CleanupBounds()
 		{
-			_Bounds = default(RectangularArea2);
+			Bounds = RectangularArea2.Zero;
 		}
 		
 		private  RectangularArea2 _Bounds;
@@ -210,7 +213,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		#endregion
 		
-		#region OnScreen
+		#region IsOnScreen
 		
 		public Boolean IsOnScreen()
 		{
@@ -223,10 +226,10 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		protected void Recalc()
 		{
+			ClearRecalcRequired();
+			
 			if (IsDisposed)
 				return;
-			
-			ClearRecalcRequired();
 			
 			RecalcBounds();
 			RecalcHelper();
@@ -243,24 +246,48 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		private void InitializeDebugInfo()
 		{
 			DebugInfoEnabled = false;
-			DebugInfoPosition = RelativePosition.Right;
-			DebugInfoAlignment = TextAlignment.Left;
 		}
 		
 		private void CleanupDebugInfo()
 		{
 			DebugInfoEnabled = false;
-			DebugInfoPosition = RelativePosition.Right;
-			DebugInfoAlignment = TextAlignment.Left;
 		}
 		
-		private Boolean DebugInfoEnabled;
+		private IDisposablePlus DebugInfoDisposer;
+		public IDebugInfo DebugInfo { get; private set; }
 		
-		public RelativePosition DebugInfoPosition;
+		//TODO: This needs to be made generic and moved to DebugLabel.
+		public Boolean DebugInfoEnabled
+		{
+			get { return DebugInfo != null; }
+			set
+			{
+				if (DebugInfoEnabled == value)
+					return;
+				
+				if (value && !IsDisposed)
+				{
+					DebugLabel l = DebugLabel.CreateDebugLabel(DrawEngine2d, Layer.Type, this);
+					DebugInfoDisposer = l;
+					DebugInfo = l;
+				}
+				else
+				{
+					DebugInfoDisposer.Dispose();
+					DebugInfoDisposer = null;
+					DebugInfo = null;
+				}
+				
+				SetRecalcRequired();
+			}
+		}
 		
-		public TextAlignment DebugInfoAlignment;
-		
-		
+		public virtual void RefreshDebugInfo()
+		{
+			//Example:
+			//base.RefreshDebugInfo();
+			//DebugInfo.AddDebugInfoLine("Position", Position);
+		}
 		
 		#endregion
 	}

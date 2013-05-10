@@ -1,25 +1,25 @@
 using System;
+using System.Text;
 using PsmFramework.Engines.DrawEngine2d.Layers;
 using PsmFramework.Engines.DrawEngine2d.Shaders;
 using PsmFramework.Engines.DrawEngine2d.Support;
-using PsmFramework.Engines.DrawEngine2d.Textures;
+using PsmFramework.Engines.DrawEngine2d.TiledTextures;
 using Sce.PlayStation.Core;
 using Sce.PlayStation.Core.Graphics;
-using PsmFramework.Engines.DrawEngine2d.TiledTextures;
 
 namespace PsmFramework.Engines.DrawEngine2d.Drawables
 {
 	/// <summary>
-	/// A simple text label class that draws strings using the hardcoded font data.
+	/// A text label class that draws strings using the hardcoded font data.
 	/// DebugLabel is always drawn on top of every other Drawable in a special Render pass.
 	/// </summary>
-	public sealed class DebugLabel : SpriteDrawableBase
+	public sealed class DebugLabel : SpriteDrawableBase, IDebugInfo
 	{
-		//TODO: Needs an auto Scale based on screen size.
+		//TODO: Needs an auto Scale based on screen ppi.
 		
 		#region Factory
 		
-		public static DebugLabel CreateDebugLabel(DrawEngine2d drawEngine2d, LayerType type)
+		internal static DebugLabel CreateDebugLabel(DrawEngine2d drawEngine2d, LayerType type, IDebuggable parent = null)
 		{
 			if (drawEngine2d == null || drawEngine2d.IsDisposed)
 				throw new ArgumentNullException();
@@ -38,16 +38,25 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 					throw new ArgumentException();
 			}
 			
-			return new DebugLabel(layer);
+			return new DebugLabel(layer, parent);
 		}
+		
+		#endregion
+		
+		#region ToggleDebugInfo
+		
+//		public static void ToggleDebugInfo(Boolean enabled, IDebuggable source, ref IDebugInfo debugInfo, ref IDisposablePlus debugInfoDisposer)
+//		{
+//		}
 		
 		#endregion
 		
 		#region Constructor, Dispose
 		
-		private DebugLabel(LayerBase layer)
+		private DebugLabel(LayerBase layer, IDebuggable parent)
 			: base(layer)
 		{
+			SetParent(parent);
 		}
 		
 		#endregion
@@ -58,10 +67,14 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		{
 			InitializeCharacterCoordinateCache();
 			InitializeText();
+			InitializeParent();
+			InitializeIDebugInfo();
 		}
 		
 		protected override void Cleanup()
 		{
+			CleanupIDebugInfo();
+			CleanupParent();
 			CleanupText();
 			CleanupCharacterCoordinateCache();
 		}
@@ -76,7 +89,15 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			DrawEngine2d.GraphicsContext.SetShaderProgram(Shader.ShaderProgram);
 			DrawEngine2d.Textures.SetOpenGlTexture(DebugFont.TextureKey);
 			
-			if(RecalcRenderCacheRequired)
+			//This seems like a terrible place to have this!!!
+			if (RefreshNeeded)
+			{
+				ClearDebugInfo();
+				Parent.RefreshDebugInfo();
+				Text = DebugInfoBuilder.ToString();
+			}
+			
+			if (RecalcRenderCacheRequired)
 				RecalcRenderCache();
 			
 			TiledTexture tt = DrawEngine2d.TiledTextures.GetTiledTexture(DebugFont.TextureKey);
@@ -104,16 +125,74 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		#endregion
 		
+		#region Position
+		
+		private void SetPositionFromParent()
+		{
+			if (IsDisposed || Parent == null)
+			{
+				SetPosition(DefaultPosition);
+				return;
+			}
+			
+			//TODO: Support coordinatesystemmode here.
+			
+			switch (RelativePosition)
+			{
+				case RelativePosition.TopLeft :
+					SetPosition(Parent.Bounds.TopLeft);
+					break;
+				case RelativePosition.Top :
+					SetPosition(Parent.Bounds.TopCenter);
+					break;
+				case RelativePosition.TopRight :
+					SetPosition(Parent.Bounds.TopRight);
+					break;
+					
+				case RelativePosition.Left :
+					SetPosition(Parent.Bounds.CenterLeft);
+					break;
+				case RelativePosition.Center :
+					SetPosition(Parent.Bounds.Center);
+					break;
+				case RelativePosition.Right :
+					SetPosition(Parent.Bounds.CenterRight);
+					break;
+					
+				case RelativePosition.BottomLeft :
+					SetPosition(Parent.Bounds.BottomLeft);
+					break;
+				case RelativePosition.Bottom :
+					SetPosition(Parent.Bounds.BottomCenter);
+					break;
+				case RelativePosition.BottomRight :
+					SetPosition(Parent.Bounds.BottomRight);
+					break;
+			}
+		}
+		
+		#endregion
+		
 		#region Recalc
 		
 		protected override void RecalcBounds()
 		{
 			//TODO: throw new NotImplementedException();
+			
+			if (RenderTextRequiresRecalc)
+				GenerateRenderText();
+			
+			//TODO: get parents bounds.
+			//TODO: calc bounds based on TextAlignment, RelativePosition, etc.
 		}
 		
 		protected override void RecalcHelper()
 		{
-			GenerateRenderText();
+			SetPositionFromParent();
+			
+			if (RenderTextRequiresRecalc)
+				GenerateRenderText();
+			
 			SetRenderRecacheRequired();
 		}
 		
@@ -201,6 +280,10 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		{
 			public Coordinate2 Position;
 			public Char Character;
+			public override String ToString()
+			{
+				return Character.ToString() + " " + Position.ToString();
+			}
 		}
 		
 		private void SetRenderRecacheRequired()
@@ -235,13 +318,14 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		public String Text
 		{
 			get { return _Text; }
-			set
+			private set
 			{
 				if (_Text == value)
 					return;
 				
 				_Text = value;
 				
+				SetRenderTextRecalcRequired();
 				SetRecalcRequired();
 			}
 		}
@@ -256,16 +340,17 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void GenerateRenderText()
 		{
+			ClearRenderTextRecalcRequired();
+			
 			if (IsDisposed)
 				return;
-			
-			Int32 maxLength;
 			
 			RenderTextCharCount = 0;
 			RenderTextLineCount = 0;
 			RenderTextMaxLineLength = 0;
 			
-			maxLength = String.IsNullOrWhiteSpace(Text) ? 0 : Text.Length;
+			Int32 maxLength = String.IsNullOrWhiteSpace(Text) ? 0 : Text.Length;
+			
 			RenderText = new Char[maxLength];
 			if (maxLength == 0)
 				return;
@@ -296,6 +381,219 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 				
 				RenderText[RenderTextCharCount - 1] = DrawEngine2d.DebugFont.ContainsCharacterGlyph(c) ? c : FallbackChar;
 			}
+		}
+		
+		private Boolean RenderTextRequiresRecalc;
+		
+		private void SetRenderTextRecalcRequired()
+		{
+			RenderTextRequiresRecalc = true;
+		}
+		
+		private void ClearRenderTextRecalcRequired()
+		{
+			RenderTextRequiresRecalc = false;
+		}
+		
+		#endregion
+		
+		#region Parent
+		
+		private void InitializeParent()
+		{
+			Parent = null;
+		}
+		
+		private void CleanupParent()
+		{
+			Parent = null;
+		}
+		
+		private IDebuggable Parent;
+		
+		private void SetParent(IDebuggable parent)
+		{
+			Parent = parent;
+		}
+		
+		public void ParentUpdated()
+		{
+			SetRecalcRequired();
+		}
+		
+		#endregion
+		
+		#region IDebugInfo
+		
+		private void InitializeIDebugInfo()
+		{
+			RefreshForcesRender = true;
+			RefreshInterval = TimeSpan.Zero;
+			
+			RelativePosition = RelativePosition.Center;
+			PlacementPosition = PlacementPosition.Inside;
+			TextAlignment = TextAlignment.Center;
+			
+			DebugInfoBuilder = new StringBuilder();
+		}
+		
+		private void CleanupIDebugInfo()
+		{
+			RefreshForcesRender = true;
+			RefreshInterval = TimeSpan.Zero;
+			
+			RelativePosition = RelativePosition.Center;
+			PlacementPosition = PlacementPosition.Inside;
+			TextAlignment = TextAlignment.Center;
+			
+			DebugInfoBuilder.Clear();
+			DebugInfoBuilder = null;
+		}
+		
+		public Boolean RefreshForcesRender { get; set; }
+		public TimeSpan RefreshInterval { get; set; }
+		public DateTime LastRefresh { get; private set; }
+		public Boolean RefreshNeeded { get; private set; }
+		public void CalcIfRefreshNeeded(DateTime updateTime)
+		{
+			if (RefreshNeeded)
+				return;
+			
+			if (IsDisposed)
+				return;
+			
+			if (updateTime - LastRefresh > RefreshInterval)
+				RefreshNeeded = true;
+		}
+		
+		//TODO: Move these to region position?
+		//TODO: force redraw when changed.
+		private RelativePosition _RelativePosition;
+		public RelativePosition RelativePosition
+		{
+			get { return _RelativePosition; }
+			set
+			{
+				if (_RelativePosition == value)
+					return;
+				
+				_RelativePosition = value;
+				
+				SetRecalcRequired();
+			}
+		}
+		
+		//TODO: Move these to region position?
+		//TODO: force redraw when changed.
+		private PlacementPosition _PlacementPosition;
+		public PlacementPosition PlacementPosition
+		{
+			get { return _PlacementPosition; }
+			set
+			{
+				if (_PlacementPosition == value)
+					return;
+				
+				_PlacementPosition = value;
+				
+				SetRecalcRequired();
+			}
+		}
+		
+		private TextAlignment _TextAlignment;
+		public TextAlignment TextAlignment
+		{
+			get { return _TextAlignment; }
+			set
+			{
+				if (_TextAlignment == value)
+					return;
+				
+				_TextAlignment = value;
+				
+				SetRecalcRequired();
+			}
+		}
+		
+		private StringBuilder DebugInfoBuilder;
+		
+		private const String DebugInfoSeparator = ": ";
+		
+		private void ClearDebugInfo()
+		{
+			if (DebugInfoBuilder != null)
+				DebugInfoBuilder.Clear();
+		}
+		
+		public void AddDebugInfoLine(String name, String data)
+		{
+			DebugInfoBuilder.Append(name);
+			DebugInfoBuilder.Append(DebugInfoSeparator);
+			DebugInfoBuilder.AppendLine(data);
+		}
+		
+		public void AddDebugInfoLine(String name, Int32 data)
+		{
+			DebugInfoBuilder.Append(name);
+			DebugInfoBuilder.Append(DebugInfoSeparator);
+			DebugInfoBuilder.Append(data);
+			DebugInfoBuilder.AppendLine();
+		}
+		
+		public void AddDebugInfoLine(String name, Int64 data)
+		{
+			DebugInfoBuilder.Append(name);
+			DebugInfoBuilder.Append(DebugInfoSeparator);
+			DebugInfoBuilder.Append(data);
+			DebugInfoBuilder.AppendLine();
+		}
+		
+		public void AddDebugInfoLine(String name, Single data)
+		{
+			DebugInfoBuilder.Append(name);
+			DebugInfoBuilder.Append(DebugInfoSeparator);
+			DebugInfoBuilder.Append(data.ToString());
+			DebugInfoBuilder.AppendLine();
+		}
+		
+		public void AddDebugInfoLine(String name, Coordinate2 data)
+		{
+			DebugInfoBuilder.Append(name);
+			DebugInfoBuilder.Append(DebugInfoSeparator);
+			DebugInfoBuilder.Append(data.ToString());
+			DebugInfoBuilder.AppendLine();
+		}
+		
+		public void AddDebugInfoLine(String name, Coordinate2i data)
+		{
+			DebugInfoBuilder.Append(name);
+			DebugInfoBuilder.Append(DebugInfoSeparator);
+			DebugInfoBuilder.Append(data.ToString());
+			DebugInfoBuilder.AppendLine();
+		}
+		
+		public void AddDebugInfoLine(String name, RectangularArea2 data)
+		{
+			DebugInfoBuilder.Append(name);
+			DebugInfoBuilder.Append(DebugInfoSeparator);
+			DebugInfoBuilder.Append(data.ToString());
+			DebugInfoBuilder.AppendLine();
+		}
+		
+		public void AddDebugInfoLine(String name, RectangularArea2i data)
+		{
+			DebugInfoBuilder.Append(name);
+			DebugInfoBuilder.Append(DebugInfoSeparator);
+			DebugInfoBuilder.Append(data.ToString());
+			DebugInfoBuilder.AppendLine();
+		}
+		
+		public void AddDebugInfoLine(String name, Angle2 data)
+		{
+			DebugInfoBuilder.Append(name);
+			DebugInfoBuilder.Append(DebugInfoSeparator);
+			DebugInfoBuilder.Append(data.ToString());
+			DebugInfoBuilder.AppendLine();
 		}
 		
 		#endregion

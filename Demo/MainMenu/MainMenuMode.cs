@@ -7,10 +7,9 @@ using PsmFramework;
 using PsmFramework.Engines.DrawEngine2d.Drawables;
 using PsmFramework.Engines.DrawEngine2d.Layers;
 using PsmFramework.Engines.DrawEngine2d.Support;
-using PsmFramework.Engines.DrawEngine2d.Textures;
+using PsmFramework.Engines.DrawEngine2d.TiledTextures;
 using PsmFramework.Modes;
 using Sce.PlayStation.Core.Imaging;
-using PsmFramework.Engines.DrawEngine2d.TiledTextures;
 
 namespace Demo.MainMenu
 {
@@ -39,13 +38,19 @@ namespace Demo.MainMenu
 		protected override void Initialize()
 		{
 			DebugInfoEnabled = true;
-			//DebugInfoForcesRender = false;
+			DebugInfo.RefreshForcesRender = true;
+			DebugInfo.RefreshInterval = new TimeSpan(0, 0, 0, 1);
+			//These don't work yet.
+//			DebugInfo.PlacementPosition = PlacementPosition.Inside;
+//			DebugInfo.RelativePosition = RelativePosition.Top;
+//			DebugInfo.TextAlignment = TextAlignment.Center;
 			
 			InitializeLayersAndSprites();
 		}
 		
 		protected override void Cleanup()
 		{
+			DebugInfoEnabled = false;
 			CleanupLayersAndSprites();
 		}
 		
@@ -99,7 +104,8 @@ namespace Demo.MainMenu
 			
 			if (Mgr.GamePad0_Select_Pressed)
 			{
-				Mgr.FreeMemory();
+				//Mgr.FreeMemory();
+				Mgr.SetRunStateToEnding();
 				return;
 			}
 		}
@@ -181,9 +187,10 @@ namespace Demo.MainMenu
 			test.SetDimensionsProportionallyByHeight(rowHeight);
 			test.SetPosition(modeLeft, row4,RelativePosition.Left);
 			
-			Font f = new Font(FontAlias.System, (Int32)rowHeight, FontStyle.Regular);
-			Int32 i = f.Metrics.Height;
-			String t = "test";
+			//Experimenting
+//			Font f = new Font(FontAlias.System, (Int32)rowHeight, FontStyle.Regular);
+//			Int32 i = f.Metrics.Height;
+			//String t = "test";
 		}
 		
 		private void CleanupLayersAndSprites()
@@ -196,7 +203,7 @@ namespace Demo.MainMenu
 		
 		#region DebugInfo
 		
-//		protected override void GetAdditionalDebugInfo()
+//		public override void RefreshDebugInfo()
 //		{
 //			AddDebugInfoLine("Camera Center", DrawEngine2d.WorldCamera.Center);
 //			AddDebugInfoLine("Camera Bounds", DrawEngine2d.WorldCamera.Bounds);

@@ -68,6 +68,7 @@ namespace PsmFramework
 			
 			while (RunState != RunState.Ending)
 			{
+				CalculateUpdateTime();
 				CalculateTimeSinceLastFrame();
 				CalculateFramesPerSecond();
 				
@@ -230,7 +231,7 @@ namespace PsmFramework
 		{
 			get
 			{
-				return (DateTime.UtcNow - LastModeChange) > cMinTicksBetweenModeChanges;
+				return (UpdateTime - LastModeChange) > cMinTicksBetweenModeChanges;
 			}
 		}
 		
@@ -241,7 +242,7 @@ namespace PsmFramework
 		
 		public void GoToMode(CreateModeDelegate factory)
 		{
-			LastModeChange = DateTime.UtcNow;
+			LastModeChange = UpdateTime;
 			PreviousMode = CurrentMode;
 			NextModeFactory = factory;
 			CurrentMode = null;
@@ -251,7 +252,7 @@ namespace PsmFramework
 		//TODO: GoToThenReturn should not dispose of the original mode. perhaps as an option or another method.
 		public void GoToModeThenReturn(CreateModeDelegate factory, ModeBase returnMode)
 		{
-			LastModeChange = DateTime.UtcNow;
+			LastModeChange = UpdateTime;
 			PreviousMode = CurrentMode;
 			NextModeFactory = factory;
 			CurrentMode = null;
@@ -260,7 +261,7 @@ namespace PsmFramework
 		
 		public void ReturnToMode()
 		{
-			LastModeChange = DateTime.UtcNow;
+			LastModeChange = UpdateTime;
 			PreviousMode = CurrentMode;
 			CurrentMode = ReturnMode;
 			ReturnMode = null;
@@ -366,6 +367,8 @@ namespace PsmFramework
 			FrameTimer = new Stopwatch();
 			UpdateTimer = new Stopwatch();
 			RenderTimer = new Stopwatch();
+			
+			CalculateUpdateTime();
 		}
 		
 		private void CleanupTimers()
@@ -384,9 +387,15 @@ namespace PsmFramework
 		private Stopwatch UpdateTimer;
 		private Stopwatch RenderTimer;
 		
+		public DateTime UpdateTime { get; private set; }
 		public TimeSpan TimeSinceLastFrame { get; private set; }
 		public TimeSpan UpdateLength { get; private set; }
 		public TimeSpan RenderLength { get; private set; }
+		
+		private void CalculateUpdateTime()
+		{
+			UpdateTime = DateTime.Now;
+		}
 		
 		private void CalculateTimeSinceLastFrame()
 		{
@@ -435,7 +444,7 @@ namespace PsmFramework
 		
 		private void CalculateFramesPerSecond()
 		{
-			Int32 CurrentSec = DateTime.Now.Second;
+			Int32 CurrentSec = UpdateTime.Second;
 			
 			if(LastSecondTracked == CurrentSec)
 				CurrentFramesPerSecond++;

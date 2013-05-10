@@ -113,6 +113,25 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		#endregion
 		
+		#region Position
+		
+		public new void SetPosition(Coordinate2 position, RelativePosition relativeTo = RelativePosition.Center)
+		{
+			base.SetPosition(position, relativeTo);
+		}
+		
+		public new void SetPosition(Single x, Single y, RelativePosition relativeTo = RelativePosition.Center)
+		{
+			base.SetPosition(x, y, relativeTo);
+		}
+		
+		public new void AdjustPosition(Single horizontal, Single vertical)
+		{
+			base.AdjustPosition(horizontal, vertical);
+		}
+		
+		#endregion
+		
 		#region Rotation
 		
 		public new void SetRotation(Angle2 angle)
@@ -167,7 +186,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 //			GenerateModelMatrix();
 //			Matrix4 wvp = GenerateWorldViewProjectionMatrix();
 			
-			Matrix4 cm = Matrix4.Translation(-RotationCenterX,  -RotationCenterY, RotationCenterZ);
+			Matrix4 cm = Matrix4.Translation(-RotationCenterX, -RotationCenterY, RotationCenterZ);
 			Matrix4 tm = Matrix4.Translation(Position.X + HalfWidth, Position.Y + HalfHeight, 0.0f);
 			Matrix4 rm = Matrix4.RotationZ(Rotation.Radian);
 			Matrix4 sm = Matrix4.Scale(Width, Height, 0.0f);
@@ -188,7 +207,14 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		protected override void RecalcBounds()
 		{
-			//throw new NotImplementedException();
+			//TODO: support coordinatesystemmode here.
+			if (Rotation == DefaultRotation)
+				Bounds = new RectangularArea2(Position.X, Position.Y, Position.X + Width, Position.Y + Height);
+			else
+			{
+				
+				//Bounds = new RectangularArea2();
+			}
 		}
 		
 		protected override void RecalcHelper()
@@ -203,7 +229,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		private void InitializeMatrices()
 		{
 			//As of now, RotationCenter cannot be changed so this can be computed once.
-			CenterMatrix = Matrix4.Translation(-RotationCenterX,  -RotationCenterY, RotationCenterZ);
+			CenterMatrix = Matrix4.Translation(-RotationCenterX, -RotationCenterY, RotationCenterZ);
 		}
 		
 		private void CleanupMatrices()
@@ -221,7 +247,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		
 		private void GenerateModelMatrix()
 		{
-			//TODO: These should only be recalced if the values changed.
+			//TODO: These should only be recalced if the values have changed.
 			TranslationMatrix = Matrix4.Translation(Position.X + HalfWidth, Position.Y + HalfHeight, 0.0f);
 			ScaleMatrix = Matrix4.Scale(Width, Height, 0.0f);
 			

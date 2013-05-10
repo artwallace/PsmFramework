@@ -1,15 +1,12 @@
 Rendering
-* Consider adding a 2nd rendering pass. The first pass will only create ShaderObjects and the 2nd pass will consolidate 
+* Add a 2nd rendering pass. The first pass will only create ShaderObjects and the 2nd pass will consolidate 
   all similar, contiguous ShaderObjects into VBO arrays and send them in bulk to GPU. this would make Update
   more flexible and Render more efficient.
-* (maybe) Redo debug label so that it only exists in debuglayer and let other objects add to it for effecient rendering.
-* (maybe) Consolidate debug layers into one?
 
 Shaders
 * 
 
 Drawables
-* Add Rotation to Sprite.
 * fix bounds
 * Add foreground and background color support to DebugLabel.
 

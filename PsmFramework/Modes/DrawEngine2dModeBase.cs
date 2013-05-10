@@ -1,13 +1,12 @@
 using System;
-using System.Text;
 using PsmFramework.Engines.DrawEngine2d;
 using PsmFramework.Engines.DrawEngine2d.Drawables;
-using PsmFramework.Engines.DrawEngine2d.Support;
 using PsmFramework.Engines.DrawEngine2d.Layers;
+using PsmFramework.Engines.DrawEngine2d.Support;
 
 namespace PsmFramework.Modes
 {
-	public abstract class DrawEngine2dModeBase : ModeBase
+	public abstract class DrawEngine2dModeBase : ModeBase, IDebuggable
 	{
 		#region Constructor, Dispose
 		
@@ -23,6 +22,7 @@ namespace PsmFramework.Modes
 		protected override void InitializeInternal()
 		{
 			InitializeDrawEngine2d();
+			InitializeBounds();
 			InitializeDebugInfo();
 			FirstPass = true;
 		}
@@ -30,6 +30,7 @@ namespace PsmFramework.Modes
 		protected override void CleanupInternal()
 		{
 			CleanupDebugInfo();
+			CleanupBounds();
 			CleanupDrawEngine2d();
 		}
 		
@@ -51,20 +52,18 @@ namespace PsmFramework.Modes
 			
 			//This is going to get data from the previous frame.
 			if (DebugInfoEnabled)
-			{
-				if (DrawEngine2d.RenderRequired || DebugInfoForcesRender || DrawEngine2d.RenderRequiredLastFrame)
-					GetDebugInfo();
-			}
+				DebugInfo.CalcIfRefreshNeeded(Mgr.UpdateTime);
 		}
 		
 		internal override void UpdateInternalPost()
 		{
 			//This is going to get data from the previous frame.
-			if (DebugInfoEnabled)
-			{
-				if (DrawEngine2d.RenderRequired || DebugInfoForcesRender)
-					DrawDebugInfo();
-			}
+//			if (DebugInfoEnabled)
+//			{
+				//TODO: Re-enable or move
+//				if (DrawEngine2d.RenderRequired || DebugInfo.RefreshForcesRender)
+//					DrawDebugInfo();
+//			}
 		}
 		
 		internal override void RenderInternal()
@@ -102,180 +101,78 @@ namespace PsmFramework.Modes
 		
 		#endregion
 		
+		#region Bounds for IDebuggable
+		
+		private void InitializeBounds()
+		{
+		}
+		
+		private void CleanupBounds()
+		{
+		}
+		
+		public RectangularArea2 Bounds
+		{
+			get
+			{
+				if (IsDisposed || DrawEngine2d.ScreenCamera == null)
+					return RectangularArea2.Zero;
+				
+				return DrawEngine2d.ScreenCamera.Bounds;
+			}
+		}
+		
+		#endregion
+		
 		#region DebugInfo
 		
 		private void InitializeDebugInfo()
 		{
 			DebugInfoEnabled = false;
-			DebugInfoForcesRender = true;
-			DebugInfo = new StringBuilder();
 		}
 		
 		private void CleanupDebugInfo()
 		{
 			DebugInfoEnabled = false;
-			DebugInfoForcesRender = false;
-			
-			DebugInfo.Clear();
-			DebugInfo.Capacity = 0;
-			DebugInfo = null;
 		}
 		
-		private Boolean _DebugInfoEnabled;
+		private IDisposablePlus DebugInfoDisposer;
+		public IDebugInfo DebugInfo { get; private set; }
+		
 		public Boolean DebugInfoEnabled
 		{
-			get { return _DebugInfoEnabled; }
+			get { return DebugInfo != null; }
 			set
 			{
-				if(_DebugInfoEnabled == value)
+				if (DebugInfoEnabled == value)
 					return;
 				
-				_DebugInfoEnabled = value;
+				if (value && !IsDisposed)
+				{
+					DebugLabel l = DebugLabel.CreateDebugLabel(DrawEngine2d, LayerType.Screen, this);
+					DebugInfoDisposer = l;
+					DebugInfo = l;
+				}
+				else
+				{
+					DebugInfoDisposer.Dispose();
+					DebugInfoDisposer = null;
+					DebugInfo = null;
+				}
 				
-				//TODO: This is necessary until DebugLabel supports better draw method.
-				ToggleDebugInfo();
+				//SetRecalcRequired();
+				DrawEngine2d.SetRenderRequired();
 			}
 		}
 		
-		//TODO: This is necessary until DebugLabel supports better draw method.
-		private void ToggleDebugInfo()
+		public virtual void RefreshDebugInfo()
 		{
-			if(IsDisposed)
-				return;
-			
-			if(_DebugInfoEnabled)
-				CreateDebugInfoLabel();
-			else
-				RemoveDebugInfoLabel();
-			
-			DrawEngine2d.SetRenderRequired();
-		}
-		
-		private readonly Coordinate2 DebugInfoPstn = new Coordinate2(0f, 0f);
-		
-		private void CreateDebugInfoLabel()
-		{
-			//This shouldn't happen but delete it if it's there.
-			if(DebugInfoLabel != null)
-				DebugInfoLabel.Dispose();
-			
-			DebugInfoLabel = DebugLabel.CreateDebugLabel(DrawEngine2d, LayerType.Screen);
-			DebugInfoLabel.SetPosition(DebugInfoPstn);
-		}
-		
-		private void RemoveDebugInfoLabel()
-		{
-			//This shouldn't happen but whatever.
-			if(DebugInfoLabel == null)
-				return;
-			
-			DebugInfoLabel.Dispose();
-			DebugInfoLabel = null;
-		}
-		
-		//This is necessary until DebugLabel supports better draw method.
-		private DebugLabel DebugInfoLabel;
-		
-		public Boolean DebugInfoForcesRender;
-		
-		private StringBuilder DebugInfo;
-		
-		private const String DebugInfoSeparator = ": ";
-		
-		private void GetDebugInfo()
-		{
-			DebugInfo.Clear();
-			
-			AddDebugInfoLine("RAM Used", (System.Math.Round(GC.GetTotalMemory(false) / 1048576d, 2)).ToString() + " MiB");
-			AddDebugInfoLine("Update Ticks", Mgr.UpdateLength.Ticks);
-			AddDebugInfoLine("Render Ticks", DrawLength.Ticks);
-			AddDebugInfoLine("Swap Buffers Ticks", SwapBuffersLength.Ticks);
-			AddDebugInfoLine("FPS", Mgr.FramesPerSecond);
-			AddDebugInfoLine("OpenGL Draws", DrawEngine2d.DrawArrayCallsCounter);//and +1 for this
-			
-			GetAdditionalDebugInfo();
-		}
-		
-		//TODO: needs a better name.
-		protected virtual void GetAdditionalDebugInfo()
-		{
-		}
-		
-		protected void AddDebugInfoLine(String name, String data)
-		{
-			DebugInfo.Append(name);
-			DebugInfo.Append(DebugInfoSeparator);
-			DebugInfo.AppendLine(data);
-		}
-		
-		protected void AddDebugInfoLine(String name, Int32 data)
-		{
-			DebugInfo.Append(name);
-			DebugInfo.Append(DebugInfoSeparator);
-			DebugInfo.Append(data);
-			DebugInfo.AppendLine();
-		}
-		
-		protected void AddDebugInfoLine(String name, Int64 data)
-		{
-			DebugInfo.Append(name);
-			DebugInfo.Append(DebugInfoSeparator);
-			DebugInfo.Append(data);
-			DebugInfo.AppendLine();
-		}
-		
-		protected void AddDebugInfoLine(String name, Single data)
-		{
-			DebugInfo.Append(name);
-			DebugInfo.Append(DebugInfoSeparator);
-			DebugInfo.Append(data.ToString());
-			DebugInfo.AppendLine();
-		}
-		
-		protected void AddDebugInfoLine(String name, Coordinate2 data)
-		{
-			DebugInfo.Append(name);
-			DebugInfo.Append(DebugInfoSeparator);
-			DebugInfo.Append(data.ToString());
-			DebugInfo.AppendLine();
-		}
-		
-		protected void AddDebugInfoLine(String name, Coordinate2i data)
-		{
-			DebugInfo.Append(name);
-			DebugInfo.Append(DebugInfoSeparator);
-			DebugInfo.Append(data.ToString());
-			DebugInfo.AppendLine();
-		}
-		
-		protected void AddDebugInfoLine(String name, RectangularArea2 data)
-		{
-			DebugInfo.Append(name);
-			DebugInfo.Append(DebugInfoSeparator);
-			DebugInfo.Append(data.ToString());
-			DebugInfo.AppendLine();
-		}
-		
-		protected void AddDebugInfoLine(String name, RectangularArea2i data)
-		{
-			DebugInfo.Append(name);
-			DebugInfo.Append(DebugInfoSeparator);
-			DebugInfo.Append(data.ToString());
-			DebugInfo.AppendLine();
-		}
-		
-		protected void AddDebugInfoLine(String name, Angle2 data)
-		{
-			DebugInfo.Append(name);
-			DebugInfo.Append(DebugInfoSeparator);
-			DebugInfo.Append(data.ToString());
-			DebugInfo.AppendLine();
-		}
-		
-		private void DrawDebugInfo()
-		{
-			//DrawEngine2d.SetRenderRequired();
-			DebugInfoLabel.Text = DebugInfo.ToString();
+			DebugInfo.AddDebugInfoLine("RAM Used", (System.Math.Round(GC.GetTotalMemory(false) / 1048576d, 2)).ToString() + " MiB");
+			DebugInfo.AddDebugInfoLine("Update Ticks", Mgr.UpdateLength.Ticks);
+			DebugInfo.AddDebugInfoLine("Render Ticks", DrawLength.Ticks);
+			DebugInfo.AddDebugInfoLine("Swap Buffers Ticks", SwapBuffersLength.Ticks);
+			DebugInfo.AddDebugInfoLine("FPS", Mgr.FramesPerSecond);
+			DebugInfo.AddDebugInfoLine("OpenGL Draws", DrawEngine2d.DrawArrayCallsCounter);//and +1 for this
 		}
 		
 		#endregion

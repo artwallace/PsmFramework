@@ -82,7 +82,7 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			}
 		}
 		
-		public void SetPosition(Coordinate2 position, RelativePosition relativeTo = RelativePosition.Center)
+		protected void SetPosition(Coordinate2 position, RelativePosition relativeTo = RelativePosition.Center)
 		{
 			//TODO: Add support for CoordinateSystemMode
 			if (DrawEngine2d.CoordinateSystemMode != CoordinateSystemMode.OriginAtUpperLeft)
@@ -131,17 +131,17 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			}
 		}
 		
-		public void SetPosition(Single x, Single y, RelativePosition relativeTo = RelativePosition.Center)
+		protected void SetPosition(Single x, Single y, RelativePosition relativeTo = RelativePosition.Center)
 		{
 			SetPosition(new Coordinate2(x, y), relativeTo);
 		}
 		
-		public void AdjustPosition(Single horizontal, Single vertical)
+		protected void AdjustPosition(Single horizontal, Single vertical)
 		{
 			Position = new Coordinate2(Position.X + horizontal, Position.Y + vertical);
 		}
 		
-		public readonly Coordinate2 DefaultPosition = Coordinate2.X0Y0;
+		protected readonly Coordinate2 DefaultPosition = Coordinate2.X0Y0;
 		
 		#endregion
 		
@@ -245,8 +245,8 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 		protected Single HalfWidth { get; private set; }
 		protected Single HalfHeight { get; private set; }
 		
-		public Single NaturalWidth { get; private set; }
-		public Single NaturalHeight { get; private set; }
+		protected Single NaturalWidth { get; private set; }
+		protected Single NaturalHeight { get; private set; }
 		
 		protected void SetNaturalDimensions(Single width, Single height)
 		{
@@ -324,21 +324,6 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			SetColorsToDefault();
 		}
 		
-		private Color _BackgroundColor;
-		public Color BackgroundColor
-		{
-			get { return _BackgroundColor; }
-			set
-			{
-				if(_BackgroundColor == value)
-					return;
-				
-				_BackgroundColor = value;
-				
-				SetRecalcRequired();
-			}
-		}
-		
 		private Color _ForegroundColor;
 		public Color ForegroundColor
 		{
@@ -354,10 +339,25 @@ namespace PsmFramework.Engines.DrawEngine2d.Drawables
 			}
 		}
 		
+		private Color _BackgroundColor;
+		public Color BackgroundColor
+		{
+			get { return _BackgroundColor; }
+			set
+			{
+				if(_BackgroundColor == value)
+					return;
+				
+				_BackgroundColor = value;
+				
+				SetRecalcRequired();
+			}
+		}
+		
 		public void SetColorsToDefault()
 		{
-			BackgroundColor = Colors.Black;
 			ForegroundColor = Colors.White;
+			BackgroundColor = Colors.Black;
 		}
 		
 		#endregion

@@ -4,8 +4,6 @@ namespace PsmFramework.Engines.DrawEngine2d
 {
 	public abstract class ManagerBase : IDisposablePlus
 	{
-		//Should probably switch this to my IObjectState idea to protect against inadvertent disposal.
-		
 		#region Constructor, Dispose
 		
 		public ManagerBase(DrawEngine2d drawEngine2d)

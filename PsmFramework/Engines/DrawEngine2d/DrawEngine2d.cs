@@ -131,7 +131,7 @@ namespace PsmFramework.Engines.DrawEngine2d
 		//Value of 2 needed to fix bug where PSM discards first buffer.
 		//If that bug is fixed, value can be dropped to 1,
 		// which is needed to workaround stupid SwapBuffers behaviour.
-		private const Int32 WorkaroundBuffersNeeded = 2;
+		private const Int32 WorkaroundBuffersNeeded = 1;
 		
 		private void IncrementWorkaroundBuffersFilled()
 		{
